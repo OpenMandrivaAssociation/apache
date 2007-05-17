@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.4
-Release:	%mkrel 7
+Release:	%mkrel 8
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -20,7 +20,6 @@ Source1:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz.asc
 Source2:	apache-README.urpmi
 Source3:	apache2_transparent_png_icons.tar.bz2
 Source4: 	perl-framework.tar.bz2
-Source6:	certwatch.tar.bz2
 Source9: 	htcacheclean.init
 Source10: 	htcacheclean.sysconfig
 Source30:	30_mod_proxy.conf
@@ -701,8 +700,7 @@ The apache source code, including Mandriva patches. Use this package to build
 your own customized apache if needed.
 
 %prep
-
-%setup -q -n httpd-%{version} -a4 -a6
+%setup -q -n httpd-%{version} -a4
 %patch0 -p1 -b .deplibs.droplet
 %patch1 -p1 -b .encode.droplet
 %patch2 -p0 -b .xfsz.droplet
@@ -781,7 +779,6 @@ perl -pi -e "s|^#define AP_SERVER_BASEPRODUCT .*|#define AP_SERVER_BASEPRODUCT \
 # prepare the apache-source package
 rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}; mkdir -p $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src
 cp -dpR $RPM_BUILD_DIR/httpd-%{version} $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src/apache-%{version}
-rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src/apache-%{version}/certwatch
 rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src/apache-%{version}/perl-framework
 rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src/apache-%{version}/tmp-httpd-%{version}/usr/src
 rm -f $RPM_BUILD_DIR/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/*.spec
@@ -936,9 +933,6 @@ for mpm in worker event itk prefork; do
     %make
     popd
 done
-
-# build the certwatch stuff
-gcc %{optflags} -o certwatch/certwatch -Wall -Werror certwatch/certwatch.c -lcrypto
 
 %if %{build_test}
 # run the test suite, quite a hack, but works, sometimes...
@@ -1136,14 +1130,6 @@ touch %{buildroot}/var/cache/httpd/mod_ssl/scache.sem
 
 # fix a msec safe cache for the mod_ldap LDAPSharedCacheFile
 touch %{buildroot}/var/cache/httpd/mod_ldap_cache
-
-# install the certwatch stuff
-install -d %{buildroot}%{_sysconfdir}/cron.daily
-install -d %{buildroot}%{_mandir}/man8
-install -d %{buildroot}%{_sbindir}
-install -m0755 certwatch/certwatch %{buildroot}%{_sbindir}/certwatch
-install -m0755 certwatch/certwatch.cron %{buildroot}%{_sysconfdir}/cron.daily/certwatch
-install -m0644 certwatch/certwatch.8 %{buildroot}%{_mandir}/man8/certwatch.8
 
 # install htcacheclean files
 install -d %{buildroot}%{_initrddir}
@@ -1608,14 +1594,11 @@ fi
 %defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_ssl.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_ssl.default-vhost.conf
-%attr(0755,root,root) %{_sysconfdir}/cron.daily/certwatch
-%attr(0755,root,root) %{_sbindir}/certwatch
 %attr(0755,root,root) %{_libdir}/apache/mod_ssl.so
 %attr(0700,apache,root) %dir /var/cache/httpd/mod_ssl
 %attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.dir
 %attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.pag
 %attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.sem
-%attr(0644,root,root) %{_mandir}/man8/certwatch.8*
 
 %files mod_dbd
 %defattr(-,root,root)
