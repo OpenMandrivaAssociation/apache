@@ -838,6 +838,12 @@ else
 fi
 export CFLAGS CPPFLAGS AP_LIBS
 
+%if %mdkversion >= 200710
+export CFLAGS="$CFLAGS -fstack-protector"
+export CXXFLAGS="$CXXFLAGS -fstack-protector"
+export FFLAGS="$FFLAGS -fstack-protector"
+%endif
+
 APVARS="--enable-layout=NUX \
     --cache-file=../config.cache \
     --prefix=%{_sysconfdir}/httpd \
