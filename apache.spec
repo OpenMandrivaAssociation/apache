@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.4
-Release:	%mkrel 11
+Release:	%mkrel 12
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -822,6 +822,8 @@ cp %{SOURCE67} 67_mod_userdir.conf
 cp server/core.c server/core.c.untagged
 
 %build
+%serverbuild
+
 #########################################################################################
 # configure and build phase
 #
@@ -831,15 +833,15 @@ export WANT_AUTOCONF_2_5="1"
 cp %{SOURCE100} buildconf
 sh ./buildconf
 
-CFLAGS="%{optflags}"
+CFLAGS="$RPM_OPT_FLAGS"
 CPPFLAGS="-DSSL_EXPERIMENTAL_ENGINE -DLDAP_DEPRECATED -DHAVE_APR_MEMCACHE"
 if pkg-config openssl; then
     # configure -C barfs with trailing spaces in CFLAGS
-    CFLAGS="%{optflags} $CPPFLAGS"
+    CFLAGS="$RPM_OPT_FLAGS $CPPFLAGS"
     CPPFLAGS="$CPPFLAGS `pkg-config --cflags openssl | sed 's/ *$//'`"
     AP_LIBS="$AP_LIBS `pkg-config --libs openssl`"
 else
-    CFLAGS="%{optflags}"
+    CFLAGS="$RPM_OPT_FLAGS"
     CPPFLAGS="$CPPFLAGS"
     AP_LIBS="$AP_LIBS -lssl -lcrypto"
 fi
