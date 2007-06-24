@@ -1,4 +1,4 @@
-%define build_test 0
+%define build_test 1
 
 # commandline overrides:
 # rpm -ba|--rebuild --with 'xxx'
@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.4
-Release:	%mkrel 13
+Release:	%mkrel 14
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
