@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.4
-Release:	%mkrel 12
+Release:	%mkrel 13
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -1551,7 +1551,7 @@ fi
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_http.so
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy.so
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_balancer.so
-%attr(0770,root,apache) %dir /var/cache/httpd/mod_proxy
+%attr(0770,apache,root) %dir /var/cache/httpd/mod_proxy
 
 %files mod_proxy_ajp
 %defattr(-,root,root)
