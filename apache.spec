@@ -1,4 +1,4 @@
-%define build_test 1
+%define build_test 0
 
 # commandline overrides:
 # rpm -ba|--rebuild --with 'xxx'
