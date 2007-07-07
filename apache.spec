@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.4
-Release:	%mkrel 14
+Release:	%mkrel 15
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -64,10 +64,13 @@ Patch14:	httpd-2.2.4-mod_rewrite-fcgi.diff
 Patch15:	httpd-ab_source_address.diff
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
-# security fixes
-Patch50:	apache-2.2.4-CVE-2007-1862.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20070425-00.diff
+# security fixes
+Patch101:	apache-2.2.4-CVE-2007-1862.diff
+Patch102:	httpd-2.2.3-CVE-2006-5752.patch
+Patch103:	httpd-2.2.3-CVE-2007-1863.patch
+Patch104:	httpd-2.2.4-CVE-2007-3304.patch
 BuildRequires:	apr-devel >= 1:1.2.2
 BuildRequires:	apr-util-devel >= 1.2.2
 BuildRequires:	apr_memcache-devel >= 0.7.0
@@ -723,9 +726,13 @@ your own customized apache if needed.
 %patch15 -p0 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 
-%patch50 -p0 -b .CVE-2007-1862.droplet
-
 %patch100 -p1 -b .mpm-itk.droplet
+
+# security fixes
+%patch101 -p0 -b .CVE-2007-1862.droplet
+%patch102 -p1 -b .cve-2006-5752
+%patch103 -p1 -b .cve-2007-1863
+%patch104 -p1 -b .cve-2007-3304
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
