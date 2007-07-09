@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.4
-Release:	%mkrel 15
+Release:	%mkrel 16
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -662,6 +662,7 @@ Summary:	Clean up the disk cache (for apache-mod_disk_cache)
 Group:		System/Servers
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
+Requires:	apache-mod_disk_cache = %{version}-%{release}
 
 %description	htcacheclean
 htcacheclean is used to keep the size of mod_disk_cache's storage within a
