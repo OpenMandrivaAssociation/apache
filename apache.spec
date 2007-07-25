@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.4
-Release:	%mkrel 16
+Release:	%mkrel 17
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -131,7 +131,8 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
-Provides:	apache = %{version}-%{release}, apache-mpm = %{version}-%{release}
+Provides:	apache = %{version}-%{release}
+Provides:	apache-mpm = %{version}-%{release}
 
 %description	mpm-prefork
 This Multi-Processing Module (MPM) implements a non-threaded, pre-forking web
@@ -159,7 +160,8 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
-Provides:	apache = %{version}-%{release}, apache-mpm = %{version}-%{release}
+Provides:	apache = %{version}-%{release}
+#Provides:	apache-mpm = %{version}-%{release}
 Conflicts:	apache-mod_php apache-mod_php4 apache-mod_perl apache-mod_python
 
 %description	mpm-worker
@@ -203,7 +205,8 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
-Provides:	apache = %{version}-%{release}, apache-mpm = %{version}-%{release}
+Provides:	apache = %{version}-%{release}
+#Provides:	apache-mpm = %{version}-%{release}
 Conflicts:	apache-mod_php apache-mod_php4 apache-mod_perl apache-mod_python
 
 %description	mpm-event
@@ -243,7 +246,8 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
-Provides:	apache = %{version}-%{release}, apache-mpm = %{version}-%{release}
+Provides:	apache = %{version}-%{release}
+#Provides:	apache-mpm = %{version}-%{release}
 
 %description	mpm-itk
 apache-mpm-itk (just mpm-itk for short) is an MPM (Multi-Processing Module) for
