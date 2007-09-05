@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.5
-Release:	%mkrel 0.3
+Version:	2.2.6
+Release:	%mkrel 0.1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -1646,7 +1646,6 @@ fi
 %attr(0644,root,root) /var/www/icons/README*
 %attr(0644,root,root) /var/www/icons/*.png
 %attr(0644,root,root) /var/www/icons/*.gif
-%attr(0644,root,root) /var/www/icons/small/README*
 %attr(0644,root,root) /var/www/icons/small/*.png
 %attr(0644,root,root) /var/www/icons/small/*.gif
 %attr(0755,root,root) %{_sbindir}/ab
