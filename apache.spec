@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.6
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -64,6 +64,8 @@ Patch14:	httpd-2.2.4-mod_rewrite-fcgi.diff
 Patch15:	httpd-ab_source_address.diff
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
+Patch17:	httpd-2.2.4-oldflush.patch
+Patch18:	worker_init_patch_plus_r572937_2.2.x.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20070425-00.diff
 BuildRequires:	apr-devel >= 1:1.2.2
@@ -732,6 +734,8 @@ your own customized apache if needed.
 %patch14 -p0 -b .fcgi.droplet
 %patch15 -p0 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
+%patch17 -p1 -b .oldflush
+%patch18 -p0 -b .worker_init_patch_plus_r572937_2.2.x
 
 %patch100 -p1 -b .mpm-itk.droplet
 
