@@ -66,6 +66,7 @@ Patch15:	httpd-ab_source_address.diff
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch17:	httpd-2.2.4-oldflush.patch
 Patch18:	worker_init_patch_plus_r572937_2.2.x.diff
+Patch19:	httpd-bug42829.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20070425-00.diff
 BuildRequires:	apr-devel >= 1:1.2.2
@@ -736,6 +737,7 @@ your own customized apache if needed.
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch17 -p1 -b .oldflush
 %patch18 -p0 -b .worker_init_patch_plus_r572937_2.2.x
+%patch19 -p0 -b .bug42829
 
 %patch100 -p1 -b .mpm-itk.droplet
 
