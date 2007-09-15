@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.6
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -25,7 +25,7 @@ Source10: 	htcacheclean.sysconfig
 Source30:	30_mod_proxy.conf
 Source31:	31_mod_proxy_ajp.conf
 Source40: 	40_mod_ssl.conf
-Source41: 	41_mod_ssl.default-vhost.conf
+Source41: 	01_default_ssl_vhost.conf
 Source45: 	45_mod_dav.conf
 Source46: 	46_mod_ldap.conf
 Source47: 	47_mod_authnz_ldap.conf
@@ -819,7 +819,7 @@ cp %{SOURCE10} htcacheclean.sysconfig
 cp %{SOURCE30} 30_mod_proxy.conf
 cp %{SOURCE31} 31_mod_proxy_ajp.conf
 cp %{SOURCE40} 40_mod_ssl.conf
-cp %{SOURCE41} 41_mod_ssl.default-vhost.conf
+cp %{SOURCE41} 01_default_ssl_vhost.conf
 cp %{SOURCE45} 45_mod_dav.conf
 cp %{SOURCE46} 46_mod_ldap.conf
 cp %{SOURCE47} 47_mod_authnz_ldap.conf
@@ -1032,6 +1032,7 @@ popd
 # install phase
 install -d %{buildroot}%{_libdir}/apache
 install -d %{buildroot}%{_libdir}/apache-extramodules
+install -d %{buildroot}%{_sysconfdir}/httpd/conf/vhosts.d
 install -d %{buildroot}%{_sysconfdir}/httpd/modules.d
 install -d %{buildroot}%{_localstatedir}/dav
 install -d %{buildroot}/var/www
@@ -1125,7 +1126,6 @@ ln -s ../../..%{_libdir}/apache/build %{buildroot}%{_sysconfdir}/httpd/build
 install -m0644 30_mod_proxy.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 31_mod_proxy_ajp.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 40_mod_ssl.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
-install -m0644 41_mod_ssl.default-vhost.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 45_mod_dav.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 46_mod_ldap.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 47_mod_authnz_ldap.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
@@ -1137,6 +1137,9 @@ install -m0644 59_mod_deflate.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 60_mod_dbd.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 61_mod_authn_dbd.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 67_mod_userdir.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
+
+# install vhost conf files for the "vhosts.d" dir loading structure
+install -m0644 01_default_ssl_vhost.conf %{buildroot}%{_sysconfdir}/httpd/conf/vhosts.d/
 
 # install the mpm stuff
 install -m0755 build-worker/httpd %{buildroot}%{_sbindir}/httpd-worker
@@ -1377,6 +1380,12 @@ if [ "$1" = "0" ]; then
     if [ -f /var/lock/subsys/httpd ]; then
         %{_initrddir}/httpd restart 1>&2
     fi
+fi
+
+%pre mod_ssl
+# If there was default mod_ssl vhost misplaced move it as rpmsave
+if [ -f %{_sysconfdir}/httpd/modules.d/41_mod_ssl.default-vhost.conf -o ! -f  %{_sysconfdir}/httpd/conf/vhosts.d/01_default_ssl_vhost.conf ]; then
+    mv -vf %{_sysconfdir}/httpd/modules.d/41_mod_ssl.default-vhost.conf %{_sysconfdir}/httpd/conf/vhosts.d/01_default_ssl_vhost.conf
 fi
 
 %post mod_ssl
@@ -1622,7 +1631,7 @@ fi
 %files mod_ssl
 %defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_ssl.conf
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_ssl.default-vhost.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/vhosts.d/*_default_ssl_vhost.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ssl.so
 %attr(0700,apache,root) %dir /var/cache/httpd/mod_ssl
 %attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.dir
