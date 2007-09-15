@@ -1434,6 +1434,11 @@ fi
 %create_ghostfile /var/cache/httpd/mod_ssl/scache.pag apache root 0600
 %create_ghostfile /var/cache/httpd/mod_ssl/scache.sem apache root 0600
 
+# http://qa.mandriva.com/show_bug.cgi?id=33429
+if [ -f /etc/pki/tls/certs/localhost.crt ]; then
+    chmod 644 /etc/pki/tls/certs/localhost.crt
+fi
+
 if [ -f /var/lock/subsys/httpd ]; then
     %{_initrddir}/httpd restart 1>&2;
 fi
