@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.6
-Release:	%mkrel 5
+Release:	%mkrel 6
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -740,7 +740,7 @@ your own customized apache if needed.
 %patch17 -p1 -b .oldflush.droplet
 %patch18 -p0 -b .worker_init_patch_plus_r572937_2.2.x.droplet
 %patch19 -p0 -b .bug42829.droplet
-%patch20 -p0 -b .bug43415.droplet
+%patch20 -p1 -b .bug43415.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 
