@@ -67,11 +67,12 @@ Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch17:	httpd-2.2.4-oldflush.patch
 Patch18:	worker_init_patch_plus_r572937_2.2.x.diff
 Patch19:	httpd-bug42829.diff
+Patch20:	httpd-bug43415.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20070425-00.diff
-BuildRequires:	apr-devel >= 1:1.2.2
-BuildRequires:	apr-util-devel >= 1.2.2
-BuildRequires:	apr_memcache-devel >= 0.7.0
+BuildRequires:	apr-devel >= 1:1.2.11
+BuildRequires:	apr-util-devel >= 1.2.10
+BuildRequires:	apr_memcache-devel >= 0.7.0-11
 BuildRequires:	distcache-devel
 BuildRequires:	byacc
 BuildRequires:	db4-devel
@@ -682,9 +683,9 @@ directories at regular intervals for cached content to be removed.
 %package	devel
 Summary:	Module development tools for the apache web server
 Group:		Development/C
-Requires:	apr-devel >= 1:1.2.2
-Requires:	apr-util-devel >= 1.2.2
-Requires:	apr_memcache-devel >= 0.7.0
+Requires:	apr-devel >= 1:1.2.11
+Requires:	apr-util-devel >= 1.2.10
+Requires:	apr_memcache-devel >= 0.7.0-11
 Requires:	byacc
 Requires:	db4-devel
 Requires:	distcache-devel
@@ -717,6 +718,7 @@ The apache source code, including Mandriva patches. Use this package to build
 your own customized apache if needed.
 
 %prep
+
 %setup -q -n httpd-%{version} -a4
 %patch0 -p1 -b .deplibs.droplet
 %patch1 -p1 -b .encode.droplet
@@ -735,9 +737,10 @@ your own customized apache if needed.
 %patch14 -p0 -b .fcgi.droplet
 %patch15 -p0 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
-%patch17 -p1 -b .oldflush
-%patch18 -p0 -b .worker_init_patch_plus_r572937_2.2.x
-%patch19 -p0 -b .bug42829
+%patch17 -p1 -b .oldflush.droplet
+%patch18 -p0 -b .worker_init_patch_plus_r572937_2.2.x.droplet
+%patch19 -p0 -b .bug42829.droplet
+%patch20 -p0 -b .bug43415.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 
