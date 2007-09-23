@@ -1389,7 +1389,7 @@ fi
 # http://qa.mandriva.com/show_bug.cgi?id=32773
 # http://qa.mandriva.com/show_bug.cgi?id=33198
 # If there was default mod_ssl vhost misplaced move it as rpmsave
-if [ -f %{_sysconfdir}/httpd/modules.d/41_mod_ssl.default-vhost.conf -o ! -f  %{_sysconfdir}/httpd/conf/vhosts.d/01_default_ssl_vhost.conf ]; then
+if [ -f %{_sysconfdir}/httpd/modules.d/41_mod_ssl.default-vhost.conf -a ! -f  %{_sysconfdir}/httpd/conf/vhosts.d/01_default_ssl_vhost.conf ]; then
     mv -vf %{_sysconfdir}/httpd/modules.d/41_mod_ssl.default-vhost.conf %{_sysconfdir}/httpd/conf/vhosts.d/01_default_ssl_vhost.conf
 fi
 
