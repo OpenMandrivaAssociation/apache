@@ -108,6 +108,7 @@ BuildRequires:	perl-XML-Parser
 %if %mdkversion >= 1020
 BuildRequires:	multiarch-utils >= 1.0.3
 %endif
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 This package contains the main binary of apache, a powerful, full-featured,
