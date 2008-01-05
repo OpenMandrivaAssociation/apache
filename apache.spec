@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.6
-Release:	%mkrel 10
+Version:	2.2.7
+Release:	%mkrel 0.1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -39,6 +39,8 @@ Source61:	61_mod_authn_dbd.conf
 Source67:	67_mod_userdir.conf
 Source68:	default-vhosts.conf
 Source100:	buildconf
+# lynx -dump http://mpm-itk.sesse.net/ > README.itk
+Source101:	README.itk
 Patch0:		httpd-2.0.45-deplibs.patch
 Patch1:		httpd-encode.diff
 Patch2:		httpd-2.0.40-xfsz.patch
@@ -48,7 +50,7 @@ Patch4:		httpd-2.0.48-debuglog.patch
 Patch5:		httpd-2.0.48-bsd-ipv6-fix.diff
 # OE: prepare for the mod_limitipconn module found here:
 # http://dominia.org/djao/limitipconn.html
-Patch6:		apachesrc.diff
+Patch6:		httpd-limitipconn.diff
 # JMD: fix suexec path so we can have both versions of Apache and both
 # versions of suexec
 Patch7:		apache2-suexec.patch
@@ -65,12 +67,10 @@ Patch15:	httpd-ab_source_address.diff
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch17:	httpd-2.2.4-oldflush.patch
-Patch18:	worker_init_patch_plus_r572937_2.2.x.diff
 Patch19:	httpd-bug42829.diff
 Patch20:	httpd-bug43415.diff
-Patch21:	httpd-2.2.6-ssllibver.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
-Patch100:	apache2.2-mpm-itk-20070425-00.diff
+Patch100:	apache2.2-mpm-itk-20080105-00.patch
 BuildRequires:	apr-devel >= 1:1.2.11
 BuildRequires:	apr-util-devel >= 1.2.10
 BuildRequires:	apr_memcache-devel >= 0.7.0-11
@@ -727,7 +727,7 @@ your own customized apache if needed.
 %patch3 -p1 -b .corelimit.droplet
 %patch4 -p1 -b .debuglog.droplet
 %patch5 -p1 -b .bsd-ipv6.droplet
-%patch6 -p1 -b .apachesrc.droplet
+%patch6 -p1 -b .limitipconn.droplet
 %patch7 -p0 -b .apache2-suexec.droplet
 %patch8 -p1 -b .apxs.droplet
 %patch9 -p1 -b .disablemods.droplet
@@ -739,10 +739,8 @@ your own customized apache if needed.
 %patch15 -p0 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch17 -p1 -b .oldflush.droplet
-%patch18 -p0 -b .worker_init_patch_plus_r572937_2.2.x.droplet
 %patch19 -p0 -b .bug42829.droplet
 %patch20 -p1 -b .bug43415.droplet
-%patch21 -p1 -b .ssllibver.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 
@@ -839,6 +837,8 @@ cp %{SOURCE67} 67_mod_userdir.conf
 
 # this will only work if configured correctly in the config (FullOs)...
 cp server/core.c server/core.c.untagged
+
+cp %{SOURCE101} README.itk
 
 %build
 %serverbuild
@@ -1538,11 +1538,11 @@ fi
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_user.so
 %attr(0755,root,root) %{_libdir}/apache/mod_autoindex.so
 %attr(0755,root,root) %{_libdir}/apache/mod_bucketeer.so
-%attr(0755,root,root) %{_libdir}/apache/mod_case_filter.so
 %attr(0755,root,root) %{_libdir}/apache/mod_case_filter_in.so
+%attr(0755,root,root) %{_libdir}/apache/mod_case_filter.so
 %attr(0755,root,root) %{_libdir}/apache/mod_cern_meta.so
-%attr(0755,root,root) %{_libdir}/apache/mod_cgi.so
 %attr(0755,root,root) %{_libdir}/apache/mod_cgid.so
+%attr(0755,root,root) %{_libdir}/apache/mod_cgi.so
 %attr(0755,root,root) %{_libdir}/apache/mod_charset_lite.so
 %attr(0755,root,root) %{_libdir}/apache/mod_dir.so
 %attr(0755,root,root) %{_libdir}/apache/mod_dumpio.so
@@ -1571,6 +1571,7 @@ fi
 %attr(0755,root,root) %{_libdir}/apache/mod_setenvif.so
 %attr(0755,root,root) %{_libdir}/apache/mod_speling.so
 %attr(0755,root,root) %{_libdir}/apache/mod_status.so
+%attr(0755,root,root) %{_libdir}/apache/mod_substitute.so
 %attr(0755,root,root) %{_libdir}/apache/mod_unique_id.so
 %attr(0755,root,root) %{_libdir}/apache/mod_usertrack.so
 %attr(0755,root,root) %{_libdir}/apache/mod_version.so
