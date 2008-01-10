@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.7
-Release:	%mkrel 0.2
+Release:	%mkrel 0.3
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -70,6 +70,7 @@ Patch17:	httpd-2.2.4-oldflush.patch
 Patch19:	httpd-bug42829.diff
 Patch20:	httpd-bug43415.diff
 Patch21:	httpd-bug38034.diff
+Patch22:	httpd-bug19954_41056.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20080105-00.patch
 BuildRequires:	apr-devel >= 1:1.2.11
@@ -743,6 +744,7 @@ your own customized apache if needed.
 %patch19 -p0 -b .bug42829.droplet
 %patch20 -p1 -b .bug43415.droplet
 %patch21 -p0 -b .bug38034.droplet
+%patch22 -p0 -b .bug19954_41056.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 
