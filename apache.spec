@@ -1,3 +1,6 @@
+%define         defaultmaxmodules 128
+%define         defaultserverlimit 1024
+
 %define build_test 1
 
 # commandline overrides:
@@ -11,7 +14,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.8
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -69,6 +72,8 @@ Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch17:	httpd-2.2.4-oldflush.patch
 Patch19:	httpd-bug42829.diff
 Patch20:	httpd-bug43415.diff
+# http://issues.apache.org/bugzilla/show_bug.cgi?id=43596
+Patch21:	httpd-2.2.6-chroot.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20080105-00.patch
 BuildRequires:	apr-devel >= 1:1.2.11
@@ -122,6 +127,16 @@ Check for available Apache modules for Mandriva Linux at:
 http://nux.se/apache/
 (most of them can be installed from the contribs repository)
 
+This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
+This package defaults to a ServerLimit of %{defaultserverlimit}.
+
+You can change these values at RPM build time by using for example:
+
+--define 'maxmodules 512' --define 'serverlimit 2048' 
+
+The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
+The package was built with a ServerLimit of %{?!serverlimit:%{defaultserverlimit}}%{?serverlimit:%{serverlimit}}.
+
 %package	mpm-prefork
 Summary:	Implements a non-threaded, pre-forking web server (stable)
 Group:		System/Servers
@@ -150,6 +165,16 @@ handle as many simultaneous requests as you expect to receive, but small enough
 to assure that there is enough physical RAM for all processes.
 
 Check for available Apache modules here: http://nux.se/apache/
+
+This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
+This package defaults to a ServerLimit of %{defaultserverlimit}.
+
+You can change these values at RPM build time by using for example:
+
+--define 'maxmodules 512' --define 'serverlimit 2048' 
+
+The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
+The package was built with a ServerLimit of %{?!serverlimit:%{defaultserverlimit}}%{?serverlimit:%{serverlimit}}.
 
 %package	mpm-worker
 Summary:	Implements a hybrid multi-threaded multi-process web server (experimental)
@@ -187,6 +212,14 @@ This version of apache is fully modular, and many modules are available in
 pre-compiled formats, like PHP and mod_auth_external.
 
 Check for available Apache modules here: http://nux.se/apache/
+
+This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
+
+You can change these values at RPM build time by using for example:
+
+--define 'maxmodules 512'
+
+The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
 
 I M P O R T A N T
 -----------------
@@ -227,6 +260,14 @@ This version of apache is fully modular, and many modules are available in
 pre-compiled formats, like PHP and mod_auth_external.
 
 Check for available Apache modules here: http://nux.se/apache/
+
+This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
+
+You can change these values at RPM build time by using for example:
+
+--define 'maxmodules 512'
+
+The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
 
 I M P O R T A N T
 -----------------
@@ -272,6 +313,16 @@ in short, this means you can run non-thread-aware code (like many PHP
 extensions) without problems. (On the other hand, you lose out to any
 performance benefit you'd get with threads, of course; you'd have to decide for
 yourself if that's worth it or not.)
+
+This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
+This package defaults to a ServerLimit of %{defaultserverlimit}.
+
+You can change these values at RPM build time by using for example:
+
+--define 'maxmodules 512' --define 'serverlimit 2048' 
+
+The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
+The package was built with a ServerLimit of %{?!serverlimit:%{defaultserverlimit}}%{?serverlimit:%{serverlimit}}.
 
 I M P O R T A N T
 -----------------
@@ -741,6 +792,7 @@ your own customized apache if needed.
 %patch17 -p1 -b .oldflush.droplet
 %patch19 -p0 -b .bug42829.droplet
 %patch20 -p1 -b .bug43415.droplet
+%patch21 -p1 -b .bug43596.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 
@@ -789,13 +841,13 @@ cat >> config.layout << EOF
 EOF
 
 #Fix DYNAMIC_MODULE_LIMIT
-perl -pi -e "s/DYNAMIC_MODULE_LIMIT 64/DYNAMIC_MODULE_LIMIT 128/;" include/httpd.h
+perl -pi -e "s/DYNAMIC_MODULE_LIMIT 64/DYNAMIC_MODULE_LIMIT %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}}/;" include/httpd.h
 
 # don't try to touch srclib
 perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules support|g" Makefile.in
 
 # bump server limit
-perl -pi -e "s|DEFAULT_SERVER_LIMIT 256|DEFAULT_SERVER_LIMIT 1024|g" server/mpm/prefork/prefork.c
+perl -pi -e "s|DEFAULT_SERVER_LIMIT 256|DEFAULT_SERVER_LIMIT %{?!serverlimit:%{defaultserverlimit}}%{?serverlimit:%{serverlimit}}|g" server/mpm/prefork/prefork.c server/mpm/experimental/itk/itk.c
 
 # tag it with the "legacy" name so that we can track this at netcraft...
 perl -pi -e "s|^#define AP_SERVER_BASEPRODUCT .*|#define AP_SERVER_BASEPRODUCT \"%{BASEPRODUCT}\"|g" include/ap_release.h
