@@ -14,7 +14,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.8
-Release:	%mkrel 4
+Release:	%mkrel 5
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -76,6 +76,8 @@ Patch20:	httpd-bug43415.diff
 Patch21:	httpd-2.2.6-chroot.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20080105-00.patch
+# http://daniel-lange.com/plugin/tag/sni
+Patch200:	https://bob.sni.velox.ch/misc/httpd-2.2.x-sni.patch
 BuildRequires:	apr-devel >= 1:1.2.11
 BuildRequires:	apr-util-devel >= 1.2.10
 BuildRequires:	apr_memcache-devel >= 0.7.0-11
@@ -795,6 +797,8 @@ your own customized apache if needed.
 %patch21 -p1 -b .bug43596.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
+
+%patch200 -p1 -b .sno.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
