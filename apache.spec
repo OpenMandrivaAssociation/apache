@@ -22,7 +22,7 @@ Source0:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz
 Source1:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz.asc
 Source2:	apache-README.urpmi
 Source3:	apache2_transparent_png_icons.tar.bz2
-Source4: 	perl-framework.tar.bz2
+Source4: 	perl-framework.tar.gz
 Source9: 	htcacheclean.init
 Source10: 	htcacheclean.sysconfig
 Source30:	30_mod_proxy.conf
