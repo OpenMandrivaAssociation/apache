@@ -1,3 +1,5 @@
+%define _disable_ld_no_undefined 1 
+
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
 
@@ -14,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.8
-Release:	%mkrel 7
+Release:	%mkrel 8
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -948,7 +950,6 @@ export FFLAGS="$FFLAGS -fstack-protector"
 %endif
 
 APVARS="--enable-layout=NUX \
-    --cache-file=../config.cache \
     --prefix=%{_sysconfdir}/httpd \
     --exec-prefix=%{_prefix} \
     --bindir=%{_bindir} \
