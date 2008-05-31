@@ -3,7 +3,7 @@
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
 
-%define build_test 1
+%define build_test 0
 
 # commandline overrides:
 # rpm -ba|--rebuild --with 'xxx'
