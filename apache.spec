@@ -89,9 +89,8 @@ Patch30:	httpd-pr44402.diff
 Patch100:	apache2.2-mpm-itk-20080105-00.patch
 # http://daniel-lange.com/plugin/tag/sni
 Patch200:	https://bob.sni.velox.ch/misc/httpd-2.2.x-sni.patch
-BuildRequires:	apr-devel >= 1:1.2.11
-BuildRequires:	apr-util-devel >= 1.2.10
-BuildRequires:	apr_memcache-devel >= 0.7.0-11
+BuildRequires:	apr-devel >= 1:1.3.0
+BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
 BuildRequires:	byacc
 BuildRequires:	db4-devel
@@ -704,6 +703,7 @@ Requires:	apache-modules = %{version}-%{release}
 Requires:	apr-util-dbd-sqlite3
 Requires:	apr-util-dbd-pgsql
 Requires:	apr-util-dbd-mysql
+Requires:	apr-util-dbd-ldap
 
 %description	mod_dbd
 mod_dbd manages SQL database connections using apr_dbd. It provides database
@@ -748,9 +748,8 @@ directories at regular intervals for cached content to be removed.
 %package	devel
 Summary:	Module development tools for the apache web server
 Group:		Development/C
-Requires:	apr-devel >= 1:1.2.11
-Requires:	apr-util-devel >= 1.2.10
-Requires:	apr_memcache-devel >= 0.7.0-11
+Requires:	apr-devel >= 1:1.3.0
+Requires:	apr-util-devel >= 1.3.0
 Requires:	byacc
 Requires:	db4-devel
 Requires:	distcache-devel
@@ -758,7 +757,6 @@ Requires:	expat-devel
 Requires:	gdbm-devel
 Requires:	libsasl-devel
 Requires:	libtool >= 1.4.2
-Requires:	openldap-devel
 Requires:	openssl-devel
 Requires:	pcre-devel >= 5.0
 Requires:	perl >= 0:5.600
@@ -1036,8 +1034,7 @@ for mpm in worker event itk prefork; do
     %endif
 
     # there is no autofoo stuff the memcache addon yet
-    perl -pi -e "s|-ldistcache -lnal|%{_libdir}/libapr_memcache.la -ldistcache -lnal|g" build/config_vars.mk
-    cp %{_includedir}/apr_memcache-0/apr_memcache.h modules/ssl/
+    perl -pi -e "s|-ldistcache -lnal|-ldistcache -lnal|g" build/config_vars.mk
 
     # finally doing the build stage
     %make
