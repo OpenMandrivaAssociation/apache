@@ -15,8 +15,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.8
-Release:	%mkrel 9
+Version:	2.2.9
+Release:	%mkrel 0.1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -73,18 +73,8 @@ Patch15:	httpd-ab_source_address.diff
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch17:	httpd-2.2.4-oldflush.patch
 Patch19:	httpd-bug42829.diff
-Patch20:	httpd-bug43415.diff
 # http://issues.apache.org/bugzilla/show_bug.cgi?id=43596
 Patch21:	httpd-2.2.6-chroot.patch
-Patch22:	httpd-pr43319.diff
-Patch23:	httpd-pr41190.diff
-Patch24:	httpd-pr44311.diff
-Patch25:	httpd-pr44458.diff
-Patch26:	httpd-pr27834.diff
-Patch27:	httpd-pr43711.diff
-Patch28:	httpd-pr11035.diff
-Patch29:	httpd-mod_logio_fixes.diff
-Patch30:	httpd-pr44402.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20080105-00.patch
 # http://daniel-lange.com/plugin/tag/sni
@@ -783,7 +773,7 @@ your own customized apache if needed.
 %prep
 
 %setup -q -n httpd-%{version} -a4
-%patch0 -p1 -b .deplibs.droplet
+%patch0 -p0 -b .deplibs.droplet
 %patch1 -p1 -b .encode.droplet
 %patch2 -p0 -b .xfsz.droplet
 %patch3 -p1 -b .corelimit.droplet
@@ -798,22 +788,11 @@ your own customized apache if needed.
 %patch12 -p1 -b .french_fixes.droplet
 %patch13 -p1 -b .authnoprov.droplet
 %patch14 -p0 -b .fcgi.droplet
-%patch15 -p0 -b .ab_source_address.droplet
+%patch15 -p1 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch17 -p1 -b .oldflush.droplet
 %patch19 -p0 -b .bug42829.droplet
-%patch20 -p1 -b .bug43415.droplet
 %patch21 -p1 -b .bug43596.droplet
-
-%patch22 -p0 -b .pr43319.droplet
-%patch23 -p0 -b .pr41190.droplet
-%patch24 -p0 -b .pr44311.droplet
-%patch25 -p0 -b .pr44458.droplet
-%patch26 -p0 -b .pr27834.droplet
-%patch27 -p0 -b .pr43711.droplet
-%patch28 -p0 -b .pr11035.droplet
-%patch29 -p0 -b .mod_logio_fixes.droplet
-%patch30 -p0 -b .pr44402.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 
