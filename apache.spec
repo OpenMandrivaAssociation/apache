@@ -16,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.9
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -53,9 +53,6 @@ Patch3:		httpd-2.0.48-corelimit.patch
 Patch4:		httpd-2.0.48-debuglog.patch
 # http://lists.debian.org/debian-apache/2003/11/msg00109.html
 Patch5:		httpd-2.0.48-bsd-ipv6-fix.diff
-# OE: prepare for the mod_limitipconn module found here:
-# http://dominia.org/djao/limitipconn.html
-Patch6:		httpd-limitipconn.diff
 # JMD: fix suexec path so we can have both versions of Apache and both
 # versions of suexec
 Patch7:		apache2-suexec.patch
@@ -779,7 +776,6 @@ your own customized apache if needed.
 %patch3 -p1 -b .corelimit.droplet
 %patch4 -p1 -b .debuglog.droplet
 %patch5 -p1 -b .bsd-ipv6.droplet
-%patch6 -p1 -b .limitipconn.droplet
 %patch7 -p0 -b .apache2-suexec.droplet
 %patch8 -p1 -b .apxs.droplet
 %patch9 -p1 -b .disablemods.droplet
@@ -796,7 +792,7 @@ your own customized apache if needed.
 
 %patch100 -p1 -b .mpm-itk.droplet
 
-%patch200 -p1 -b .sno.droplet
+%patch200 -p1 -b .sni.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
