@@ -3,7 +3,7 @@
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
 
-%define build_test 0
+%define build_test 1
 
 # commandline overrides:
 # rpm -ba|--rebuild --with 'xxx'
@@ -16,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.9
-Release:	%mkrel 3
+Release:	%mkrel 4
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
