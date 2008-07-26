@@ -16,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.9
-Release:	%mkrel 4
+Release:	%mkrel 5
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -74,6 +74,9 @@ Patch19:	httpd-bug42829.diff
 Patch21:	httpd-2.2.6-chroot.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20080105-00.patch
+# http://www.telana.com/files/httpd-2.2.3-peruser-0.3.0.patch
+Patch101:	httpd-2.2.9-peruser-0.3.0.diff
+Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 # http://daniel-lange.com/plugin/tag/sni
 Patch200:	https://bob.sni.velox.ch/misc/httpd-2.2.x-sni.patch
 BuildRequires:	apr-devel >= 1:1.3.0
@@ -328,6 +331,52 @@ I M P O R T A N T
 This package is totally experimental and may not be stable or suitable at any
 time, in any way, or for any kind production usage. Be warned. You must
 manually add HTTPD="/usr/sbin/httpd-itk" in the /etc/sysconfig/httpd
+configuration file to be able to use this MPM.
+
+%package	mpm-peruser
+Summary:	Implements a hybrid multi-process, multi-threaded web server (experimental)
+Group:		System/Servers
+URL:		http://www.telana.com/peruser.php
+Requires(pre): rpm-helper
+Requires(postun): rpm-helper
+Requires(pre):	apache-conf >= %{version}
+Requires(pre):	apache-base = %{version}-%{release}
+Requires(pre):	apache-modules = %{version}-%{release}
+Requires:	apache-conf >= %{version}
+Requires:	apache-base = %{version}-%{release}
+Requires:	apache-modules = %{version}-%{release}
+Provides:	webserver
+Provides:	apache = %{version}-%{release}
+#Provides:	apache-mpm = %{version}-%{release}
+
+%description	mpm-peruser
+This Multi-Processing Module (MPM) implements a hybrid multi-process,
+multi-threaded web server. A fixed number of processes create threads to handle
+requests. Fluctuations in load are handled by increasing or decreasing the
+number of threads in each process.
+
+Peruser is an Apache 2 module based on metuxmpm, a working implementation of
+the perchild MPM. The fundamental concept behind all of them is to run each
+apache child process as its own user and group, each handling its own set of
+virtual hosts. Peruser and recent metuxmpm releases can also chroot() apache
+processes. The result is a sane and secure web server environment for your
+users, without kludges like PHP's safe_mode.
+
+This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
+This package defaults to a ServerLimit of %{defaultserverlimit}.
+
+You can change these values at RPM build time by using for example:
+
+--define 'maxmodules 512' --define 'serverlimit 2048' 
+
+The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
+The package was built with a ServerLimit of %{?!serverlimit:%{defaultserverlimit}}%{?serverlimit:%{serverlimit}}.
+
+I M P O R T A N T
+-----------------
+This package is totally experimental and may not be stable or suitable at any
+time, in any way, or for any kind production usage. Be warned. You must
+manually add HTTPD="/usr/sbin/httpd-peruser" in the /etc/sysconfig/httpd
 configuration file to be able to use this MPM.
 
 %package	base
@@ -791,6 +840,8 @@ your own customized apache if needed.
 %patch21 -p1 -b .bug43596.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
+%patch101 -p1 -b .mpm-peruser.droplet
+%patch102 -p1 -b .mpm_peruser-fix.droplet
 
 %patch200 -p1 -b .sni.droplet
 
@@ -845,7 +896,7 @@ perl -pi -e "s/DYNAMIC_MODULE_LIMIT 64/DYNAMIC_MODULE_LIMIT %{?!maxmodules:%{def
 perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules support|g" Makefile.in
 
 # bump server limit
-perl -pi -e "s|DEFAULT_SERVER_LIMIT 256|DEFAULT_SERVER_LIMIT %{?!serverlimit:%{defaultserverlimit}}%{?serverlimit:%{serverlimit}}|g" server/mpm/prefork/prefork.c server/mpm/experimental/itk/itk.c
+perl -pi -e "s|DEFAULT_SERVER_LIMIT 256|DEFAULT_SERVER_LIMIT %{?!serverlimit:%{defaultserverlimit}}%{?serverlimit:%{serverlimit}}|g" server/mpm/prefork/prefork.c server/mpm/experimental/itk/itk.c server/mpm/experimental/peruser/peruser.c
 
 # tag it with the "legacy" name so that we can track this at netcraft...
 perl -pi -e "s|^#define AP_SERVER_BASEPRODUCT .*|#define AP_SERVER_BASEPRODUCT \"%{BASEPRODUCT}\"|g" include/ap_release.h
@@ -946,7 +997,7 @@ APVARS="--enable-layout=NUX \
     --enable-forward \
     --with-program-name=httpd"
 
-for mpm in worker event itk prefork; do
+for mpm in worker event itk peruser prefork; do
     mkdir build-${mpm}; pushd build-${mpm}
     ln -s ../configure .
     
@@ -989,6 +1040,14 @@ for mpm in worker event itk prefork; do
     if [ ${mpm} = itk ]; then
 	%configure2_5x $APVARS \
     	    --with-mpm=itk \
+	    --enable-modules=none
+    # don't build support tools
+    perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
+    fi
+
+    if [ ${mpm} = peruser ]; then
+	%configure2_5x $APVARS \
+    	    --with-mpm=peruser \
 	    --enable-modules=none
     # don't build support tools
     perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
@@ -1198,6 +1257,7 @@ install -m0644 01_default_ssl_vhost.conf %{buildroot}%{_sysconfdir}/httpd/conf/v
 install -m0755 build-worker/httpd %{buildroot}%{_sbindir}/httpd-worker
 install -m0755 build-event/httpd %{buildroot}%{_sbindir}/httpd-event
 install -m0755 build-itk/httpd %{buildroot}%{_sbindir}/httpd-itk
+install -m0755 build-peruser/httpd %{buildroot}%{_sbindir}/httpd-peruser
 
 # install missing files
 install -m755 build-prefork/support/split-logfile %{buildroot}%{_sbindir}/split-logfile
@@ -1303,6 +1363,18 @@ if [ -f /var/lock/subsys/httpd ]; then
 fi
 
 %postun mpm-itk
+if [ "$1" = "0" ]; then
+    if [ -f /var/lock/subsys/httpd ]; then
+        %{_initrddir}/httpd restart 1>&2
+    fi
+fi
+
+%post mpm-peruser
+if [ -f /var/lock/subsys/httpd ]; then
+    %{_initrddir}/httpd restart 1>&2;
+fi
+
+%postun mpm-peruser
 if [ "$1" = "0" ]; then
     if [ -f /var/lock/subsys/httpd ]; then
         %{_initrddir}/httpd restart 1>&2
@@ -1564,6 +1636,11 @@ fi
 %defattr(-,root,root)
 %doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf README.itk
 %attr(0755,root,root) %{_sbindir}/httpd-itk
+
+%files mpm-peruser
+%defattr(-,root,root)
+%doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf server/mpm/experimental/peruser/AUTHORS
+%attr(0755,root,root) %{_sbindir}/httpd-peruser
 
 %files modules
 %defattr(-,root,root)
