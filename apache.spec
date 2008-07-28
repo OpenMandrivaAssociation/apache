@@ -16,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.9
-Release:	%mkrel 5
+Release:	%mkrel 6
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -1146,7 +1146,7 @@ install -d %{buildroot}%{_libdir}/apache
 install -d %{buildroot}%{_libdir}/apache-extramodules
 install -d %{buildroot}%{_sysconfdir}/httpd/conf/vhosts.d
 install -d %{buildroot}%{_sysconfdir}/httpd/modules.d
-install -d %{buildroot}%{_localstatedir}/lib/dav
+install -d %{buildroot}/var/lib/dav
 install -d %{buildroot}/var/www
 install -d %{buildroot}/var/cache/httpd/mod_proxy
 
@@ -1726,7 +1726,7 @@ fi
 %attr(0755,root,root) %{_libdir}/apache/mod_dav_fs.so
 %attr(0755,root,root) %{_libdir}/apache/mod_dav_lock.so
 %attr(0755,root,root) %{_libdir}/apache/mod_dav.so
-%attr(-,apache,apache) %dir %{_localstatedir}/lib/dav
+%attr(-,apache,apache) %dir /var/lib/dav
  
 %files mod_ldap
 %defattr(-,root,root)
