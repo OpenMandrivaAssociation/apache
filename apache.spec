@@ -16,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.9
-Release:	%mkrel 7
+Release:	%mkrel 8
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -78,7 +78,7 @@ Patch100:	apache2.2-mpm-itk-20080105-00.patch
 Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 # http://daniel-lange.com/plugin/tag/sni
-Patch200:	https://bob.sni.velox.ch/misc/httpd-2.2.x-sni.patch
+Patch200:	http://sni.velox.ch/httpd-2.2.x-sni.diff
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -721,6 +721,11 @@ It was contributed by Ralf S. Engeschall based on his mod_ssl project and
 originally derived from work by Ben Laurie.
 
 This module relies on OpenSSL to provide the cryptography engine.
+
+This module also have SNI support, please look here for more information:
+
+ * http://daniel-lange.com/plugin/tag/sni
+ * https://sni.velox.ch/
 
 %package	mod_dbd
 Summary:	Manages SQL database connections
