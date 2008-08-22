@@ -72,6 +72,8 @@ Patch17:	httpd-2.2.4-oldflush.patch
 Patch19:	httpd-bug42829.diff
 # http://issues.apache.org/bugzilla/show_bug.cgi?id=43596
 Patch21:	httpd-2.2.6-chroot.patch
+# http://marc.info/?l=oss-security&m=121803012019929&w=2
+Patch22:	apache-2.2.9-CVE-2008-2939.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	apache2.2-mpm-itk-20080105-00.patch
 # http://www.telana.com/files/httpd-2.2.3-peruser-0.3.0.patch
