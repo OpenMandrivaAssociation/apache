@@ -16,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.9
-Release:	%mkrel 11
+Release:	%mkrel 12
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -640,13 +640,9 @@ Requires(postun): rpm-helper
 Requires(pre):	apache-conf >= %{version}
 Requires(pre):	apache-base = %{version}-%{release}
 Requires(pre):	apache-modules = %{version}-%{release}
-Requires(pre):	apache-mod_cache = %{version}-%{release}
-Requires(pre):	apache-mod_disk_cache = %{version}-%{release}
 Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
-Requires:	apache-mod_cache = %{version}-%{release}
-Requires:	apache-mod_disk_cache = %{version}-%{release}
 Provides:	apache-mod_proxy_balancer = %{version}
 Provides:	apache-mod_proxy_connect = %{version}
 Provides:	apache-mod_proxy_ftp = %{version}
