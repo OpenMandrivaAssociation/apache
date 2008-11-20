@@ -16,7 +16,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.10
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -69,6 +69,7 @@ Patch15:	httpd-ab_source_address.diff
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch17:	httpd-2.2.4-oldflush.patch
+Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-bug42829.diff
 # http://marc.info/?l=oss-security&m=121803012019929&w=2
 Patch22:	apache-2.2.9-CVE-2008-2939.patch
@@ -492,6 +493,7 @@ Requires(pre):	apache-modules = %{version}-%{release}
 Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
+Requires:	apr-util-dbd-ldap
 Provides:	apache-mod_authnz_ldap = %{version}
 Obsoletes:	apache-mod_auth_ldap
 
@@ -851,6 +853,7 @@ your own customized apache if needed.
 %patch15 -p1 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch17 -p1 -b .oldflush.droplet
+%patch18 -p0 -b .ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.droplet
 %patch19 -p0 -b .bug42829.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
