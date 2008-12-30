@@ -1,4 +1,10 @@
+%if %mdkversion >= 200810
 %define _disable_ld_no_undefined 1
+%endif
+
+%if %mdkversion < 200900
+%define ldflags %{nil}
+%endif
 
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
@@ -16,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.11
-Release:	%mkrel 3
+Release:	%mkrel 4
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -71,16 +77,16 @@ Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch17:	httpd-2.2.4-oldflush.patch
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-bug42829.diff
+Patch20:	httpd-2.2.9-suenable.patch
 # http://marc.info/?l=oss-security&m=121803012019929&w=2
 Patch22:	apache-2.2.9-CVE-2008-2939.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
-Patch100:	apache2.2-mpm-itk-20080105-00.patch
+Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20080727-00.patch
 # http://www.telana.com/files/httpd-2.2.3-peruser-0.3.0.patch
 Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 # http://daniel-lange.com/plugin/tag/sni
-Patch200:	http://sni.velox.ch/httpd-2.2.x-sni.diff
-Patch201:	httpd-2.2.x-sni_fix.diff
+Patch200:	http://sni.velox.ch/httpd-2.2.x-sni.patch
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -855,13 +861,13 @@ your own customized apache if needed.
 %patch17 -p1 -b .oldflush.droplet
 %patch18 -p0 -b .ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.droplet
 %patch19 -p0 -b .bug42829.droplet
+%patch20 -p1 -b .suenable
 
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
 
 %patch200 -p1 -b .sni.droplet
-%patch201 -p0 -b .sni_fix.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -990,6 +996,8 @@ export CFLAGS="$CFLAGS -fstack-protector"
 export CXXFLAGS="$CXXFLAGS -fstack-protector"
 export FFLAGS="$FFLAGS -fstack-protector"
 %endif
+
+export SH_LDFLAGS="%{ldflags}"
 
 APVARS="--enable-layout=NUX \
     --prefix=%{_sysconfdir}/httpd \
