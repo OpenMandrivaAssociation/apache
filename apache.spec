@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.11
-Release:	%mkrel 4
+Release:	%mkrel 5
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -87,6 +87,14 @@ Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 # http://daniel-lange.com/plugin/tag/sni
 Patch200:	http://sni.velox.ch/httpd-2.2.x-sni.patch
+# upstream patches
+Patch1000:	httpd-2.2.x-PR38642.diff
+Patch1001:	httpd-2.2.x-PR39243_PR46508.diff
+Patch1002:	httpd-2.2.x-PR41120.diff
+Patch1003:	httpd-2.2.x-PR42829.diff
+Patch1004:	httpd-2.2.x-PR45529.diff
+Patch1005:	httpd-2.2.x-PR46342.diff
+Patch1006:	httpd-2.2.x-PR46467.diff
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -859,7 +867,7 @@ your own customized apache if needed.
 %patch15 -p1 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch17 -p1 -b .oldflush.droplet
-%patch18 -p0 -b .ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.droplet
+%patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .bug42829.droplet
 %patch20 -p1 -b .suenable
 
@@ -868,6 +876,15 @@ your own customized apache if needed.
 %patch102 -p1 -b .mpm_peruser-fix.droplet
 
 %patch200 -p1 -b .sni.droplet
+
+# upstream patches
+%patch1000 -p0 -b .PR38642.droplet
+%patch1001 -p0 -b .PR39243_PR46508.droplet
+%patch1002 -p0 -b .PR41120.droplet
+%patch1003 -p0 -b .PR42829.droplet
+%patch1004 -p0 -b .PR45529.droplet
+%patch1005 -p0 -b .PR46342.droplet
+%patch1006 -p0 -b .PR46467.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -1155,14 +1172,6 @@ perl Makefile.PL -apxs ${TEST_DIR}%{_sbindir}/apxs \
 make test
 popd
 %endif
-
-# prevent some insane linkage
-pushd build-prefork/support
-    for i in htcacheclean logresolve rotatelogs; do
-	rm -f ${i} ${i}.o
-	%make AP_LIBS="`apr-1-config --apr-la-file`" $i
-    done
-popd    
 
 %install
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot} 
