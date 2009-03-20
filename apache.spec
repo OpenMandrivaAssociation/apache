@@ -128,6 +128,7 @@ BuildRequires:	perl-doc
 BuildRequires:	perl-Crypt-SSLeay
 BuildRequires:	perl-XML-DOM
 BuildRequires:	perl-XML-Parser
+BuildRequires:	openssl
 %endif
 %if %mdkversion >= 1020
 BuildRequires:	multiarch-utils >= 1.0.3
