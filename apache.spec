@@ -9,7 +9,7 @@
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
 
-%define build_test 0
+%define build_test 1
 
 # commandline overrides:
 # rpm -ba|--rebuild --with 'xxx'
@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.11
-Release:	%mkrel 5
+Release:	%mkrel 6
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -95,6 +95,7 @@ Patch1003:	httpd-2.2.x-PR42829.diff
 Patch1004:	httpd-2.2.x-PR45529.diff
 Patch1005:	httpd-2.2.x-PR46342.diff
 Patch1006:	httpd-2.2.x-PR46467.diff
+Patch1007:	httpd-2.2.x-bug39369.diff
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -885,6 +886,7 @@ your own customized apache if needed.
 %patch1004 -p0 -b .PR45529.droplet
 %patch1005 -p0 -b .PR46342.droplet
 %patch1006 -p0 -b .PR46467.droplet
+%patch1007 -p0 -b .PR39369.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
