@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.11
-Release:	%mkrel 7
+Release:	%mkrel 8
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -52,6 +52,7 @@ Source68:	default-vhosts.conf
 Source100:	buildconf
 # lynx -dump http://mpm-itk.sesse.net/ > README.itk
 Source101:	README.itk
+Source102:	README.peruser
 Patch0:		httpd-2.0.45-deplibs.patch
 Patch1:		httpd-encode.diff
 Patch2:		httpd-2.0.40-xfsz.patch
@@ -85,6 +86,8 @@ Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20090321-00.patch
 # http://www.telana.com/files/httpd-2.2.3-peruser-0.3.0.patch
 Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
+# http://source.kood.ee/
+Patch103:	httpd-2.2.3-peruser-0.3.0-dc2.patch
 # http://daniel-lange.com/plugin/tag/sni
 Patch200:	http://sni.velox.ch/httpd-2.2.x-sni.patch
 # upstream patches
@@ -876,6 +879,7 @@ your own customized apache if needed.
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
+%patch103 -p1 -b .peruser-0.3.0-dc2
 
 %patch200 -p1 -b .sni.droplet
 
@@ -984,6 +988,7 @@ cp %{SOURCE67} 67_mod_userdir.conf
 cp server/core.c server/core.c.untagged
 
 cp %{SOURCE101} README.itk
+cp %{SOURCE102} README.peruser
 
 %build
 %serverbuild
@@ -1677,7 +1682,7 @@ fi
 
 %files mpm-peruser
 %defattr(-,root,root)
-%doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf server/mpm/experimental/peruser/AUTHORS
+%doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf server/mpm/experimental/peruser/AUTHORS README.peruser
 %attr(0755,root,root) %{_sbindir}/httpd-peruser
 
 %files modules
