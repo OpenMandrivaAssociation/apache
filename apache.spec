@@ -21,8 +21,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.11
-Release:	%mkrel 16
+Version:	2.2.12
+Release:	%mkrel 0.1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -88,25 +88,6 @@ Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 # http://source.kood.ee/
 Patch103:	httpd-2.2.3-peruser-0.3.0-dc2.patch
-# http://daniel-lange.com/plugin/tag/sni
-Patch200:	http://sni.velox.ch/httpd-2.2.x-sni.patch
-# upstream patches
-Patch1000:	httpd-2.2.x-PR38642.diff
-Patch1001:	httpd-2.2.x-PR39243_PR46508.diff
-Patch1002:	httpd-2.2.x-PR41120.diff
-Patch1003:	httpd-2.2.x-PR42829.diff
-Patch1004:	httpd-2.2.x-PR45529.diff
-Patch1005:	httpd-2.2.x-PR46342.diff
-Patch1006:	httpd-2.2.x-PR46467.diff
-Patch1007:	httpd-2.2.x-bug39369.diff
-Patch1008:	httpd-2.2.x-PR45023.diff
-Patch2000:	httpd-2.2.11-CVE-2009-1191.diff
-Patch2001:	httpd-2.2.x-CVE-2009-1195.diff
-Patch2002:	httpd-2.2.x-post_CVE-2009-1195_fix.diff
-Patch2003:	http://people.apache.org/~trawick/mod_perl_more_compat.txt
-Patch2004:	httpd-2.2.x-PR46428.diff
-Patch2005:	httpd-2.2.x-CVE-2009-1890.diff
-Patch2006:	httpd-2.2.x-CVE-2009-1891.diff
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -753,7 +734,8 @@ originally derived from work by Ben Laurie.
 
 This module relies on OpenSSL to provide the cryptography engine.
 
-This module also have SNI support, please look here for more information:
+This module also have native SNI support, please look here for more
+information:
 
  * http://daniel-lange.com/plugin/tag/sni
  * https://sni.velox.ch/
@@ -888,27 +870,6 @@ your own customized apache if needed.
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
 %patch103 -p1 -b .peruser-0.3.0-dc2
-
-%patch200 -p1 -b .sni.droplet
-
-# upstream patches
-%patch1000 -p0 -b .PR38642.droplet
-%patch1001 -p0 -b .PR39243_PR46508.droplet
-%patch1002 -p0 -b .PR41120.droplet
-%patch1003 -p0 -b .PR42829.droplet
-%patch1004 -p0 -b .PR45529.droplet
-%patch1005 -p0 -b .PR46342.droplet
-%patch1006 -p0 -b .PR46467.droplet
-%patch1007 -p0 -b .PR39369.droplet
-%patch1008 -p0 -b .PR45023.droplet
-
-%patch2000 -p0 -b .CVE-2009-1191
-%patch2001 -p1 -b .CVE-2009-1195
-%patch2002 -p1 -b .post_CVE-2009-1195_fix-1
-%patch2003 -p0 -b .post_CVE-2009-1195_fix-2
-%patch2004 -p0 -b .PR46428.droplet
-%patch2005 -p0 -b .CVE-2009-1890.droplet
-%patch2006 -p0 -b .CVE-2009-1891.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
