@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.13
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -521,7 +521,6 @@ Requires(pre):	apache-modules = %{version}-%{release}
 Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
-Requires:	apache-mod_proxy = %{version}-%{release}
 
 %description	mod_cache
 mod_cache implements an RFC 2616 compliant HTTP content cache that can be used
@@ -555,7 +554,6 @@ Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Requires:	apache-mod_cache = %{version}-%{release}
 Requires:	apache-htcacheclean = %{version}-%{release}
-Requires:	apache-mod_proxy = %{version}-%{release}
 
 %description	mod_disk_cache
 mod_disk_cache implements a disk based storage manager. It is primarily of use
@@ -577,7 +575,6 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Requires:	apache-mod_cache = %{version}-%{release}
-Requires:	apache-mod_proxy = %{version}-%{release}
 
 %description	mod_mem_cache
 This module requires the service of mod_cache. It acts as a support module for
@@ -601,7 +598,6 @@ Requires(pre):	apache-modules = %{version}-%{release}
 Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
-Requires:	apache-mod_proxy = %{version}-%{release}
 
 %description	mod_file_cache
 Caching frequently requested files that change very infrequently is a technique
