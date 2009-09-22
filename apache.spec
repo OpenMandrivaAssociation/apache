@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.13
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -87,6 +87,8 @@ Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 # http://source.kood.ee/
 Patch103:	httpd-2.2.3-peruser-0.3.0-dc2.patch
+Patch200:	httpd-2.2.x-CVE-2009-3094.diff
+Patch201:	httpd-2.2.x-CVE-2009-3095.diff
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -864,6 +866,9 @@ your own customized apache if needed.
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
 %patch103 -p1 -b .peruser-0.3.0-dc2
+
+%patch200 -p0 -b .CVE-2009-3094
+%patch201 -p0 -b .CVE-2009-3095
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
