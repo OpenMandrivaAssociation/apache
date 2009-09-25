@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.13
-Release:	%mkrel 3
+Release:	%mkrel 4
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -992,12 +992,6 @@ else
     AP_LIBS="$AP_LIBS -lssl -lcrypto"
 fi
 export CFLAGS CPPFLAGS AP_LIBS
-
-%if %mdkversion >= 200710
-export CFLAGS="$CFLAGS -fstack-protector"
-export CXXFLAGS="$CXXFLAGS -fstack-protector"
-export FFLAGS="$FFLAGS -fstack-protector"
-%endif
 
 export SH_LDFLAGS="%{ldflags}"
 
