@@ -960,6 +960,7 @@ cp %{SOURCE10} htcacheclean.sysconfig
 # add the module config files
 cp %{SOURCE30} 30_mod_proxy.conf
 cp %{SOURCE31} 31_mod_proxy_ajp.conf
+cp %{SOURCE32} 32_mod_proxy_scgi.conf
 cp %{SOURCE40} 40_mod_ssl.conf
 cp %{SOURCE41} 01_default_ssl_vhost.conf
 cp %{SOURCE45} 45_mod_dav.conf
