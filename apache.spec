@@ -21,8 +21,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.13
-Release:	%mkrel 4
+Version:	2.2.14
+Release:	%mkrel 0.1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -35,6 +35,7 @@ Source9: 	htcacheclean.init
 Source10: 	htcacheclean.sysconfig
 Source30:	30_mod_proxy.conf
 Source31:	31_mod_proxy_ajp.conf
+Source32:	32_mod_proxy_scgi.conf
 Source40: 	40_mod_ssl.conf
 Source41: 	01_default_ssl_vhost.conf
 Source45: 	45_mod_dav.conf
@@ -87,8 +88,6 @@ Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 # http://source.kood.ee/
 Patch103:	httpd-2.2.3-peruser-0.3.0-dc2.patch
-Patch200:	httpd-2.2.x-CVE-2009-3094.diff
-Patch201:	httpd-2.2.x-CVE-2009-3095.diff
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -689,6 +688,23 @@ Apache JServ Protocol version 1.3 (hereafter AJP13). Thus, in order to get the
 ability of handling AJP13 protocol, mod_proxy and mod_proxy_ajp have to be
 present in the server.
 
+%package	mod_proxy_scgi
+Summary:	Provides support for the the SCGI protocol, version 1
+Group:		System/Servers
+Requires(pre): rpm-helper
+Requires(postun): rpm-helper
+Requires(pre):	apache-conf >= %{version}
+Requires(pre):	apache-base = %{version}-%{release}
+Requires(pre):	apache-modules = %{version}-%{release}
+Requires(pre):	apache-mod_proxy = %{version}-%{release}
+Requires:	apache-conf >= %{version}
+Requires:	apache-base = %{version}-%{release}
+Requires:	apache-modules = %{version}-%{release}
+Requires:	apache-mod_proxy = %{version}-%{release}
+
+%description	mod_proxy_scgi
+This module provides support for the SCGI protocol, version 1.
+
 %package	mod_userdir
 Summary:	User-specific directories
 Group:		System/Servers
@@ -866,9 +882,6 @@ your own customized apache if needed.
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
 %patch103 -p1 -b .peruser-0.3.0-dc2
-
-%patch200 -p0 -b .CVE-2009-3094
-%patch201 -p0 -b .CVE-2009-3095
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -1251,6 +1264,7 @@ ln -s ../../..%{_libdir}/apache/build %{buildroot}%{_sysconfdir}/httpd/build
 # install module conf files for the "modules.d" dir loading structure
 install -m0644 30_mod_proxy.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 31_mod_proxy_ajp.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
+install -m0644 32_mod_proxy_scgi.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 40_mod_ssl.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 45_mod_dav.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 46_mod_ldap.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
@@ -1418,6 +1432,18 @@ if [ -f /var/lock/subsys/httpd ]; then
 fi
 
 %postun mod_proxy_ajp
+if [ "$1" = "0" ]; then
+    if [ -f /var/lock/subsys/httpd ]; then
+        %{_initrddir}/httpd restart 1>&2
+    fi
+fi
+
+%post mod_proxy_scgi
+if [ -f /var/lock/subsys/httpd ]; then
+    %{_initrddir}/httpd restart 1>&2;
+fi
+
+%postun mod_proxy_scgi
 if [ "$1" = "0" ]; then
     if [ -f /var/lock/subsys/httpd ]; then
         %{_initrddir}/httpd restart 1>&2
@@ -1733,6 +1759,11 @@ fi
 %doc modules/proxy/CHANGES
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_proxy_ajp.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_ajp.so
+
+%files mod_proxy_scgi
+%defattr(-,root,root)
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_proxy_scgi.conf
+%attr(0755,root,root) %{_libdir}/apache/mod_proxy_scgi.so
 
 %files mod_dav
 %defattr(-,root,root)
