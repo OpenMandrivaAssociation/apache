@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.14
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -79,6 +79,7 @@ Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-bug42829.diff
 Patch20:	httpd-2.2.9-suenable.patch
+Patch21:	httpd-2.2.14-CVE-2009-3555.diff
 # http://marc.info/?l=oss-security&m=121803012019929&w=2
 Patch22:	apache-2.2.9-CVE-2008-2939.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
@@ -876,12 +877,13 @@ your own customized apache if needed.
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .bug42829.droplet
-%patch20 -p1 -b .suenable
+%patch20 -p1 -b .suenable.droplet
+%patch21 -p1 -b .CVE-2009-3555.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
-%patch103 -p1 -b .peruser-0.3.0-dc2
+%patch103 -p1 -b .peruser-0.3.0-dc2.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
