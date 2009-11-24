@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.14
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -734,6 +734,7 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Requires:	openssl
+Requires(post):	openssl makedev
 Provides:	mod_ssl
 Obsoletes:	mod_ssl
 %if %mdkversion >= 200810
