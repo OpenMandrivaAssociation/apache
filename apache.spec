@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.14
-Release:	%mkrel 3
+Release:	%mkrel 4
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -61,6 +61,7 @@ Patch3:		httpd-2.0.48-corelimit.patch
 Patch4:		httpd-2.0.48-debuglog.patch
 # http://lists.debian.org/debian-apache/2003/11/msg00109.html
 Patch5:		httpd-2.0.48-bsd-ipv6-fix.diff
+Patch6:		httpd-2.2.14-apachectl_fix.diff
 # JMD: fix suexec path so we can have both versions of Apache and both
 # versions of suexec
 Patch7:		apache2-suexec.patch
@@ -866,6 +867,7 @@ your own customized apache if needed.
 %patch3 -p0 -b .corelimit.droplet
 %patch4 -p1 -b .debuglog.droplet
 %patch5 -p1 -b .bsd-ipv6.droplet
+%patch6 -p0 -b .apachectl_fix.droplet
 %patch7 -p0 -b .apache2-suexec.droplet
 %patch8 -p1 -b .apxs.droplet
 %patch9 -p1 -b .disablemods.droplet
