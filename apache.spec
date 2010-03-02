@@ -81,8 +81,6 @@ Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-bug42829.diff
 Patch20:	httpd-2.2.9-suenable.patch
 Patch21:	httpd-2.2.14-CVE-2009-3555.diff
-# http://marc.info/?l=oss-security&m=121803012019929&w=2
-Patch22:	apache-2.2.9-CVE-2008-2939.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20090414-00.patch
 # http://www.telana.com/files/httpd-2.2.3-peruser-0.3.0.patch
