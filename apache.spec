@@ -21,8 +21,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.14
-Release:	%mkrel 6
+Version:	2.2.15
+Release:	%mkrel 0.0
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -49,7 +49,8 @@ Source59:	59_mod_deflate.conf
 Source60:	60_mod_dbd.conf
 Source61:	61_mod_authn_dbd.conf
 Source67:	67_mod_userdir.conf
-Source68:	default-vhosts.conf
+Source68:	68_mod_reqtimeout.conf
+Source69:	default-vhosts.conf
 Source100:	buildconf
 # lynx -dump http://mpm-itk.sesse.net/ > README.itk
 Source101:	README.itk
@@ -80,14 +81,13 @@ Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-bug42829.diff
 Patch20:	httpd-2.2.9-suenable.patch
-Patch21:	httpd-2.2.14-CVE-2009-3555.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20090414-00.patch
-# http://www.telana.com/files/httpd-2.2.3-peruser-0.3.0.patch
+# http://www.peruser.org/
 Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
-# http://source.kood.ee/
-Patch103:	httpd-2.2.3-peruser-0.3.0-dc2.patch
+Patch103:	httpd-2.2.3-peruser-0.3.0-dc3.diff
+Patch104:	httpd-2.2.15-peruser-strfmt.diff
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
@@ -808,6 +808,25 @@ functionality is provided by, for example, mod_authn_file. This module relies
 on mod_dbd to specify the backend database driver and connection parameters,
 and manage the database connections.
 
+%package	mod_reqtimeout
+Summary:	Set timeout and minimum data rate for receiving requests
+Group:		System/Servers
+Requires(pre): rpm-helper
+Requires(postun): rpm-helper
+Requires(pre):	apache-conf >= %{version}
+Requires(pre):	apache-base = %{version}-%{release}
+Requires(pre):	apache-modules = %{version}-%{release}
+Requires:	apache-conf >= %{version}
+Requires:	apache-base = %{version}-%{release}
+Requires:	apache-modules = %{version}-%{release}
+
+%description	mod_reqtimeout
+This module allows to set timeouts for the reading request and reading body
+phases. It is implemented as an input connection filter that sets the socket
+timeout so that the total request time does not exceed the timeout value.
+
+mod_reqtimeout can be used to mitigate slowloris type attacks.
+
 %package	htcacheclean
 Summary:	Clean up the disk cache (for apache-mod_disk_cache)
 Group:		System/Servers
@@ -879,12 +898,12 @@ your own customized apache if needed.
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .bug42829.droplet
 %patch20 -p1 -b .suenable.droplet
-%patch21 -p1 -b .CVE-2009-3555.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
-%patch103 -p1 -b .peruser-0.3.0-dc2.droplet
+%patch103 -p1 -b .peruser-0.3.0-dc3.droplet
+%patch104 -p0 -b .peruser-strfmt.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -977,6 +996,7 @@ cp %{SOURCE59} 59_mod_deflate.conf
 cp %{SOURCE60} 60_mod_dbd.conf
 cp %{SOURCE61} 61_mod_authn_dbd.conf
 cp %{SOURCE67} 67_mod_userdir.conf
+cp %{SOURCE68} 68_mod_reqtimeout.conf
 
 # this will only work if configured correctly in the config (FullOs)...
 cp server/core.c server/core.c.untagged
@@ -1281,6 +1301,7 @@ install -m0644 59_mod_deflate.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 60_mod_dbd.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 61_mod_authn_dbd.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 install -m0644 67_mod_userdir.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
+install -m0644 68_mod_reqtimeout.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 
 # install vhost conf files for the "vhosts.d" dir loading structure
 install -m0644 01_default_ssl_vhost.conf %{buildroot}%{_sysconfdir}/httpd/conf/vhosts.d/
@@ -1645,6 +1666,18 @@ if [ "$1" = "0" ]; then
     fi
 fi
 
+%post mod_reqtimeout
+if [ -f /var/lock/subsys/httpd ]; then
+    %{_initrddir}/httpd restart 1>&2;
+fi
+
+%postun mod_reqtimeout
+if [ "$1" = "0" ]; then
+    if [ -f /var/lock/subsys/httpd ]; then
+        %{_initrddir}/httpd restart 1>&2
+    fi
+fi
+
 %post htcacheclean
 %_post_service htcacheclean
 if [ -f %{_var}/lock/subsys/htcacheclean ]; then
@@ -1834,6 +1867,11 @@ fi
 %defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_authn_dbd.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authn_dbd.so
+
+%files mod_reqtimeout
+%defattr(-,root,root)
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/*_mod_reqtimeout.conf
+%attr(0755,root,root) %{_libdir}/apache/mod_reqtimeout.so
 
 %files base
 %defattr(-,root,root)
