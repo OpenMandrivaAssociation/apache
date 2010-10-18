@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.17
-Release:	%mkrel 0.0.pre.1
+Release:	%mkrel 0.0.pre.2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
