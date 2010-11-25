@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.17
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -1014,7 +1014,7 @@ export WANT_AUTOCONF_2_5="1"
 cp %{SOURCE100} buildconf
 sh ./buildconf
 
-CFLAGS="$RPM_OPT_FLAGS"
+CFLAGS="`echo $RPM_OPT_FLAGS |sed -e 's/-fomit-frame-pointer//'`"
 CPPFLAGS="-DSSL_EXPERIMENTAL_ENGINE -DLDAP_DEPRECATED -DHAVE_APR_MEMCACHE"
 if pkg-config openssl; then
     # configure -C barfs with trailing spaces in CFLAGS
