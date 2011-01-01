@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.17
-Release:	%mkrel 3
+Release:	%mkrel 4
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -104,7 +104,7 @@ BuildRequires:	perl >= 0:5.600
 BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
 BuildRequires:	autoconf2.5
-BuildRequires:	automake1.7
+BuildRequires:	automake
 BuildRequires:	lynx
 BuildRequires:	libcap-devel
 %if %{build_test}
@@ -858,7 +858,7 @@ Requires:	perl >= 0:5.600
 Requires:	pkgconfig
 Requires:	zlib-devel
 Requires:	autoconf2.5
-Requires:	automake1.7
+Requires:	automake
 
 %description	devel
 The apache-devel package contains the source code for the apache Web server and
