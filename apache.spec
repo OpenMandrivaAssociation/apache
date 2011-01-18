@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.17
-Release:	%mkrel 4
+Release:	%mkrel 5
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -122,9 +122,6 @@ BuildRequires:	perl-XML-DOM
 BuildRequires:	perl-XML-Parser
 BuildRequires:	openssl
 %endif
-%if %mdkversion >= 1020
-BuildRequires:	multiarch-utils >= 1.0.3
-%endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -134,10 +131,6 @@ server on the Internet.
 
 This version of apache is fully modular, and many modules are available in
 pre-compiled formats, like PHP and mod_auth_external.
-
-Check for available Apache modules for Mandriva Linux at:
-http://nux.se/apache/
-(most of them can be installed from the contribs repository)
 
 This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
 This package defaults to a ServerLimit of %{defaultserverlimit}.
@@ -176,8 +169,6 @@ configuration directives. Most important is that MaxClients be big enough to
 handle as many simultaneous requests as you expect to receive, but small enough
 to assure that there is enough physical RAM for all processes.
 
-Check for available Apache modules here: http://nux.se/apache/
-
 This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
 This package defaults to a ServerLimit of %{defaultserverlimit}.
 
@@ -202,7 +193,7 @@ Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
 Provides:	apache = %{version}-%{release}
 #Provides:	apache-mpm = %{version}-%{release}
-Conflicts:	apache-mod_php apache-mod_php4 apache-mod_perl apache-mod_python
+Conflicts:	apache-mod_php apache-mod_perl apache-mod_python
 
 %description	mpm-worker
 This Multi-Processing Module (MPM) implements a hybrid multi-process
@@ -222,8 +213,6 @@ server on the Internet.
 
 This version of apache is fully modular, and many modules are available in
 pre-compiled formats, like PHP and mod_auth_external.
-
-Check for available Apache modules here: http://nux.se/apache/
 
 This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
 
@@ -255,7 +244,7 @@ Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
 Provides:	apache = %{version}-%{release}
 #Provides:	apache-mpm = %{version}-%{release}
-Conflicts:	apache-mod_php apache-mod_php4 apache-mod_perl apache-mod_python
+Conflicts:	apache-mod_php apache-mod_perl apache-mod_python
 
 %description	mpm-event
 The event Multi-Processing Module (MPM) is designed to allow more requests to
@@ -270,8 +259,6 @@ server on the Internet.
 
 This version of apache is fully modular, and many modules are available in
 pre-compiled formats, like PHP and mod_auth_external.
-
-Check for available Apache modules here: http://nux.se/apache/
 
 This package defaults to a maximum of %{defaultmaxmodules} dynamically loadable modules.
 
@@ -554,7 +541,7 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Requires:	apache-mod_cache = %{version}-%{release}
-Requires:	apache-htcacheclean = %{version}-%{release}
+Suggests:	apache-htcacheclean = %{version}-%{release}
 
 %description	mod_disk_cache
 mod_disk_cache implements a disk based storage manager. It is primarily of use
@@ -832,7 +819,8 @@ Summary:	Clean up the disk cache (for apache-mod_disk_cache)
 Group:		System/Servers
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
-Requires:	apache-mod_disk_cache = %{version}-%{release}
+Suggests:	apache-mod_disk_cache = %{version}-%{release}
+Suggests:	apache-mod_proxy = %{version}-%{release}
 
 %description	htcacheclean
 htcacheclean is used to keep the size of mod_disk_cache's storage within a
@@ -1059,7 +1047,7 @@ APVARS="--enable-layout=NUX \
 for mpm in worker event itk peruser prefork; do
     mkdir build-${mpm}; pushd build-${mpm}
     ln -s ../configure .
-    
+
     if [ ${mpm} = prefork ]; then
         %configure2_5x $APVARS \
     	    --with-mpm=prefork \
@@ -1079,7 +1067,7 @@ for mpm in worker event itk peruser prefork; do
     	    --enable-optional-hook-export=shared --enable-optional-hook-import=shared \
 	    --enable-charset_lite=shared --enable-authn_alias=shared
     fi
-    
+
     if [ ${mpm} = worker ]; then
 	%configure2_5x $APVARS \
     	    --with-mpm=worker \
@@ -1335,9 +1323,7 @@ install -d %{buildroot}%{_sysconfdir}/sysconfig
 install -m0755 htcacheclean.init %{buildroot}%{_initrddir}/htcacheclean
 install -m0644 htcacheclean.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/htcacheclean
 
-%if %mdkversion >= 1020
 %multiarch_includes %{buildroot}%{_includedir}/apache/ap_config_layout.h
-%endif
 
 # add two important documentation files in the plain ASCII format
 cp docs/manual/upgrading.html.en upgrading.html
@@ -1918,9 +1904,7 @@ fi
 
 %files devel
 %defattr(-,root,root)
-%if %mdkversion >= 1020
 %multiarch %{multiarch_includedir}/apache/ap_config_layout.h
-%endif
 %{_includedir}/apache
 %attr(0755,root,root) %dir %{_libdir}/apache/build
 %attr(0755,root,root) %dir %{_sysconfdir}/httpd/build
