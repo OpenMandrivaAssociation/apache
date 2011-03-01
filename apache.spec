@@ -22,7 +22,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.17
-Release:	%mkrel 5
+Release:	%mkrel 6
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -92,7 +92,7 @@ BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
 BuildRequires:	distcache-devel
 BuildRequires:	byacc
-BuildRequires:	db4-devel
+BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libsasl-devel
@@ -834,7 +834,7 @@ Group:		Development/C
 Requires:	apr-devel >= 1:1.3.0
 Requires:	apr-util-devel >= 1.3.0
 Requires:	byacc
-Requires:	db4-devel
+Requires:	db-devel
 Requires:	distcache-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
