@@ -21,8 +21,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.17
-Release:	%mkrel 8
+Version:	2.2.18
+Release:	%mkrel 1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -82,7 +82,7 @@ Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch20:	httpd-2.2.9-suenable.patch
 # http://home.samfundet.no/~sesse/mpm-itk/
 #Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20090414-00.patch
-Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-2.2.17-01.patch
+Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-2.2.17-01.diff
 # http://www.peruser.org/
 Patch101:	httpd-2.2.9-peruser-0.3.0.diff
 Patch102:	apache-2.2.6-mpm_peruser-fix.diff
@@ -935,7 +935,7 @@ cat >> config.layout << EOF
     runtimedir:    /var/run
     logfiledir:    /var/log/httpd
     proxycachedir: /var/cache/httpd/mod_proxy
-</Layout>     
+</Layout>
 EOF
 
 #Fix DYNAMIC_MODULE_LIMIT
