@@ -1011,7 +1011,7 @@ for mpm in worker event itk peruser prefork; do
 	    --enable-mods-shared=all \
     	    --with-ldap --enable-ldap=shared --enable-authnz-ldap=shared \
 	    --enable-cache=shared --enable-disk-cache=shared --enable-file-cache=shared --enable-mem-cache=shared \
-    	    --enable-ssl --with-ssl=%{_prefix} \
+    	    --enable-ssl --with-ssl=%{_prefix} --disable-distcache \
     	    --enable-deflate=shared \
     	    --enable-cgid=shared \
     	    --enable-proxy=shared --enable-proxy-connect=shared --enable-proxy-ftp=shared \
