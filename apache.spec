@@ -1,10 +1,4 @@
-%if %mdkversion >= 200810
 %define _disable_ld_no_undefined 1
-%endif
-
-%if %mdkversion < 200900
-%define ldflags %{nil}
-%endif
 
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
@@ -724,10 +718,8 @@ Requires:	openssl
 Requires(post):	openssl makedev
 Provides:	mod_ssl
 Obsoletes:	mod_ssl
-%if %mdkversion >= 200810
 Suggests:	distcache-server
 Suggests:	memcached
-%endif
 
 %description	mod_ssl
 This module provides SSL v2/v3 and TLS v1 support for the Apache HTTP Server.
@@ -754,20 +746,11 @@ Requires:	apache-conf >= %{version}
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Requires:	apr-util-dbd-ldap
-%if %mdkversion < 200810
-Requires:	apr-util-dbd-freetds
-Requires:	apr-util-dbd-mysql
-Requires:	apr-util-dbd-odbc
-Requires:	apr-util-dbd-pgsql
-Requires:	apr-util-dbd-sqlite3
-%endif
-%if %mdkversion >= 200810
 Suggests:	apr-util-dbd-freetds
 Suggests:	apr-util-dbd-mysql
 Suggests:	apr-util-dbd-odbc
 Suggests:	apr-util-dbd-pgsql
 Suggests:	apr-util-dbd-sqlite3
-%endif
 
 %description	mod_dbd
 mod_dbd manages SQL database connections using apr_dbd. It provides database
