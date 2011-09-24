@@ -3,13 +3,6 @@
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
 
-%define build_test 0
-
-# commandline overrides:
-# rpm -ba|--rebuild --with 'xxx'
-%{?_with_test: %{expand: %%global build_test 1}}
-%{?_without_test: %{expand: %%global build_test 0}}
-
 %define TAG Mandriva Linux
 %define BASEPRODUCT Apache
 
@@ -24,7 +17,6 @@ Source0:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz
 Source1:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz.asc
 Source2:	apache-README.urpmi
 Source3:	apache2_transparent_png_icons.tar.bz2
-Source4: 	perl-framework.tar.gz
 Source9: 	htcacheclean.init
 Source10: 	htcacheclean.sysconfig
 Source30:	30_mod_proxy.conf
@@ -102,21 +94,6 @@ BuildRequires:	autoconf2.5
 BuildRequires:	automake
 BuildRequires:	lynx
 BuildRequires:	libcap-devel
-%if %{build_test}
-BuildRequires:	perl-CGI >= 1:3.11
-BuildRequires:	perl-HTML-Parser
-BuildRequires:	perl-libwww-perl
-BuildRequires:	perl-Tie-IxHash
-BuildRequires:	perl-URI
-BuildRequires:	perl-BSD-Resource
-#BuildRequires:	subversion
-BuildRequires:	perl-HTTP-DAV
-BuildRequires:	perl-doc
-BuildRequires:	perl-Crypt-SSLeay
-BuildRequires:	perl-XML-DOM
-BuildRequires:	perl-XML-Parser
-BuildRequires:	openssl
-%endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -849,7 +826,7 @@ your own customized apache if needed.
 
 %prep
 
-%setup -q -n httpd-%{version} -a4
+%setup -q -n httpd-%{version}
 %patch0 -p0 -b .deplibs.droplet
 %patch1 -p1 -b .encode.droplet
 %patch2 -p0 -b .xfsz.droplet
@@ -1105,68 +1082,6 @@ for mpm in worker event itk peruser prefork; do
     %make
     popd
 done
-
-%if %{build_test}
-# run the test suite, quite a hack, but works, sometimes...
-TEST_DIR="`pwd`/TEST"
-make -C build-prefork DESTDIR=${TEST_DIR} \
-	manualdir=${TEST_DIR}/var/www/html/manual \
-	install
-
-perl -pi -e "s|%{_libdir}/apache/|${TEST_DIR}%{_libdir}/apache/|g" ${TEST_DIR}%{_sysconfdir}/httpd/conf/*
-perl -pi -e "s|^#Include|Include|g" ${TEST_DIR}%{_sysconfdir}/httpd/conf/httpd.conf
-perl -pi -e "s|/etc|${TEST_DIR}/etc|g" ${TEST_DIR}%{_sysconfdir}/httpd/conf/httpd.conf ${TEST_DIR}%{_sysconfdir}/httpd/conf/extra/*.conf
-perl -pi -e  "s|%{_libdir}/apache/build|${TEST_DIR}%{_libdir}/apache/build|g" ${TEST_DIR}%{_sbindir}/apxs
-
-# fool apxs
-cat >> ${TEST_DIR}%{_libdir}/apache/build/config_vars.mk << EOF
-bindir = ${TEST_DIR}/usr/bin
-sbindir = ${TEST_DIR}/usr/sbin
-exec_prefix = ${TEST_DIR}/usr
-datadir = ${TEST_DIR}/var/www
-localstatedir = ${TEST_DIR}/var
-libdir = ${TEST_DIR}%{_libdir}
-libexecdir = ${TEST_DIR}%{_libdir}/apache
-includedir = ${TEST_DIR}/usr/include/apache
-sysconfdir = ${TEST_DIR}/etc/httpd/conf
-installbuilddir = ${TEST_DIR}%{_libdir}/apache/build
-runtimedir = ${TEST_DIR}/var/run
-proxycachedir = ${TEST_DIR}/var/cache/httpd/mod_proxy
-prefix = ${TEST_DIR}/usr
-EOF
-
-pushd perl-framework
-#svn checkout --ignore-externals http://svn.apache.org/repos/asf/httpd/test/trunk/perl-framework perl-framework
-#svn checkout http://svn.apache.org/repos/asf/httpd/test/trunk/perl-framework perl-framework
-#svn up
-
-# disable test cases for bugs that has not been fixed yet,are too old, or
-# it is unclear who to blaim, either the php or ASF folks...
-rm -f t/php/arg.t
-rm -f t/php/func5.t
-
-# this test works with php-5.0 but not with php-5.1, yuck!
-rm -f t/php/virtual.t
-
-# broken ssl tests
-# t/ssl/extlookup.t ........... 1/4 # Failed test 2 in t/ssl/extlookup.t at line 27
-rm -f t/ssl/extlookup.t
-
-# 3/10 # Failed test 9 in t/ssl/require.t at line 44
-rm -f t/ssl/require.t
-
-# if not using LC_ALL=C t/php/getlastmod.t can fail at
-# testing : getlastmod()
-# expected: november
-# received: November
-export LC_ALL=C
-
-perl Makefile.PL -apxs ${TEST_DIR}%{_sbindir}/apxs \
-    -httpd_conf ${TEST_DIR}%{_sysconfdir}/httpd/conf/httpd.conf \
-    -httpd ${TEST_DIR}%{_sbindir}/httpd
-make test
-popd
-%endif
 
 %install
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot} 
