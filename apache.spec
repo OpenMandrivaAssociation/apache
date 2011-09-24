@@ -55,7 +55,6 @@ Patch7:		apache2-suexec.patch
 Patch8:		httpd-2.1.10-apxs.patch
 Patch9:		httpd-2.1.10-disablemods.patch
 Patch10:	httpd-2.1.10-pod.patch
-Patch11:	httpd-2.2.0-mod_ssl_memcache.diff
 # http://qa.mandriva.com/show_bug.cgi?id=19542
 Patch12:	httpd-2.2.2-french_fixes.diff
 Patch13:	httpd-2.2.0-authnoprov.patch
@@ -77,7 +76,6 @@ Patch104:	httpd-2.2.15-peruser-strfmt.diff
 Patch105:	httpd-2.2.17-filter.patch
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	apr-util-devel >= 1.3.0
-BuildRequires:	distcache-devel
 BuildRequires:	byacc
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
@@ -681,7 +679,7 @@ This module allows user-specific directories to be accessed using the
 http://example.com/~username/ syntax.
 
 %package	mod_ssl
-Summary:	Strong cryptography using the SSL, TLS and distcache protocols
+Summary:	Strong cryptography using the SSL, TLS protocols
 Group:		System/Servers
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
@@ -695,7 +693,6 @@ Requires:	openssl
 Requires(post):	openssl makedev
 Provides:	mod_ssl
 Obsoletes:	mod_ssl
-Suggests:	distcache-server
 Suggests:	memcached
 
 %description	mod_ssl
@@ -796,7 +793,6 @@ Requires:	apr-devel >= 1:1.3.0
 Requires:	apr-util-devel >= 1.3.0
 Requires:	byacc
 Requires:	db-devel
-Requires:	distcache-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
 Requires:	libsasl-devel
@@ -838,7 +834,6 @@ your own customized apache if needed.
 %patch8 -p1 -b .apxs.droplet
 %patch9 -p1 -b .disablemods.droplet
 %patch10 -p1 -b .pod.droplet
-%patch11 -p0 -b .memcache.droplet
 %patch12 -p1 -b .french_fixes.droplet
 %patch13 -p1 -b .authnoprov.droplet
 %patch14 -p0 -b .fcgi.droplet
@@ -966,7 +961,7 @@ cp %{SOURCE100} buildconf
 sh ./buildconf
 
 CFLAGS="`echo $RPM_OPT_FLAGS |sed -e 's/-fomit-frame-pointer//'`"
-CPPFLAGS="-DSSL_EXPERIMENTAL_ENGINE -DLDAP_DEPRECATED -DHAVE_APR_MEMCACHE"
+CPPFLAGS="-DSSL_EXPERIMENTAL_ENGINE -DLDAP_DEPRECATED"
 if pkg-config openssl; then
     # configure -C barfs with trailing spaces in CFLAGS
     CFLAGS="$RPM_OPT_FLAGS $CPPFLAGS"
@@ -1016,7 +1011,7 @@ for mpm in worker event itk peruser prefork; do
 	    --enable-mods-shared=all \
     	    --with-ldap --enable-ldap=shared --enable-authnz-ldap=shared \
 	    --enable-cache=shared --enable-disk-cache=shared --enable-file-cache=shared --enable-mem-cache=shared \
-    	    --enable-ssl --with-ssl=%{_prefix} --enable-distcache \
+    	    --enable-ssl --with-ssl=%{_prefix} \
     	    --enable-deflate=shared \
     	    --enable-cgid=shared \
     	    --enable-proxy=shared --enable-proxy-connect=shared --enable-proxy-ftp=shared \
@@ -1074,9 +1069,6 @@ for mpm in worker event itk peruser prefork; do
     %ifarch x86_64
 	find -type f | xargs perl -pi -e "s|/usr/lib\b|%{_libdir}|g"
     %endif
-
-    # there is no autofoo stuff the memcache addon yet
-    perl -pi -e "s|-ldistcache -lnal|-ldistcache -lnal|g" build/config_vars.mk
 
     # finally doing the build stage
     %make
