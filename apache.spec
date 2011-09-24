@@ -37,6 +37,7 @@ Source61:	61_mod_authn_dbd.conf
 Source67:	67_mod_userdir.conf
 Source68:	68_mod_reqtimeout.conf
 Source69:	default-vhosts.conf
+Source70:	00_manual.conf
 Source100:	buildconf
 # lynx -dump http://mpm-itk.sesse.net/ > README.itk
 Source101:	README.itk
@@ -820,6 +821,19 @@ Group:		System/Servers
 The apache source code, including Mandriva patches. Use this package to build
 your own customized apache if needed.
 
+%package	doc
+Summary:	The apache Manual
+Group:		System/Servers
+Requires(pre):	apache-conf >= %{version}
+Requires:	apache-conf >= %{version}
+BuildArch:	noarch
+
+%description	doc
+This package contains the apache server documentation in HTML format.
+
+Please view the documentaion by starting the apache server and your favourite
+web browser and point to this URL: http://localhost/manual
+
 %prep
 
 %setup -q -n httpd-%{version}
@@ -947,6 +961,9 @@ cp server/core.c server/core.c.untagged
 
 cp %{SOURCE101} README.itk
 cp %{SOURCE102} README.peruser
+
+cp %{SOURCE70} 00_manual.conf
+perl -pi -e "s|_DOCDIR_|%{_docdir}/%{name}-doc|g" 00_manual.conf
 
 %build
 %serverbuild
@@ -1230,6 +1247,31 @@ cp docs/manual/new_features_2_2.html.en new_features_2_2.html
 lynx -dump -nolist upgrading.html > upgrading.txt
 lynx -dump -nolist new_features_2_2.html > new_features_2_2.txt
 
+# fix the manual
+rm -rf installed-manual
+mv %{buildroot}/var/www/html/manual installed-manual
+find installed-manual -type d -exec chmod 755 {} \;
+find installed-manual -type f -exec chmod 644 {} \;
+install -d %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d
+install -m0644 00_manual.conf %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d/00_manual.conf
+
+cat > README.MDV << EOF
+Please view the documentaion by starting the apache server and your favourite
+web browser and point to this URL: http://localhost/manual
+
+Accessing the HTML manual manually on the filesystem can be tricky, you will have
+to do something like this first:
+
+cd %{_docdir}/%{name}-doc
+for i in \`find -name "*.html.en"\`; do
+    new_name=\`echo \$i | sed -e "s/.html.en/.html/g"\`
+    mv -f \$i \$new_name
+done
+
+lynx index.html
+
+EOF
+
 # cleanup
 rm -f %{buildroot}%{_sbindir}/suexec
 rm -f  %{buildroot}%{_mandir}/man8/suexec.8*
@@ -1237,7 +1279,6 @@ rm -rf %{buildroot}/var/www/html/index*
 rm -rf %{buildroot}/var/www/html/apach*
 rm -rf %{buildroot}/var/www/cgi-bin/printenv
 rm -rf %{buildroot}/var/www/cgi-bin/test-cgi
-rm -rf %{buildroot}/var/www/html/manual
 rm -rf %{buildroot}%{_sysconfdir}/httpd/conf/{extra,original,httpd.conf,magic,mime.types}
 
 #########################################################################################
@@ -1578,6 +1619,16 @@ if [ "$1" = "0" ]; then
     fi
 fi
 
+%post doc
+%if %mdkversion < 201010
+%_post_webapp
+%endif
+
+%postun doc
+%if %mdkversion < 201010
+%_postun_webapp
+%endif
+
 %files mpm-prefork
 %defattr(-,root,root)
 %doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf
@@ -1815,3 +1866,8 @@ fi
 %files source
 %defattr(-,root,root)
 %{_usrsrc}/apache-%{version}
+
+%files doc
+%defattr(-,root,root)
+%doc installed-manual/* README.MDV
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/webapps.d/00_manual.conf
