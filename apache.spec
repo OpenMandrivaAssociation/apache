@@ -9,7 +9,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.21
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -66,6 +66,7 @@ Patch15:	httpd-ab_source_address.diff
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch20:	httpd-2.2.9-suenable.patch
+Patch21:	httpd-2.2.21-CVE-2011-3368.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 #Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20090414-00.patch
 Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-2.2.17-01.diff
@@ -855,6 +856,7 @@ web browser and point to this URL: http://localhost/manual
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
 %patch20 -p1 -b .suenable.droplet
+%patch21 -p0 -b .CVE-2011-3368.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
