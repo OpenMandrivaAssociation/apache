@@ -9,7 +9,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.21
-Release:	%mkrel 4
+Release:	%mkrel 5
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -924,11 +924,11 @@ perl -pi -e "s|DEFAULT_SERVER_LIMIT 256|DEFAULT_SERVER_LIMIT %{?!serverlimit:%{d
 perl -pi -e "s|^#define AP_SERVER_BASEPRODUCT .*|#define AP_SERVER_BASEPRODUCT \"%{BASEPRODUCT}\"|g" include/ap_release.h
 
 # prepare the apache-source package
-rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}; mkdir -p $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src
-cp -dpR $RPM_BUILD_DIR/httpd-%{version} $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src/apache-%{version}
-rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src/apache-%{version}/perl-framework
-rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}/usr/src/apache-%{version}/tmp-httpd-%{version}/usr/src
-rm -f $RPM_BUILD_DIR/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/*.spec
+rm -rf %{_builddir}/tmp-httpd-%{version}; mkdir -p %{_builddir}/tmp-httpd-%{version}/usr/src
+cp -dpR %{_builddir}/httpd-%{version} %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}
+rm -rf %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}/perl-framework
+rm -rf %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}/tmp-httpd-%{version}/usr/src
+rm -f %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/*.spec
 
 # use my nice converted transparent png icons
 tar -jxf %{SOURCE3}
@@ -1078,7 +1078,7 @@ for mpm in worker event itk peruser prefork; do
     fi
 
     #Copy configure flags to a file in the apache-source rpm.
-    cp config.nice $RPM_BUILD_DIR/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/config.nice.${mpm}
+    cp config.nice %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/config.nice.${mpm}
 
     # tag it with the mpm name too so that we can track this somehow at for example netcraft...
     MPM_NAME=`echo ${mpm}|tr "[a-z]" "[A-Z]"`
@@ -1111,7 +1111,7 @@ install -d %{buildroot}/var/cache/httpd/mod_proxy
 #EXCLUDE_FROM_STRIP="%{buildroot}%{_sbindir}/httpd %{buildroot}%{_sbindir}/httpd-worker %{buildroot}%{_sbindir}/httpd-peruser"
 
 # install source
-tar c -C $RPM_BUILD_DIR/tmp-httpd-%{version} usr/src | tar x -C %{buildroot}
+tar c -C %{_builddir}/tmp-httpd-%{version} usr/src | tar x -C %{buildroot}
 
 # don't fiddle with the initscript!
 export DONT_GPRINTIFY=1
@@ -1293,9 +1293,9 @@ rm -rf %{buildroot}%{_sysconfdir}/httpd/conf/{extra,original,httpd.conf,magic,mi
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot} 
 
 # Clean up "install source" and other generated dirs
-[ "$RPM_BUILD_DIR/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}" != "/" ] && rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}
-[ "$RPM_BUILD_DIR/usr/src" != "/" ] && rm -rf $RPM_BUILD_DIR/usr/src
-[ "$RPM_BUILD_DIR/tmp-httpd-%{version}" != "/" ] && rm -rf $RPM_BUILD_DIR/tmp-httpd-%{version}
+[ "%{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}" != "/" ] && rm -rf %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}
+[ "%{_builddir}/usr/src" != "/" ] && rm -rf %{_builddir}/usr/src
+[ "%{_builddir}/tmp-httpd-%{version}" != "/" ] && rm -rf %{_builddir}/tmp-httpd-%{version}
 
 %pre base
 %_pre_useradd apache /var/www /bin/sh
