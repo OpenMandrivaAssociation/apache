@@ -8,8 +8,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.2.21
-Release:	%mkrel 6
+Version:	2.2.22
+Release:	%mkrel 0.0.1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -67,10 +67,6 @@ Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-2.2.21-linux3.diff
 Patch20:	httpd-2.2.9-suenable.patch
-Patch21:	httpd-2.2.21-CVE-2011-3368.diff
-Patch22:	httpd-2.2.21-CVE-2011-3192-regression_fix.diff
-Patch23:	httpd-2.2.21-CVE-2011-4317.diff
-Patch24:	httpd-2.2.9-CVE-2011-3607.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 #Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20090414-00.patch
 Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-2.2.17-01.diff
@@ -861,17 +857,13 @@ web browser and point to this URL: http://localhost/manual
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .linux3.droplet
 %patch20 -p1 -b .suenable.droplet
-%patch21 -p0 -b .CVE-2011-3368.droplet
-%patch22 -p0 -b .CVE-2011-3192-regression_fix.droplet
-%patch23 -p1 -b .CVE-2011-4317.droplet
-%patch24 -p0 -b .CVE-2011-3607.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
 %patch102 -p1 -b .mpm_peruser-fix.droplet
 %patch103 -p1 -b .peruser-0.3.0-dc3.droplet
 %patch104 -p0 -b .peruser-strfmt.droplet
-%patch105 -p1 -b .filter
+%patch105 -p1 -b .filter.droplet
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
