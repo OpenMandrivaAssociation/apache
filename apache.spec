@@ -1,3 +1,12 @@
+%if %mandriva_branch == Cooker
+# Cooker
+%define release %mkrel 1
+%else
+# Old distros
+%define subrel 1
+%define release %mkrel 0
+%endif
+
 %define _disable_ld_no_undefined 1
 
 %define defaultmaxmodules 128
@@ -9,7 +18,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.2.22
-Release:	%mkrel 0.0.1
+Release:	%release
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -76,22 +85,20 @@ Patch102:	apache-2.2.6-mpm_peruser-fix.diff
 Patch103:	httpd-2.2.3-peruser-0.3.0-dc3.diff
 Patch104:	httpd-2.2.15-peruser-strfmt.diff
 Patch105:	httpd-2.2.17-filter.patch
-BuildRequires:	apr-devel >= 1:1.3.0
-BuildRequires:	apr-util-devel >= 1.3.0
+BuildRequires:	autoconf automake libtool
+BuildRequires:	apr-devel >= 1:1.4.5
+BuildRequires:	apr-util-devel >= 1.4.1
 BuildRequires:	byacc
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libsasl-devel
-BuildRequires:	libtool >= 1.4.2
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel
-BuildRequires:	pcre-devel >= 5.0
-BuildRequires:	perl >= 0:5.600
+BuildRequires:	pcre-devel
+BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
-BuildRequires:	autoconf2.5
-BuildRequires:	automake
 BuildRequires:	lynx
 BuildRequires:	libcap-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -827,7 +834,9 @@ Summary:	The apache Manual
 Group:		System/Servers
 Requires(pre):	apache-conf >= %{version}
 Requires:	apache-conf >= %{version}
+%if %mdkversion >= 201000
 BuildArch:	noarch
+%endif
 
 %description	doc
 This package contains the apache server documentation in HTML format.
