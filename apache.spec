@@ -76,6 +76,8 @@ Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-2.2.21-linux3.diff
 Patch20:	httpd-2.2.9-suenable.patch
+# https://bugs.php.net/bug.php?id=60986
+Patch21:	httpd-2.2.22-pcre-8.30.diff
 # http://home.samfundet.no/~sesse/mpm-itk/
 #Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-20090414-00.patch
 Patch100:	http://mpm-itk.sesse.net/apache2.2-mpm-itk-2.2.17-01.diff
@@ -866,6 +868,7 @@ web browser and point to this URL: http://localhost/manual
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .linux3.droplet
 %patch20 -p1 -b .suenable.droplet
+%patch21 -p0 -b .pcre-8.30.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
