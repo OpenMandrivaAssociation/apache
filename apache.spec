@@ -868,7 +868,7 @@ web browser and point to this URL: http://localhost/manual
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .linux3.droplet
 %patch20 -p1 -b .suenable.droplet
-%patch21 -p0 -b .pcre-8.30.droplet
+%patch21 -p1 -b .pcre-8.30.droplet
 
 %patch100 -p1 -b .mpm-itk.droplet
 %patch101 -p1 -b .mpm-peruser.droplet
