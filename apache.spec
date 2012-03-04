@@ -35,6 +35,7 @@ Patch106:	httpd-2.4.1-mdv_config.diff
 BuildRequires:	autoconf automake libtool
 BuildRequires:	apr-devel >= 1:1.4.5
 BuildRequires:	apr-util-devel >= 1.4.1
+BuildRequires:	bison
 BuildRequires:	byacc
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
@@ -442,7 +443,7 @@ module such as mod_authz_user. It also allows for advanced logic to be
 applied to the authorization processing.
 
 %package	mod_authnz_ldap
-Summary:	Allows an LDAP directory to be used to store the database for HTTP Basic authentication.
+Summary:	LDAP HTTP Basic authentication
 Group:		System/Servers
 Conflicts:	apache-mod_proxy < 2.4.0
 
@@ -634,7 +635,7 @@ mod_cache_disk
 Further details, discussion, and examples, are provided in the Caching Guide.
 
 %package	mod_cache_disk
-Summary:	Disk based storage module for the HTTP caching filter.
+Summary:	Disk based storage module for the HTTP caching filter
 Group:		System/Servers
 Obsoletes:	apache-mod_disk_cache
 Suggests:	apache-htcacheclean = %{version}-%{release}
@@ -659,7 +660,7 @@ tool can be run on demand, or can be daemonized to offer continuous monitoring
 of directory sizes.
 
 %package	mod_socache_shmcb
-Summary:	shmcb based shared object cache provider.
+Summary:	shmcb based shared object cache provider
 Group:		System/Servers
 
 %description	mod_socache_shmcb
@@ -672,7 +673,7 @@ shmcb:/path/to/datafile(512000)
 Details of other shared object cache providers can be found here.
 
 %package	mod_socache_dbm
-Summary:	DBM based shared object cache provider.
+Summary:	DBM based shared object cache provider
 Group:		System/Servers
 
 %description	mod_socache_dbm
@@ -684,7 +685,7 @@ dbm:/path/to/datafile
 Details of other shared object cache providers can be found here.
 
 %package	mod_socache_memcache
-Summary:	Memcache based shared object cache provider.
+Summary:	Memcache based shared object cache provider
 Group:		System/Servers
 
 %description	mod_socache_memcache
@@ -737,7 +738,7 @@ Conflicts:	apache-modules < 2.4.0
 Buckets manipulation filter
 
 %package	mod_dumpio
-Summary:	Dumps all I/O to error log as desired.
+Summary:	Dumps all I/O to error log as desired
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
 
@@ -861,7 +862,7 @@ timeout so that the total request time does not exceed the timeout value.
 mod_reqtimeout can be used to mitigate slowloris type attacks.
 
 %package	mod_ext_filter
-Summary:	Pass the response body through an external program before delivery to the client
+Summary:	Pass the response body through an external program before delivery
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
 
@@ -943,7 +944,7 @@ used as a provider to mod_filter; no change to existing filter modules is
 required (although it may be possible to simplify them).
 
 %package	mod_reflector
-Summary:	Reflect a request body as a response via the output filter stack.
+Summary:	Reflect a request body as a response via the output filter stack
 Group:		System/Servers
 
 %description	mod_reflector
@@ -1030,7 +1031,7 @@ can also convert data to an encoding of choice after markup processing, and
 will ensure the correct charset value is set in the HTTP Content-Type header.
 
 %package	mod_proxy_html
-Summary:	Rewrite HTML links in to ensure they are addressable from Clients' networks in a proxy context.
+Summary:	Rewrite HTML links in to ensure they are addressable in a proxy context
 Group:		System/Servers
 
 %description	mod_proxy_html
@@ -1095,7 +1096,7 @@ affected files (updating their last modified date) to ensure that all
 visitors are receive the corrected content headers.
 
 %package	mod_ldap
-Summary:	LDAP connection pooling and result caching services for use by other LDAP modules
+Summary:	LDAP connection pooling and result caching services
 Group:		System/Servers
 Requires:	apr-util-dbd-ldap
 Requires:	apache-mod_authnz_ldap
@@ -1237,7 +1238,7 @@ who can exploit this module.
 More information on the CERN metafile semantics is available.
 
 %package	mod_expires
-Summary:	Generation of Expires and Cache-Control HTTP headers according to user-specified criteria
+Summary:	Generation of Expires and Cache-Control HTTP headers
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
 
@@ -1300,7 +1301,7 @@ the identifier for each request. Unique identifiers are useful for various
 reasons which are beyond the scope of this document.
 
 %package	mod_setenvif
-Summary:	Allows the setting of environment variables based on characteristics of the request
+Summary:	Set the environment variables based on characteristics of the request
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
 
@@ -1329,7 +1330,7 @@ provides a new container -- <IfVersion>, which allows a flexible version
 checking including numeric comparisons and regular expressions.
 
 %package	mod_remoteip
-Summary:	Replaces the original client IP address for the connection with the useragent IP address
+Summary:	Replaces the original client IP address with the useragent IP address
 Group:		System/Servers
 
 %description	mod_remoteip
@@ -1655,7 +1656,7 @@ For more details on the session interface, see the documentation for the
 mod_session module.
 
 %package	mod_slotmem_shm
-Summary:	Slot-based shared memory provider.
+Summary:	Slot-based shared memory provider
 Group:		System/Servers
 
 %description	mod_slotmem_shm
@@ -1667,7 +1668,7 @@ or not. The data itself is stored and restored within a file noted by the
 name parameter in the create and attach calls.
 
 %package	mod_slotmem_plain
-Summary:	Slot-based shared memory provider.
+Summary:	Slot-based shared memory provider
 Group:		System/Servers
 
 %description	mod_slotmem_plain
@@ -1724,7 +1725,7 @@ Conflicts:	apache-modules < 2.4.0
 Description:optional hook import module
 
 %package	mod_dialup
-Summary:	Send static content at a bandwidth rate limit, defined by the various old modem standards
+Summary:	Send static content at a bandwidth rate limit, defined by old modem standards
 Group:		System/Servers
 
 %description	mod_dialup
@@ -1751,7 +1752,7 @@ It requires the services of mod_proxy_balancer, and provides the byrequests
 load balancing method..
 
 %package	mod_lbmethod_bytraffic
-Summary:	Weighted Traffic Counting load balancer scheduler algorithm for mod_proxy_balancer
+Summary:	Weighted Traffic Counting load balancer scheduler for mod_proxy_balancer
 Group:		System/Servers
 
 %description	mod_lbmethod_bytraffic
@@ -1760,7 +1761,7 @@ It requires the services of mod_proxy_balancer, and provides the bytraffic
 load balancing method..
 
 %package	mod_lbmethod_bybusyness
-Summary:	Pending Request Counting load balancer scheduler algorithm for mod_proxy_balancer
+Summary:	Pending Request Counting load balancer scheduler for mod_proxy_balancer
 Group:		System/Servers
 
 %description	mod_lbmethod_bybusyness
@@ -1769,7 +1770,7 @@ It requires the services of mod_proxy_balancer, and provides the bybusyness
 load balancing method.
 
 %package	mod_lbmethod_heartbeat
-Summary:	Heartbeat Traffic Counting load balancer scheduler algorithm for mod_proxy_balancer
+Summary:	Heartbeat Traffic Counting load balancer scheduler for mod_proxy_balancer
 Group:		System/Servers
 
 %description	mod_lbmethod_heartbeat
@@ -1782,7 +1783,7 @@ capacity every time. Servers that have 0 active clients are penalized,
 with the assumption that they are not fully initialized.
 
 %package	mod_unixd
-Summary:	Basic (required) security for Unix-family platforms.
+Summary:	Basic (required) security for Unix-family platforms
 Group:		System/Servers
 
 %description	mod_unixd
@@ -2077,7 +2078,7 @@ However, we are trying to phase out "magic MIME types" so we are deprecating
 this method.
 
 %package	mod_actions
-Summary:	This module provides for executing CGI scripts based on media type or request method.
+Summary:	Provides for executing CGI scripts based on media type or request method
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
 
@@ -2088,7 +2089,7 @@ directive lets you run CGI scripts whenever a particular method is used in
 a request. This makes it much easier to execute scripts that process files.
 
 %package	mod_speling
-Summary:	Attempts to correct mistaken URLs by ignoring capitalization, or attempting to correct various minor misspellings.
+Summary:	Attempts to correct various minor misspellings
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
 
@@ -2121,7 +2122,7 @@ This module allows user-specific directories to be accessed using the
 http://example.com/~user/ syntax.
 
 %package	mod_alias
-Summary:	Provides for mapping different parts of the host filesystem in the document tree and for URL redirection
+Summary:	Provides for mapping and for URL redirection
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
 
