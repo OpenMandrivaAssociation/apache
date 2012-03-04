@@ -50,6 +50,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
 BuildRequires:	lynx
 BuildRequires:	libcap-devel
+BuildRequires:	libxml2-devel
 BuildRequires:	lua-devel >= 5.1
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
