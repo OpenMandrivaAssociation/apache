@@ -39,6 +39,7 @@ BuildRequires:	bison
 BuildRequires:	byacc
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
+BuildRequires:	flex
 BuildRequires:	gdbm-devel
 BuildRequires:	libsasl-devel
 BuildRequires:	openldap-devel
