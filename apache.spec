@@ -1,4 +1,5 @@
-%define _disable_ld_no_undefined 1
+%define _build_pkgcheck_set %{nil}
+%define _build_pkgcheck_srpm %{nil}
 
 %define defaultmaxmodules 128
 %define defaultserverlimit 1024
@@ -10,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.1
-Release:	0.0.WIP.1
+Release:	0.0.WIP.2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -32,8 +33,9 @@ Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-2.2.21-linux3.diff
 Patch105:	httpd-2.2.17-filter.patch
 Patch106:	httpd-2.4.1-mdv_config.diff
+Patch107:	httpd-2.4.1-linkage_fix.diff
 BuildRequires:	autoconf automake libtool
-BuildRequires:	apr-devel >= 1:1.4.5
+BuildRequires:	apr-devel >= 1:1.4.6
 BuildRequires:	apr-util-devel >= 1.4.1
 BuildRequires:	bison
 BuildRequires:	byacc
@@ -41,17 +43,17 @@ BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	flex
 BuildRequires:	gdbm-devel
+BuildRequires:	libcap-devel
 BuildRequires:	libsasl-devel
+BuildRequires:	libxml2-devel
+BuildRequires:	lua-devel >= 5.1
+BuildRequires:	lynx
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pcre-devel
 BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
-BuildRequires:	lynx
-BuildRequires:	libcap-devel
-BuildRequires:	libxml2-devel
-BuildRequires:	lua-devel >= 5.1
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -82,6 +84,7 @@ Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
 Provides:	apache = %{version}-%{release}
+Provides:	apache-mpm = %{version}-%{release}
 
 %description	mpm-prefork
 This Multi-Processing Module (MPM) implements a non-threaded, pre-forking web
@@ -197,6 +200,8 @@ file to be able to use this MPM.
 %package	base
 Summary:	Common files and utilities for apache
 Group:		System/Servers
+Requires(pre): rpm-helper
+Requires(postun): rpm-helper
 Requires:	apache = %{version}-%{release}
 Provides:	apache-conf = %{version}-%{release}
 Obsoletes:	apache-conf
@@ -209,46 +214,48 @@ access control, the apache logs and more.
 %package	modules
 Summary:	Meta package
 Group:		System/Servers
-Suggests:	apache-mod_actions = %{version}-%{release}
-Suggests:	apache-mod_alias = %{version}-%{release}
-Suggests:	apache-mod_auth_basic = %{version}-%{release}
-Suggests:	apache-mod_auth_digest = %{version}-%{release}
-Suggests:	apache-mod_authn_alias = %{version}-%{release}
-Suggests:	apache-mod_authn_anon = %{version}-%{release}
-Suggests:	apache-mod_authn_default = %{version}-%{release}
-Suggests:	apache-mod_authn_file = %{version}-%{release}
-Suggests:	apache-mod_authz_dbm = %{version}-%{release}
-Suggests:	apache-mod_authz_default = %{version}-%{release}
-Suggests:	apache-mod_authz_groupfile = %{version}-%{release}
-Suggests:	apache-mod_authz_host = %{version}-%{release}
-Suggests:	apache-mod_authz_owner = %{version}-%{release}
-Suggests:	apache-mod_authz_user = %{version}-%{release}
-Suggests:	apache-mod_autoindex = %{version}-%{release}
-Suggests:	apache-mod_cgi = %{version}-%{release}
-Suggests:	apache-mod_dir = %{version}-%{release}
-Suggests:	apache-mod_env = %{version}-%{release}
-Suggests:	apache-mod_expires = %{version}-%{release}
-Suggests:	apache-mod_filter = %{version}-%{release}
-Suggests:	apache-mod_headers = %{version}-%{release}
-Suggests:	apache-mod_imagemap = %{version}-%{release}
-Suggests:	apache-mod_include = %{version}-%{release}
-Suggests:	apache-mod_info = %{version}-%{release}
-Suggests:	apache-mod_log_config = %{version}-%{release}
-Suggests:	apache-mod_mime = %{version}-%{release}
-Suggests:	apache-mod_mime_magic = %{version}-%{release}
-Suggests:	apache-mod_negotiation = %{version}-%{release}
-Suggests:	apache-mod_rewrite = %{version}-%{release}
-Suggests:	apache-mod_setenvif = %{version}-%{release}
-Suggests:	apache-mod_status = %{version}-%{release}
-Suggests:	apache-mod_substitute = %{version}-%{release}
-Suggests:	apache-mod_unique_id = %{version}-%{release}
-Suggests:	apache-mod_usertrack = %{version}-%{release}
-Suggests:	apache-mod_version = %{version}-%{release}
-Suggests:	apache-mod_vhost_alias = %{version}-%{release}
-# new ones
-Suggests:	apache-mod_authz_core = %{version}-%{release}
-Suggests:	apache-mod_authz_host = %{version}-%{release}
-Suggests:	apache-mod_unixd = %{version}-%{release}
+Requires:	apache-mpm = %{version}-%{release}
+Requires:	apache-mod_actions = %{version}-%{release}
+Requires:	apache-mod_alias = %{version}-%{release}
+Requires:	apache-mod_auth_basic = %{version}-%{release}
+Requires:	apache-mod_auth_digest = %{version}-%{release}
+Requires:	apache-mod_authn_anon = %{version}-%{release}
+Requires:	apache-mod_authn_file = %{version}-%{release}
+Requires:	apache-mod_authz_dbm = %{version}-%{release}
+Requires:	apache-mod_authz_groupfile = %{version}-%{release}
+Requires:	apache-mod_authz_host = %{version}-%{release}
+Requires:	apache-mod_authz_owner = %{version}-%{release}
+Requires:	apache-mod_authz_user = %{version}-%{release}
+Requires:	apache-mod_autoindex = %{version}-%{release}
+Requires:	apache-mod_cgi = %{version}-%{release}
+Requires:	apache-mod_dir = %{version}-%{release}
+Requires:	apache-mod_env = %{version}-%{release}
+Requires:	apache-mod_expires = %{version}-%{release}
+Requires:	apache-mod_filter = %{version}-%{release}
+Requires:	apache-mod_headers = %{version}-%{release}
+Requires:	apache-mod_imagemap = %{version}-%{release}
+Requires:	apache-mod_include = %{version}-%{release}
+Requires:	apache-mod_info = %{version}-%{release}
+Requires:	apache-mod_log_config = %{version}-%{release}
+Requires:	apache-mod_mime = %{version}-%{release}
+Requires:	apache-mod_mime_magic = %{version}-%{release}
+Requires:	apache-mod_negotiation = %{version}-%{release}
+Requires:	apache-mod_rewrite = %{version}-%{release}
+Requires:	apache-mod_setenvif = %{version}-%{release}
+Requires:	apache-mod_status = %{version}-%{release}
+Requires:	apache-mod_substitute = %{version}-%{release}
+Requires:	apache-mod_unique_id = %{version}-%{release}
+Requires:	apache-mod_usertrack = %{version}-%{release}
+Requires:	apache-mod_version = %{version}-%{release}
+Requires:	apache-mod_vhost_alias = %{version}-%{release}
+# new 2.3+ modules
+Requires:	apache-mod_authz_core = %{version}-%{release}
+Requires:	apache-mod_authz_host = %{version}-%{release}
+Requires:	apache-mod_unixd = %{version}-%{release}
+# obsolete 2.2 modules
+Obsoletes:	apache-mod_authz_default
+Obsoletes:	apache-mod_authn_alias
+Obsoletes:	apache-mod_authn_default
 
 %description	modules
 This is a meta package that pulls in the apache modules used as default in the
@@ -1347,8 +1354,8 @@ RemoteIPHeader directive.
 
 Once replaced as instructed, this overridden useragent IP address is then used
 for the mod_authz_host <Require ip> feature, is reported by mod_status, and
-is recorded by mod_log_config %a and core %a format strings. The underlying
-client IP of the connection is available in the %{c}a format string.  It is
+is recorded by mod_log_config \%a and core \%a format strings. The underlying
+client IP of the connection is available in the \%{c}a format string.  It is
 critical to only enable this behavior from intermediate hosts (proxies,
 etc) which are trusted by this server, since it is trivial for the remote
 useragent to impersonate another useragent.
@@ -2185,8 +2192,8 @@ directories at regular intervals for cached content to be removed.
 %package	devel
 Summary:	Module development tools for the apache web server
 Group:		Development/C
-Requires:	apr-devel >= 1:1.3.0
-Requires:	apr-util-devel >= 1.3.0
+Requires:	apr-devel >= 1:1.4.6
+Requires:	apr-util-devel >= 1.4.1
 Requires:	autoconf automake libtool
 Requires:	byacc
 Requires:	db-devel
@@ -2238,6 +2245,7 @@ web browser and point to this URL: http://localhost/manual
 %patch19 -p0 -b .linux3.droplet
 %patch105 -p1 -b .filter.droplet
 %patch106 -p1
+%patch107 -p1
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -2277,7 +2285,7 @@ cat >> config.layout << EOF
     manualdir:     %{_datadir}/doc/apache-doc
     cgidir:        /var/www/cgi-bin
     localstatedir: /var
-    runtimedir:    /var/run
+    runtimedir:    /var/run/httpd
     logfiledir:    /var/log/httpd
     proxycachedir: /var/cache/httpd/mod_proxy
 </Layout>
@@ -2400,6 +2408,11 @@ for mpm in worker event prefork; do
 	    --enable-cern-meta=shared \
 	    --enable-ident=shared \
 	    --enable-imagemap=shared
+
+    # nuke excessive use of ldflags
+    perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
+    perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{ldflags}|g" build/config_vars.mk
+
     fi
 
     if [ ${mpm} = worker ]; then
@@ -2408,6 +2421,9 @@ for mpm in worker event prefork; do
 	    --enable-modules=none
     # don't build support tools
     perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
+    # nuke excessive use of ldflags
+    perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
+    perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{ldflags}|g" build/config_vars.mk
     fi
 
     if [ ${mpm} = event ]; then
@@ -2416,6 +2432,9 @@ for mpm in worker event prefork; do
 	    --enable-modules=none
     # don't build support tools
     perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
+    # nuke excessive use of ldflags
+    perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
+    perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{ldflags}|g" build/config_vars.mk
     fi
 
     #Copy configure flags to a file in the apache-source rpm.
@@ -2516,15 +2535,11 @@ perl -pi -e "s|^EXTRA_INCLUDES.*|EXTRA_INCLUDES = `apr-1-config --includes` -I%{
 perl -pi -e "s|^LIBTOOL.*|LIBTOOL = libtool|g" $CVMK
 perl -pi -e "s|^SH_LIBTOOL.*|SH_LIBTOOL = libtool|g" $CVMK
 
-# fix multiple ldflags
-perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" $CVMK
-
 # if the following 3 lines needs to be enabled again, use the ".*" wildcard as in
 # "s|bla bla =.*|bla bla = replaced whatever text after the equal char...|g"
 #perl -pi -e "s|installbuilddir =.*|installbuilddir = %{_libdir}/apache/build|g" $CVMK
 #perl -pi -e "s|htdocsdir =.*|htdocsdir = /var/www/html|g" $CVMK
 #perl -pi -e "s|logfiledir =.*|logfiledir = /var/log/httpd|g" $CVMK
-
 echo "ap_version = %{version}" >> $CVMK
 echo "ap_release = %{release}" >> $CVMK
 
@@ -2586,6 +2601,7 @@ install -m0644 Mandriva/fileprotector.conf %{buildroot}%{_sysconfdir}/httpd/conf
 install -m0644 Mandriva/httpd.sysconf %{buildroot}%{_sysconfdir}/sysconfig/httpd
 install -m0644 Mandriva/favicon.ico %{buildroot}/var/www/html/
 install -m0644 Mandriva/robots.txt %{buildroot}/var/www/html/
+install -m0644 Mandriva/rpm.png  %{buildroot}/var/www/icons/
 install -m0644 Mandriva/httpd.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/httpd
 
 %multiarch_includes %{buildroot}%{_includedir}/apache/ap_config_layout.h
@@ -3660,19 +3676,16 @@ fi
 
 %files mpm-prefork
 %defattr(-,root,root)
-%doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf
 %attr(0755,root,root) %{_sbindir}/httpd
 /lib/systemd/system/httpd.service
 
 %files mpm-worker
 %defattr(-,root,root)
-%doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf
 %attr(0755,root,root) %{_sbindir}/httpd-worker
 /lib/systemd/system/httpd-worker.service
 
 %files mpm-event
 %defattr(-,root,root)
-%doc etc/httpd/conf/httpd.conf etc/httpd/conf/extra/*.conf
 %attr(0755,root,root) %{_sbindir}/httpd-event
 /lib/systemd/system/httpd-event.service
 
