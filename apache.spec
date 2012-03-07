@@ -1,8 +1,8 @@
 %define _build_pkgcheck_set %{nil}
 %define _build_pkgcheck_srpm %{nil}
 
-%define defaultmaxmodules 128
-%define defaultserverlimit 1024
+%define defaultmaxmodules 256
+%define defaultserverlimit 2048
 
 %define TAG Mandriva Linux
 %define BASEPRODUCT Apache
@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.1
-Release:	0.3
+Release:	0.4
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -1936,6 +1936,17 @@ access to your server configuration information:
 Once configured, the server information is obtained by accessing
 http://your.host.example.com/server-info
 
+%package	mod_suexec
+Summary:	Allows CGI scripts to run as a specified user and Group
+Group:		System/Servers
+
+%description	mod_suexec
+This module, in combination with the suexec support program allows CGI scripts
+to run as a specified user and Group.
+
+Normally, when a CGI or SSI program executes, it runs as the same user who is
+running the web server.
+
 %package	mod_cgi
 Summary:	Execution of CGI scripts
 Group:		System/Servers
@@ -2224,9 +2235,7 @@ your own customized apache if needed.
 %package	doc
 Summary:	The apache Manual
 Group:		System/Servers
-%if %mdkversion >= 201000
 BuildArch:	noarch
-%endif
 
 %description	doc
 This package contains the apache server documentation in HTML format.
@@ -2407,7 +2416,8 @@ for mpm in worker event prefork; do
 	    --enable-charset_lite=shared --enable-authn_alias=shared \
 	    --enable-cern-meta=shared \
 	    --enable-ident=shared \
-	    --enable-imagemap=shared
+	    --enable-imagemap=shared \
+	    --enable-suexec=shared
 
     # nuke excessive use of ldflags
     perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
@@ -2618,8 +2628,6 @@ find %{buildroot}%{_datadir}/doc/apache-doc -type d -exec chmod 755 {} \;
 find %{buildroot}%{_datadir}/doc/apache-doc -type f -exec chmod 644 {} \;
 
 # cleanup
-rm -f %{buildroot}%{_sbindir}/suexec
-rm -f  %{buildroot}%{_mandir}/man8/suexec.8*
 rm -rf %{buildroot}/var/www/cgi-bin/printenv
 rm -rf %{buildroot}/var/www/cgi-bin/test-cgi
 
@@ -3544,6 +3552,14 @@ if [ "$1" = "0" ]; then
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
+%post mod_suexec
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+
+%postun mod_suexec
+if [ "$1" = "0" ]; then
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+
 %post mod_cgi
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
@@ -3664,443 +3680,346 @@ if [ "$1" = "0" ]; then
     fi
 fi
 
-%post doc
-%if %mdkversion < 201010
-%_post_webapp
-%endif
-
-%postun doc
-%if %mdkversion < 201010
-%_postun_webapp
-%endif
-
 %files mpm-prefork
-%defattr(-,root,root)
 %attr(0755,root,root) %{_sbindir}/httpd
 /lib/systemd/system/httpd.service
 
 %files mpm-worker
-%defattr(-,root,root)
 %attr(0755,root,root) %{_sbindir}/httpd-worker
 /lib/systemd/system/httpd-worker.service
 
 %files mpm-event
-%defattr(-,root,root)
 %attr(0755,root,root) %{_sbindir}/httpd-event
 /lib/systemd/system/httpd-event.service
 
 %files modules
-%defattr(-,root,root)
 
 %files mod_authn_file
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/001_mod_authn_file.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authn_file.so
 
 %files mod_authn_dbm
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/002_mod_authn_dbm.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authn_dbm.so
 
 %files mod_authn_anon
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/003_mod_authn_anon.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authn_anon.so
 
 %files mod_authn_dbd
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/004_mod_authn_dbd.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authn_dbd.so
 
 %files mod_authn_socache
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/005_mod_authn_socache.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authn_socache.so
 
 %files mod_authn_core
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/006_mod_authn_core.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authn_core.so
 
 %files mod_authz_host
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/007_mod_authz_host.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_host.so
 
 %files mod_authz_groupfile
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/008_mod_authz_groupfile.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_groupfile.so
 
 %files mod_authz_user
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/009_mod_authz_user.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_user.so
 
 %files mod_authz_dbm
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/010_mod_authz_dbm.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_dbm.so
 
 %files mod_authz_owner
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/011_mod_authz_owner.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_owner.so
 
 %files mod_authz_dbd
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/012_mod_authz_dbd.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_dbd.so
 
 %files mod_authz_core
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/013_mod_authz_core.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authz_core.so
 
 %files mod_authnz_ldap
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/014_mod_authnz_ldap.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_authnz_ldap.so
 
 %files mod_access_compat
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/015_mod_access_compat.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_access_compat.so
 
 %files mod_auth_basic
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/016_mod_auth_basic.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_auth_basic.so
 
 %files mod_auth_form
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/017_mod_auth_form.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_auth_form.so
 
 %files mod_auth_digest
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/018_mod_auth_digest.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_auth_digest.so
 
 %files mod_allowmethods
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/019_mod_allowmethods.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_allowmethods.so
 
 %files mod_file_cache
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/020_mod_file_cache.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_file_cache.so
 
 %files mod_cache
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/021_mod_cache.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_cache.so
 
 %files mod_cache_disk
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/022_mod_cache_disk.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_cache_disk.so
 
 %files mod_socache_shmcb
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/023_mod_socache_shmcb.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_socache_shmcb.so
 
 %files mod_socache_dbm
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/024_mod_socache_dbm.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_socache_dbm.so
 
 %files mod_socache_memcache
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/025_mod_socache_memcache.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_socache_memcache.so
 
 %files mod_watchdog
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/026_mod_watchdog.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_watchdog.so
 
 %files mod_dbd
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/027_mod_dbd.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dbd.so
 
 %files mod_bucketeer
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/028_mod_bucketeer.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_bucketeer.so
 
 %files mod_dumpio
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/029_mod_dumpio.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dumpio.so
 
 %files mod_echo
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/030_mod_echo.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_echo.so
 
 %files mod_case_filter
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/031_mod_case_filter.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_case_filter.so
 
 %files mod_case_filter_in
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/032_mod_case_filter_in.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_case_filter_in.so
 
 %files mod_buffer
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/033_mod_buffer.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_buffer.so
 
 %files mod_data
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/034_mod_data.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_data.so
 
 %files mod_ratelimit
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/035_mod_ratelimit.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ratelimit.so
 
 %files mod_reqtimeout
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/036_mod_reqtimeout.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_reqtimeout.so
 
 %files mod_ext_filter
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/037_mod_ext_filter.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ext_filter.so
 
 %files mod_request
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/038_mod_request.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_request.so
 
 %files mod_include
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/039_mod_include.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_include.so
 
 %files mod_filter
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/040_mod_filter.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_filter.so
 
 %files mod_reflector
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/041_mod_reflector.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_reflector.so
 
 %files mod_substitute
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/042_mod_substitute.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_substitute.so
 
 %files mod_sed
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/043_mod_sed.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_sed.so
 
 %files mod_charset_lite
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/044_mod_charset_lite.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_charset_lite.so
 
 %files mod_deflate
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/045_mod_deflate.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_deflate.so
 
 %files mod_xml2enc
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/046_mod_xml2enc.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_xml2enc.so
 
 %files mod_proxy_html
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/047_mod_proxy_html.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_html.so
 
 %files mod_mime
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/048_mod_mime.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_mime.so
 
 %files mod_ldap
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/049_mod_ldap.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ldap.so
 %attr(0600,apache,root) %ghost /var/cache/httpd/mod_ldap_cache
 
 %files mod_log_config
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/050_mod_log_config.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_log_config.so
 
 %files mod_log_debug
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/051_mod_log_debug.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_log_debug.so
 
 %files mod_log_forensic
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/052_mod_log_forensic.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_log_forensic.so
 
 %files mod_logio
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/053_mod_logio.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_logio.so
 
 %files mod_lua
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/054_mod_lua.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_lua.so
 
 %files mod_env
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/055_mod_env.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_env.so
 
 %files mod_mime_magic
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/056_mod_mime_magic.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_mime_magic.so
 
 %files mod_cern_meta
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/057_mod_cern_meta.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_cern_meta.so
 
 %files mod_expires
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/058_mod_expires.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_expires.so
 
 %files mod_headers
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/059_mod_headers.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_headers.so
 
 %files mod_ident
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/060_mod_ident.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ident.so
 
 %files mod_usertrack
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/061_mod_usertrack.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_usertrack.so
 
 %files mod_unique_id
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/062_mod_unique_id.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_unique_id.so
 
 %files mod_setenvif
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/063_mod_setenvif.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_setenvif.so
 
 %files mod_version
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/064_mod_version.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_version.so
 
 %files mod_remoteip
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/065_mod_remoteip.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_remoteip.so
 
 %files mod_proxy
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/066_mod_proxy.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy.so
-%attr(0770,apache,root) %dir /var/cache/httpd/mod_proxy
 
 %files mod_proxy_connect
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/067_mod_proxy_connect.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_connect.so
 
 %files mod_proxy_ftp
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/068_mod_proxy_ftp.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_ftp.so
 
 %files mod_proxy_http
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/069_mod_proxy_http.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_http.so
 
 %files mod_proxy_fcgi
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/070_mod_proxy_fcgi.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_fcgi.so
 
 %files mod_proxy_scgi
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/071_mod_proxy_scgi.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_scgi.so
 
 %files mod_proxy_fdpass
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/072_mod_proxy_fdpass.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_fdpass.so
 
 %files mod_proxy_ajp
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/073_mod_proxy_ajp.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_ajp.so
 
 %files mod_proxy_balancer
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/074_mod_proxy_balancer.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_balancer.so
 
 %files mod_proxy_express
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/075_mod_proxy_express.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_express.so
 
 %files mod_session
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/076_mod_session.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_session.so
 
 %files mod_session_cookie
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/077_mod_session_cookie.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_session_cookie.so
 
 %files mod_session_crypto
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/078_mod_session_crypto.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_session_crypto.so
 
 %files mod_session_dbd
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/079_mod_session_dbd.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_session_dbd.so
 
 %files mod_slotmem_shm
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/080_mod_slotmem_shm.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_slotmem_shm.so
 
 %files mod_slotmem_plain
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/081_mod_slotmem_plain.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_slotmem_plain.so
 
 %files mod_ssl
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/082_mod_ssl.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ssl.so
 %attr(0700,apache,root) %dir /var/cache/httpd/mod_ssl
@@ -4109,155 +4028,131 @@ fi
 %attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.sem
 
 %files mod_optional_hook_export
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/083_mod_optional_hook_export.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_optional_hook_export.so
 
 %files mod_optional_hook_import
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/084_mod_optional_hook_import.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_optional_hook_import.so
 
 %files mod_optional_fn_import
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/085_mod_optional_fn_import.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_optional_fn_import.so
 
 %files mod_optional_fn_export
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/086_mod_optional_fn_export.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_optional_fn_export.so
 
 %files mod_dialup
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/087_mod_dialup.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dialup.so
 
 %files mod_lbmethod_byrequests
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/088_mod_lbmethod_byrequests.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_lbmethod_byrequests.so
 
 %files mod_lbmethod_bytraffic
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/089_mod_lbmethod_bytraffic.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_lbmethod_bytraffic.so
 
 %files mod_lbmethod_bybusyness
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/090_mod_lbmethod_bybusyness.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_lbmethod_bybusyness.so
 
 %files mod_lbmethod_heartbeat
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/091_mod_lbmethod_heartbeat.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_lbmethod_heartbeat.so
 
 %files mod_unixd
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/092_mod_unixd.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_unixd.so
 
 %files mod_heartbeat
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/093_mod_heartbeat.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_heartbeat.so
 
 %files mod_heartmonitor
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/094_mod_heartmonitor.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_heartmonitor.so
 
 %files mod_dav
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/095_mod_dav.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dav.so
 %attr(-,apache,apache) %dir /var/lib/dav
 %attr(-,apache,apache) %dir /var/lib/dav/uploads
 
 %files mod_status
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/096_mod_status.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_status.so
 
 %files mod_autoindex
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/097_mod_autoindex.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_autoindex.so
 
 %files mod_asis
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/098_mod_asis.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_asis.so
 
 %files mod_info
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/099_mod_info.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_info.so
 
+%files mod_suexec
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/100_mod_suexec.conf
+%attr(0755,root,root) %{_libdir}/apache/mod_suexec.so
+%attr(0755,root,root) %{_sbindir}/suexec
+%attr(0644,root,root) %{_mandir}/man8/suexec.8*
+
 %files mod_cgi
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/100_mod_cgi.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/101_mod_cgi.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_cgi.so
 
 %files mod_cgid
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/101_mod_cgid.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/102_mod_cgid.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_cgid.so
 
 %files mod_dav_fs
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/102_mod_dav_fs.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/103_mod_dav_fs.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dav_fs.so
 
 %files mod_dav_lock
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/103_mod_dav_lock.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/104_mod_dav_lock.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dav_lock.so
 
 %files mod_vhost_alias
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/104_mod_vhost_alias.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/105_mod_vhost_alias.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_vhost_alias.so
 
 %files mod_negotiation
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/105_mod_negotiation.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/106_mod_negotiation.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_negotiation.so
 
 %files mod_dir
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/106_mod_dir.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/107_mod_dir.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dir.so
 
 %files mod_imagemap
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/107_mod_imagemap.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/108_mod_imagemap.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_imagemap.so
 
 %files mod_actions
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/108_mod_actions.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/109_mod_actions.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_actions.so
 
 %files mod_speling
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/109_mod_speling.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/110_mod_speling.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_speling.so
 
 %files mod_userdir
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/110_mod_userdir.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/111_mod_userdir.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_userdir.so
 
 %files mod_alias
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/111_mod_alias.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/112_mod_alias.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_alias.so
 
 %files mod_rewrite
-%defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/112_mod_rewrite.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/113_mod_rewrite.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_rewrite.so
 
 %files base
@@ -4343,14 +4238,12 @@ fi
 %{_mandir}/*/*
 
 %files htcacheclean
-%defattr(-,root,root)
 %attr(0755,root,root) %{_initrddir}/htcacheclean
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/htcacheclean
 %attr(0755,root,root) %{_sbindir}/htcacheclean
 %{_mandir}/man8/htcacheclean.8*
 
 %files devel
-%defattr(-,root,root)
 %{multiarch_includedir}/apache/ap_config_layout.h
 %{_includedir}/apache
 %attr(0755,root,root) %dir %{_libdir}/apache/build
@@ -4362,9 +4255,7 @@ fi
 %attr(0755,root,root) %{_libdir}/apache/httpd.exp
 
 %files source
-%defattr(-,root,root)
 %{_usrsrc}/apache-%{version}
 
 %files doc
-%defattr(-,root,root)
 %{_datadir}/doc/apache-doc
