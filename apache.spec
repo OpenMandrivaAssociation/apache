@@ -34,16 +34,13 @@ Patch19:	httpd-2.2.21-linux3.diff
 Patch105:	httpd-2.2.17-filter.patch
 Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
+Patch108:	httpd-2.4.1-buildfix.diff
 BuildRequires:	autoconf automake libtool
 BuildRequires:	apr-devel >= 1:1.4.6
 BuildRequires:	apr-util-devel >= 1.4.1
-BuildRequires:	bison
-BuildRequires:	byacc
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
-BuildRequires:	flex
 BuildRequires:	gdbm-devel
-BuildRequires:	libcap-devel
 BuildRequires:	libsasl-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	lua-devel >= 5.1
@@ -2255,6 +2252,7 @@ web browser and point to this URL: http://localhost/manual
 %patch105 -p1 -b .filter.droplet
 %patch106 -p1
 %patch107 -p1
+%patch108 -p0
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
