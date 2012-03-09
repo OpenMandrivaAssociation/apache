@@ -4169,6 +4169,9 @@ fi
 %dir %{_sysconfdir}/httpd/conf/vhosts.d
 %dir %{_sysconfdir}/httpd/conf.d
 %dir %{_sysconfdir}/httpd/modules.d
+%dir %{_sysconfdir}/httpd/conf/extra
+%dir %{_sysconfdir}/httpd/conf/original
+%dir %{_sysconfdir}/httpd/conf/original/extra
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-autoindex.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-dav.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-default.conf
@@ -4238,6 +4241,7 @@ fi
 %attr(0755,root,root) %dir %{_libdir}/apache
 %attr(0700,apache,root) %dir /var/cache/httpd
 %exclude %{_mandir}/man8/htcacheclean.8*
+%exclude %{_mandir}/man8/suexec.8*
 %{_mandir}/*/*
 
 %files htcacheclean
