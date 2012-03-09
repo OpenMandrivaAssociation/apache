@@ -2310,6 +2310,11 @@ perl -pi -e "s|DEFAULT_SERVER_LIMIT 256|DEFAULT_SERVER_LIMIT %{?!serverlimit:%{d
 # tag it with the "legacy" name so that we can track this at netcraft...
 perl -pi -e "s|^#define AP_SERVER_BASEPRODUCT .*|#define AP_SERVER_BASEPRODUCT \"%{BASEPRODUCT}\"|g" include/ap_release.h
 
+# avoid regenerating code with yacc
+pushd server
+    touch util_expr_scan.c util_expr_parse.c util_expr_parse.h util_expr_scan.l util_expr_parse.y
+popd
+
 # prepare the apache-source package
 rm -rf %{_builddir}/tmp-httpd-%{version}; mkdir -p %{_builddir}/tmp-httpd-%{version}/usr/src
 cp -dpR %{_builddir}/httpd-%{version} %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}
