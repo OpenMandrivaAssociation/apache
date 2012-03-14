@@ -11,14 +11,15 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.1
-Release:	0.4
+Release:	0.5
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
 Source0:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz
 Source1:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz.asc
+Source2:	webapp.script
 Source3:	apache2_transparent_png_icons.tar.bz2
-Source9: 	htcacheclean.init
+Source9: 	htcacheclean.service
 Source10: 	htcacheclean.sysconfig
 Source11:	Mandriva.tar.gz
 Source15:	httpd.service
@@ -144,14 +145,6 @@ You can change these values at RPM build time by using for example:
 
 The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
 
-I M P O R T A N T
------------------
-Note that the worker mpm (this package) requires thread safe modules. This 
-package is totally experimental and may not be stable or suitable at any time,
-in any way, or for any kind production usage. Be warned. You must manually
-add HTTPD="/usr/sbin/httpd-worker" in the /etc/sysconfig/httpd configuration
-file to be able to use this MPM.
-
 %package	mpm-event
 Summary:	Implements a hybrid multi-threaded multi-process web server
 Group:		System/Servers
@@ -185,14 +178,6 @@ You can change these values at RPM build time by using for example:
 --define 'maxmodules 512'
 
 The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}} dynamically loadable modules.
-
-I M P O R T A N T
------------------
-Note that the worker mpm (this package) requires thread safe modules. This 
-package is totally experimental and may not be stable or suitable at any time,
-in any way, or for any kind production usage. Be warned. You must manually
-add HTTPD="/usr/sbin/httpd-event" in the /etc/sysconfig/httpd configuration
-file to be able to use this MPM.
 
 %package	base
 Summary:	Common files and utilities for apache
@@ -2203,13 +2188,12 @@ Group:		Development/C
 Requires:	apr-devel >= 1:1.4.6
 Requires:	apr-util-devel >= 1.4.1
 Requires:	autoconf automake libtool
-Requires:	byacc
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
 Requires:	libsasl-devel
 Requires:	openssl-devel
-Requires:	pcre-devel >= 5.0
+Requires:	pcre-devel
 Requires:	perl >= 0:5.600
 Requires:	pkgconfig
 Requires:	zlib-devel
@@ -2299,7 +2283,7 @@ cat >> config.layout << EOF
 EOF
 
 #Fix DYNAMIC_MODULE_LIMIT
-perl -pi -e "s/DYNAMIC_MODULE_LIMIT 64/DYNAMIC_MODULE_LIMIT %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}}/;" include/httpd.h
+perl -pi -e "s/DYNAMIC_MODULE_LIMIT 256/DYNAMIC_MODULE_LIMIT %{?!maxmodules:%{defaultmaxmodules}}%{?maxmodules:%{maxmodules}}/;" include/httpd.h
 
 # don't try to touch srclib
 perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules support|g" Makefile.in
@@ -2315,19 +2299,19 @@ pushd server
     touch util_expr_scan.c util_expr_parse.c util_expr_parse.h util_expr_scan.l util_expr_parse.y
 popd
 
-# prepare the apache-source package
-rm -rf %{_builddir}/tmp-httpd-%{version}; mkdir -p %{_builddir}/tmp-httpd-%{version}/usr/src
-cp -dpR %{_builddir}/httpd-%{version} %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}
-rm -rf %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}/perl-framework
-rm -rf %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}/tmp-httpd-%{version}/usr/src
-rm -f %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/*.spec
-
 # use my nice converted transparent png icons
 tar -jxf %{SOURCE3}
 mv icons/*.png docs/icons/
 
+# prepare the apache-source package
+rm -rf %{_builddir}/tmp-httpd-%{version}; mkdir -p %{_builddir}/tmp-httpd-%{version}/usr/src
+cp -dpR %{_builddir}/httpd-%{version} %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}
+rm -rf %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}/tmp-httpd-%{version}/usr/src
+rm -f %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/*.spec
+rm -rf %{_builddir}/tmp-httpd-%{version}/usr/src/apache-%{version}/Mandriva
+
 # add the htcacheclean stuff
-cp %{SOURCE9} htcacheclean.init
+cp %{SOURCE9} htcacheclean.service
 cp %{SOURCE10} htcacheclean.sysconfig
 
 # this will only work if configured correctly in the config (FullOs)...
@@ -2349,7 +2333,6 @@ touch -r httpd.service httpd-${mpm}.service
 #########################################################################################
 # configure and build phase
 #
-export WANT_AUTOCONF_2_5="1"
 
 # use a minimal buildconf instead
 cp %{SOURCE100} buildconf
@@ -2532,9 +2515,6 @@ for f in `find %{buildroot} -type f -name ".orig"` \
     rm -f $f
 done
 
-# this is needed to generate the vanilla config
-make -C build-prefork DESTDIR=`pwd` install-conf
-
 #Fix config_vars.mk, and add some MDK flags so all other modules 
 #can simply do "apxs -q VARIABLE" and know, for example, the exact
 #release of apache-devel or the exact directory where the source is
@@ -2567,8 +2547,6 @@ mv %{buildroot}%{_sbindir}/envvars %{buildroot}%{_libdir}/apache/build/
 rm -f %{buildroot}%{_libdir}/apache/build/config.nice
 
 ##################################################################
-
-##################################################################
 # install module conf files for the "modules.d" dir loading structure
 install -m0644 Mandriva/*mod_*.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 
@@ -2587,6 +2565,10 @@ done
 # Default httpd (prefork) service file
 install -p -m 644 httpd.service.def %{buildroot}/lib/systemd/system/httpd.service
 
+# install htcacheclean files
+install -m0644 htcacheclean.service %{buildroot}/lib/systemd/system/htcacheclean.service
+install -m0644 htcacheclean.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/htcacheclean
+
 # install missing files
 install -m755 build-prefork/support/split-logfile %{buildroot}%{_sbindir}/split-logfile
 install -m755 support/list_hooks.pl %{buildroot}%{_sbindir}/list_hooks.pl
@@ -2604,12 +2586,6 @@ touch %{buildroot}/var/cache/httpd/mod_ssl/scache.sem
 # fix a msec safe cache for the mod_ldap LDAPSharedCacheFile
 touch %{buildroot}/var/cache/httpd/mod_ldap_cache
 
-# install htcacheclean files
-install -d %{buildroot}%{_initrddir}
-install -d %{buildroot}%{_sysconfdir}/sysconfig
-install -m0755 htcacheclean.init %{buildroot}%{_initrddir}/htcacheclean
-install -m0644 htcacheclean.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/htcacheclean
-
 install -m0644 Mandriva/fileprotector.conf %{buildroot}%{_sysconfdir}/httpd/conf/fileprotector.conf
 install -m0644 Mandriva/httpd.sysconf %{buildroot}%{_sysconfdir}/sysconfig/httpd
 install -m0644 Mandriva/favicon.ico %{buildroot}/var/www/html/
@@ -2618,6 +2594,13 @@ install -m0644 Mandriva/rpm.png  %{buildroot}/var/www/icons/
 install -m0644 Mandriva/httpd.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/httpd
 
 %multiarch_includes %{buildroot}%{_includedir}/apache/ap_config_layout.h
+
+# rpm filetriggers
+install -d %{buildroot}%{_localstatedir}/lib/rpm/filetriggers
+cat > %{buildroot}%{_localstatedir}/lib/rpm/filetriggers/webapp.filter << EOF
+^./etc/httpd/conf/webapps.d/.*\.conf$
+EOF
+install -m0755 %{SOURCE2} %{buildroot}%{_localstatedir}/lib/rpm/filetriggers/webapp.script
 
 # add two important documentation files in the plain ASCII format
 cp docs/manual/upgrading.html.en upgrading.html
@@ -3668,19 +3651,11 @@ if [ "$1" = "0" ]; then
 fi
 
 %post htcacheclean
-%_post_service htcacheclean
-if [ -f %{_var}/lock/subsys/htcacheclean ]; then
-    %{_initrddir}/htcacheclean restart 1>&2;
-fi
-
-%preun htcacheclean
-%_preun_service htcacheclean
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
 %postun htcacheclean
 if [ "$1" = "0" ]; then
-    if [ -f %{_var}/lock/subsys/htcacheclean ]; then
-        %{_initrddir}/htcacheclean restart 1>&2
-    fi
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
 %files mpm-prefork
@@ -4240,15 +4215,16 @@ fi
 %attr(0755,root,root) %{_sbindir}/split-logfile
 %attr(0755,root,root) %dir %{_libdir}/apache
 %attr(0700,apache,root) %dir /var/cache/httpd
+%{_localstatedir}/lib/rpm/filetriggers/webapp.*
 %exclude %{_mandir}/man8/htcacheclean.8*
 %exclude %{_mandir}/man8/suexec.8*
 %{_mandir}/*/*
 
 %files htcacheclean
-%attr(0755,root,root) %{_initrddir}/htcacheclean
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/htcacheclean
 %attr(0755,root,root) %{_sbindir}/htcacheclean
 %{_mandir}/man8/htcacheclean.8*
+/lib/systemd/system/htcacheclean.service
 
 %files devel
 %{multiarch_includedir}/apache/ap_config_layout.h
