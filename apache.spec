@@ -534,6 +534,7 @@ server. The most common configuration would be:
 %package	mod_file_cache
 Summary:	Caches a static list of files in memory
 Group:		System/Servers
+Requires:	apache-mod_cache = %{version}-%{release}
 
 %description	mod_file_cache
 This module should be used with care. You can easily create a broken site
@@ -630,6 +631,7 @@ Summary:	Disk based storage module for the HTTP caching filter
 Group:		System/Servers
 Obsoletes:	apache-mod_disk_cache
 Suggests:	apache-htcacheclean = %{version}-%{release}
+Requires:	apache-mod_cache = %{version}-%{release}
 
 %description	mod_cache_disk
 mod_cache_disk implements a disk based storage manager for mod_cache.
