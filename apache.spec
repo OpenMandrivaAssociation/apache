@@ -10,7 +10,7 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.2
+Version:	2.4.3
 Release:	0.1
 Group:		System/Servers
 License:	Apache License
@@ -25,7 +25,7 @@ Source11:	Mandriva.tar.gz
 Source15:	httpd.service
 Source100:	buildconf
 Patch0:		httpd-2.0.45-deplibs.patch
-Patch8:		httpd-2.1.10-apxs.patch
+Patch8:		httpd-2.4.3-apxs.patch
 # http://issues.apache.org/bugzilla/show_bug.cgi?id=32524
 Patch15:	httpd-ab_source_address.diff
 # speedups by Allen Pulsifer
@@ -2230,15 +2230,15 @@ web browser and point to this URL: http://localhost/manual
 
 %setup -q -n httpd-%{version} -a11
 %patch0 -p0 -b .deplibs.droplet
-%patch8 -p0 -b .apxs.droplet
+%patch8 -p1 -b .apxs.droplet
 %patch15 -p1 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .linux3.droplet
 %patch105 -p1 -b .filter.droplet
-%patch106 -p1
-%patch107 -p1
-%patch108 -p0
+%patch106 -p1 -b .mdvconf~
+%patch107 -p1 -b .linkage~
+%patch108 -p0 -b .buildfix~
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
