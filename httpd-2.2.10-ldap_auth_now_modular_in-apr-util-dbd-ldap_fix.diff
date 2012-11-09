@@ -1,0 +1,11 @@
+--- modules/ldap/util_ldap.c	2008-12-18 18:31:03.000000000 +0100
++++ modules/ldap/util_ldap.c.oden	2009-07-23 17:00:18.000000000 +0200
+@@ -236,7 +236,7 @@ static int uldap_connection_init(request
+         /* something really bad happened */
+         ldc->bound = 0;
+         if (NULL == ldc->reason) {
+-            ldc->reason = "LDAP: ldap initialization failed";
++            ldc->reason = "LDAP: ldap initialization failed. Please try to install apr-util-dbd-ldap.";
+         }
+         return(APR_EGENERAL);
+     }

@@ -1,0 +1,10 @@
+sources:
+  "apache2_transparent_png_icons.tar.bz2:"	20bdf283abbdbd34580b4a6f08934cb8910a0d6a
+  "buildconf:"	879fe4ee7af960358625dece9b93c2479361109c
+  "htcacheclean.service:"	29e1292067006778e266d005e75ed9f9ae5bdcb9
+  "htcacheclean.sysconfig:"	d372d4b6340dae400b33ff115cb85e75d0e6a87a
+  "httpd-2.4.3.tar.gz:"	845ca56816b0352c7759b6b8f47bd012c0864efd
+  "httpd-2.4.3.tar.gz.asc:"	524fc73a15f68750029703fe139ae4e2ebecf952
+  "httpd.service:"	1e8e3c3c0bb35106f6ec637c68ea3290e20d81fe
+  "Mandriva.tar.gz:"	750e49ba5ac5ffa211626c51a410929321936bbd
+  "webapp.script:"	8704886b296c248a2bfbabdaa00c1b7b49d5befe

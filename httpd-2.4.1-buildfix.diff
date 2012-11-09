@@ -1,0 +1,26 @@
+
+ something is fishy here, so just nuke this part
+
+--- server/Makefile.in	2011-06-04 13:41:13.000000000 -0400
++++ server/Makefile.in.oden	2012-03-09 03:54:46.470895535 -0500
+@@ -83,20 +83,3 @@
+ 	$(CPP) $(ALL_CPPFLAGS) $(ALL_INCLUDES) export_vars.h | grep -v apr_ | sed -e 's/^\#[^!]*//' | sed -e '/^$$/d' >> $@
+ 
+ 
+-#   developer stuff
+-#   (we really don't expect end users to use these targets!)
+-#
+-util_expr_scan.c util_expr_parse.c util_expr_parse.h: util_expr_scan.l util_expr_parse.y
+-	bison -pap_expr_yy --defines=$(builddir)/util_expr_parse.h \
+-	    -o $(builddir)/util_expr_parse.c $(srcdir)/util_expr_parse.y
+-	flex -Pap_expr_yy -o $(builddir)/util_expr_scan.c $(srcdir)/util_expr_scan.l
+-	set -e ; \
+-	for f in util_expr_scan.c util_expr_parse.c util_expr_parse.h ; do \
+-		sed -e "s|\"$(builddir)/|\"|g" < $(builddir)/$$f > \
+-			$(builddir)/$$f.$$$$ && \
+-		mv $(builddir)/$$f.$$$$ $(builddir)/$$f ; \
+-	done
+-	# work around flex bug
+-	# http://sourceforge.net/tracker/?func=detail&aid=3029024&group_id=97492&atid=618177
+-	perl -0777 -p -i -e 's,\n(void|int) ap_expr_yy[gs]et_column[^\n]+\)\n.*?\n\},,gs' \
+-		$(builddir)/util_expr_scan.c

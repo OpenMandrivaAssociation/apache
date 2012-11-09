@@ -1,0 +1,17 @@
+--- configure.in	2012-01-03 13:30:22.000000000 +0000
++++ configure.in.oden	2012-01-03 13:33:16.000000000 +0000
+@@ -274,13 +274,7 @@
+       APR_SETVAR(SINGLE_LISTEN_UNSERIALIZED_ACCEPT, [1])
+       ;;
+   *-linux-*)
+-      case `uname -r` in
+-        2.[[2-9]]* ) 
+-            APR_SETVAR(SINGLE_LISTEN_UNSERIALIZED_ACCEPT, [1])
+-            ;;
+-        * )
+-            ;;
+-      esac
++      APR_SETVAR(SINGLE_LISTEN_UNSERIALIZED_ACCEPT, [1])
+       ;;
+   *486-*-bsdi* | *-netbsd* | *-freebsd* | *-apple-darwin* | *-dec-osf* | *-qnx)
+       APR_SETVAR(SINGLE_LISTEN_UNSERIALIZED_ACCEPT, [1])

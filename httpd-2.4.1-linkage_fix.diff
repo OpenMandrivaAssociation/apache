@@ -1,0 +1,40 @@
+--- httpd-2.4.3/acinclude.m4.linkage~	2012-07-23 17:20:48.000000000 +0200
++++ httpd-2.4.3/acinclude.m4	2012-08-22 18:20:49.965249406 +0200
+@@ -195,7 +195,7 @@ EOF
+       modpath_shared="$modpath_shared $libname"
+       cat >>$modpath_current/modules.mk<<EOF
+ $libname: $shobjects
+-	\$(SH_LINK) -rpath \$(libexecdir) -module -avoid-version $4 $objects $5
++	\$(SH_LINK) -rpath \$(libexecdir) -Wl,--unresolved-symbols=ignore-all -module -avoid-version $4 $objects $5
+ EOF
+     fi
+   fi
+@@ -249,7 +249,7 @@ EOF
+             shobjects=`echo $objects | sed 's/\.lo/.slo/g'`
+             cat >$mpmpath/modules.mk<<EOF
+ $libname: $shobjects
+-	\$(SH_LINK) -rpath \$(libexecdir) -module -avoid-version $objects $6
++	\$(SH_LINK) -rpath \$(libexecdir) -Wl,--unresolved-symbols=ignore-all -module -avoid-version $objects $6
+ DISTCLEAN_TARGETS = modules.mk
+ static =
+ shared = $libname
+--- httpd-2.4.3/support/apxs.in.linkage~	2012-08-22 18:20:49.954249406 +0200
++++ httpd-2.4.3/support/apxs.in	2012-08-22 18:21:31.227249609 +0200
+@@ -466,7 +466,7 @@ if ($opt_c) {
+     else {
+         my $apr_ldflags=`$apr_config --ldflags`;
+         chomp($apr_ldflags);
+-        $opt .= " -rpath $CFG_LIBEXECDIR -module -avoid-version $apr_ldflags";
++	$opt .= " -rpath $CFG_LIBEXECDIR -Wl,--unresolved-symbols=ignore-all -module -avoid-version $apr_ldflags";
+     }
+ 
+     push(@cmds, "$libtool $ltflags --mode=link $CFG_CC $ldflags -o $dso_file $opt $lo");
+@@ -713,7 +713,7 @@ stop:
+ 
+ -=#=-
+ mod_%NAME%.la: mod_%NAME%.slo
+-	$(SH_LINK) -rpath $(libexecdir) -module -avoid-version  mod_%NAME%.lo
++	$(SH_LINK) -rpath $(libexecdir) -Wl,--unresolved-symbols=ignore-all -module -avoid-version  mod_%NAME%.lo
+ DISTCLEAN_TARGETS = modules.mk
+ shared =  mod_%NAME%.la
+ -=#=-

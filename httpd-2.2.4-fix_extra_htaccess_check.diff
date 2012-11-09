@@ -1,0 +1,28 @@
+--- server/request.c	2006-07-12 05:38:44.000000000 +0200
++++ server/request.c.oden	2007-06-14 13:08:22.000000000 +0200
+@@ -931,12 +931,20 @@
+ #ifdef CASE_BLIND_FILESYSTEM
+                 && (filename_len <= canonical_len)
+ #endif
+-                && ((opts.opts & (OPT_SYM_OWNER | OPT_SYM_LINKS)) == OPT_SYM_LINKS))
++                && (opts.opts & OPT_SYM_LINKS) )
+             {
+-
+-                thisinfo.filetype = APR_DIR;
+-                ++seg;
+-                continue;
++                if ((r->path_info && *r->path_info) || r->finfo.filetype == APR_DIR)
++                {
++                    thisinfo.filetype = APR_DIR;
++                    ++seg;
++                    continue;
++                }
++                else if (r->finfo.filetype == APR_REG)
++                {
++                    thisinfo.filetype = APR_REG;
++                    ++seg;
++                    break;
++                }
+             }
+ 
+             /* We choose apr_stat with flag APR_FINFO_LINK here, rather that

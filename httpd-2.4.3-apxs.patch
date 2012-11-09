@@ -1,0 +1,16 @@
+--- httpd-2.4.3/support/apxs.in.apxs.droplet	2012-07-25 13:42:40.000000000 +0200
++++ httpd-2.4.3/support/apxs.in	2012-08-22 18:17:41.796248480 +0200
+@@ -453,11 +453,11 @@ if ($opt_c) {
+     my $ldflags = "$CFG_LDFLAGS";
+     if ($opt_p == 1) {
+         
+-        my $apr_libs=`$apr_config --cflags --ldflags --link-libtool --libs`;
++        my $apr_libs=`$apr_config --cflags --ldflags --link-libtool`;
+         chomp($apr_libs);
+         my $apu_libs="";
+         if ($apr_major_version < 2) {
+-            $apu_libs=`$apu_config --ldflags --link-libtool --libs`;
++            $apu_libs=`$apu_config --ldflags --link-libtool`;
+             chomp($apu_libs);
+         }
+         
