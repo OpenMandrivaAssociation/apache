@@ -1,0 +1,10 @@
+# Repeat cache cleaning every X minutes.
+INTERVAL="120"
+
+# Specify path as the root directory of the disk cache. This should be the 
+# same value as specified with the CacheRoot directive.
+CACHEROOT="/var/cache/httpd/mod_proxy"
+
+# Specify limit as the total disk cache size limit. The value is expressed in bytes by 
+# default (or attaching B to the number). Attach K for Kbytes or M for MBytes.
+SIZE="100M"

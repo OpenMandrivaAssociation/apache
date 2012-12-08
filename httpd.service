@@ -1,0 +1,16 @@
+[Unit]
+Description=The Apache HTTP Server (@NAME@ MPM)
+After=syslog.target network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/httpd/httpd.pid
+EnvironmentFile=/etc/sysconfig/httpd
+ExecStart=@EXEC@ $OPTIONS -k start
+ExecReload=@EXEC@ $OPTIONS -t
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=@EXEC@ $OPTIONS -k stop
+#PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

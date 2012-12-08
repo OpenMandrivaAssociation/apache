@@ -1,0 +1,10 @@
+[Unit]
+Description=Clean up the disk cache. Used in conjunction with mod_cache_disk and mod_proxy
+After=syslog.target network.target httpd.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/htcacheclean
+ExecStart=/usr/sbin/htcacheclean -n -t -i -d ${INTERVAL:-"120"} -p ${CACHEROOT:-"/var/cache/httpd/mod_proxy"} -l ${SIZE:-"100M"}
+
+[Install]
+WantedBy=multi-user.target

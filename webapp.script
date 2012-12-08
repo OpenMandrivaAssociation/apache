@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+
+use strict;
+
+my (%installed, %removed);
+while (my $line = <STDIN>) {
+    my ($operation, $file) = $line =~ /^(.)(\S+)$/;
+    if ($operation eq '+') {
+        $installed{$file} = 1;
+    } else {
+        $removed{$file} = 1;
+    }
+}
+
+my @new_files = grep { !$removed{$_} } keys %installed;
+my @old_files = grep { !$installed{$_} } keys %removed;
+
+# if there configuration files added or removed, a restart is needed
+if (@new_files or @old_files) {
+    system('/bin/systemctl daemon-reload 2>/dev/null');
+} else {
+    system('/bin/systemctl daemon-reload 2>/dev/null');
+}
