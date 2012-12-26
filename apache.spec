@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.2
-Release:	0.1
+Version:	2.4.3
+Release:	1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -52,7 +52,8 @@ BuildRequires:	pcre-devel
 BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+# So people who "urpmi httpd" get what they expect
+Provides:	httpd = %EVRD
 
 %description
 This package contains the main binary of apache, a powerful, full-featured,
@@ -2228,15 +2229,15 @@ web browser and point to this URL: http://localhost/manual
 
 %setup -q -n httpd-%{version} -a11
 %patch0 -p0 -b .deplibs.droplet
-%patch8 -p0 -b .apxs.droplet
+%patch8 -p1 -b .apxs.droplet
 %patch15 -p1 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p0 -b .linux3.droplet
 %patch105 -p1 -b .filter.droplet
-%patch106 -p1
-%patch107 -p1
-%patch108 -p0
+%patch106 -p1 -b .mdvConfig~
+%patch107 -p1 -b .linkage~
+%patch108 -p0 -b .buildfix~
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -2268,13 +2269,13 @@ cat >> config.layout << EOF
     infodir:       %{_infodir}
     includedir:    %{_includedir}/apache
     sysconfdir:    %{_sysconfdir}/httpd/conf
-    datadir:       /var/www
+    datadir:       /srv/www
     installbuilddir: %{_libdir}/apache/build
-    errordir:      /var/www/error
-    iconsdir:      /var/www/icons
-    htdocsdir:     /var/www/html
+    errordir:      /srv/www/error
+    iconsdir:      /srv/www/icons
+    htdocsdir:     /srv/www/html
     manualdir:     %{_datadir}/doc/apache-doc
-    cgidir:        /var/www/cgi-bin
+    cgidir:        /srv/www/cgi-bin
     localstatedir: /var
     runtimedir:    /var/run/httpd
     logfiledir:    /var/log/httpd
@@ -2365,7 +2366,7 @@ APVARS="--enable-layout=NUX \
     --includedir=%{_includedir}/apache \
     --infodir=%{_infodir} \
     --mandir=%{_mandir} \
-    --datadir=/var/www \
+    --datadir=/srv/www \
     --with-port=80 \
     --with-perl=%{_bindir}/perl \
     --with-apr=%{_bindir}/apr-1-config \
@@ -2473,7 +2474,7 @@ install -d %{buildroot}/var/lib/dav
 install -d %{buildroot}/var/lib/dav/uploads
 install -d %{buildroot}/var/log/httpd
 install -d %{buildroot}/var/run/httpd
-install -d %{buildroot}/var/www/perl
+install -d %{buildroot}/srv/www/perl
 
 #EXCLUDE_FROM_STRIP="%{buildroot}%{_sbindir}/httpd %{buildroot}%{_sbindir}/httpd-worker %{buildroot}%{_sbindir}/httpd-peruser"
 
@@ -2493,12 +2494,12 @@ make install \
 	localstatedir=%{buildroot}/var \
 	runtimedir=%{buildroot}/var/run \
 	installbuilddir=%{buildroot}%{_libdir}/apache/build  \
-	datadir=%{buildroot}/var/www \
-	errordir=%{buildroot}/var/www/error \
-	iconsdir=%{buildroot}/var/www/icons \
-	htdocsdir=%{buildroot}/var/www/html \
+	datadir=%{buildroot}/srv/www \
+	errordir=%{buildroot}/srv/www/error \
+	iconsdir=%{buildroot}/srv/www/icons \
+	htdocsdir=%{buildroot}/srv/www/html \
 	manualdir=%{buildroot}%{_datadir}/doc/apache-doc \
-	cgidir=%{buildroot}/var/www/cgi-bin \
+	cgidir=%{buildroot}/srv/www/cgi-bin \
 	runtimedir=%{buildroot}/var/run \
 	logdir=%{buildroot}/var/log/httpd \
 	logfiledir=%{buildroot}/var/log/httpd \
@@ -2531,7 +2532,7 @@ perl -pi -e "s|^SH_LIBTOOL.*|SH_LIBTOOL = libtool|g" $CVMK
 # if the following 3 lines needs to be enabled again, use the ".*" wildcard as in
 # "s|bla bla =.*|bla bla = replaced whatever text after the equal char...|g"
 #perl -pi -e "s|installbuilddir =.*|installbuilddir = %{_libdir}/apache/build|g" $CVMK
-#perl -pi -e "s|htdocsdir =.*|htdocsdir = /var/www/html|g" $CVMK
+#perl -pi -e "s|htdocsdir =.*|htdocsdir = /srv/www/html|g" $CVMK
 #perl -pi -e "s|logfiledir =.*|logfiledir = /var/log/httpd|g" $CVMK
 echo "ap_version = %{version}" >> $CVMK
 echo "ap_release = %{release}" >> $CVMK
@@ -2588,9 +2589,9 @@ touch %{buildroot}/var/cache/httpd/mod_ldap_cache
 
 install -m0644 Mandriva/fileprotector.conf %{buildroot}%{_sysconfdir}/httpd/conf/fileprotector.conf
 install -m0644 Mandriva/httpd.sysconf %{buildroot}%{_sysconfdir}/sysconfig/httpd
-install -m0644 Mandriva/favicon.ico %{buildroot}/var/www/html/
-install -m0644 Mandriva/robots.txt %{buildroot}/var/www/html/
-install -m0644 Mandriva/rpm.png  %{buildroot}/var/www/icons/
+install -m0644 Mandriva/favicon.ico %{buildroot}/srv/www/html/
+install -m0644 Mandriva/robots.txt %{buildroot}/srv/www/html/
+install -m0644 Mandriva/rpm.png  %{buildroot}/srv/www/icons/
 install -m0644 Mandriva/httpd.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/httpd
 
 %multiarch_includes %{buildroot}%{_includedir}/apache/ap_config_layout.h
@@ -2614,8 +2615,8 @@ find %{buildroot}%{_datadir}/doc/apache-doc -type d -exec chmod 755 {} \;
 find %{buildroot}%{_datadir}/doc/apache-doc -type f -exec chmod 644 {} \;
 
 # cleanup
-rm -rf %{buildroot}/var/www/cgi-bin/printenv
-rm -rf %{buildroot}/var/www/cgi-bin/test-cgi
+rm -rf %{buildroot}/srv/www/cgi-bin/printenv
+rm -rf %{buildroot}/srv/www/cgi-bin/test-cgi
 
 #########################################################################################
 # install phase done
@@ -2630,10 +2631,16 @@ rm -rf %{buildroot}
 [ "%{_builddir}/tmp-httpd-%{version}" != "/" ] && rm -rf %{_builddir}/tmp-httpd-%{version}
 
 %pre base
-%_pre_useradd apache /var/www /bin/sh
+%_pre_useradd apache /srv/www /bin/sh
 
 %postun base
 %_postun_userdel apache
+
+%triggerun -- %name < 2.4.3-1
+# Deal with the /var/www -> /srv/www move
+if [ -d /var/www -a ! -d /srv/www ]; then
+	mv /var/www /srv/
+fi
 
 %post mpm-prefork
 # Register the httpd service
@@ -4176,27 +4183,27 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/original/extra/proxy-html.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/original/httpd.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/fileprotector.conf
-%attr(0755,apache,apache) %dir /var/www
+%attr(0755,apache,apache) %dir /srv/www
 %attr(0755,apache,apache) %dir /var/run/httpd
-%attr(0755,root,root) %dir /var/www/html
-%dir /var/www/error
-%dir /var/www/error/include
-%dir /var/www/icons
-%dir /var/www/icons/small
+%attr(0755,root,root) %dir /srv/www/html
+%dir /srv/www/error
+%dir /srv/www/error/include
+%dir /srv/www/icons
+%dir /srv/www/icons/small
 %dir /var/log/httpd
-%dir /var/www/cgi-bin
-%dir /var/www/perl
-%config(noreplace,missingok) /var/www/error/README
-%config(noreplace,missingok) /var/www/error/*.var
-%config(noreplace,missingok) /var/www/error/include/*.html
-%attr(0644,root,root) /var/www/icons/README*
-%attr(0644,root,root) /var/www/icons/*.png
-%attr(0644,root,root) /var/www/icons/*.gif
-%attr(0644,root,root) /var/www/icons/small/*.png
-%attr(0644,root,root) /var/www/icons/small/*.gif
-%attr(0644,root,root) %config(noreplace) /var/www/html/index.html
-%attr(0644,root,root) %config(noreplace) /var/www/html/favicon.ico
-%attr(0644,root,root) %config(noreplace) /var/www/html/robots.txt
+%dir /srv/www/cgi-bin
+%dir /srv/www/perl
+%config(noreplace,missingok) /srv/www/error/README
+%config(noreplace,missingok) /srv/www/error/*.var
+%config(noreplace,missingok) /srv/www/error/include/*.html
+%attr(0644,root,root) /srv/www/icons/README*
+%attr(0644,root,root) /srv/www/icons/*.png
+%attr(0644,root,root) /srv/www/icons/*.gif
+%attr(0644,root,root) /srv/www/icons/small/*.png
+%attr(0644,root,root) /srv/www/icons/small/*.gif
+%attr(0644,root,root) %config(noreplace) /srv/www/html/index.html
+%attr(0644,root,root) %config(noreplace) /srv/www/html/favicon.ico
+%attr(0644,root,root) %config(noreplace) /srv/www/html/robots.txt
 %attr(0755,root,root) %{_bindir}/ab
 %attr(0755,root,root) %{_bindir}/dbmmanage
 %attr(0755,root,root) %{_bindir}/htdbm

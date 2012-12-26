@@ -1,7 +1,7 @@
---- support/apxs.in	2010-06-22 19:12:44.000000000 +0200
-+++ support/apxs.in.oden	2012-03-03 12:52:46.884185322 +0100
-@@ -450,11 +450,11 @@ if ($opt_c) {
- 
+--- httpd-2.4.3/support/apxs.in.apxs.droplet	2012-07-25 13:42:40.000000000 +0200
++++ httpd-2.4.3/support/apxs.in	2012-12-26 14:39:54.213869054 +0100
+@@ -453,11 +453,11 @@ if ($opt_c) {
+     my $ldflags = "$CFG_LDFLAGS";
      if ($opt_p == 1) {
          
 -        my $apr_libs=`$apr_config --cflags --ldflags --link-libtool --libs`;

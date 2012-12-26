@@ -1,6 +1,5 @@
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-autoindex.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-autoindex.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-autoindex.conf.in	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-autoindex.conf.in	2012-03-07 13:10:17.136751204 +0100
+--- httpd-2.4.3/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
++++ httpd-2.4.3/docs/conf/extra/httpd-autoindex.conf.in	2012-12-26 14:42:21.414138531 +0100
 @@ -14,6 +14,7 @@
  # listings.
  #
@@ -9,7 +8,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-autoindex.conf.in httpd-2.4.1.oden/
  
  # We include the /icons/ alias for FancyIndexed directory listings.  If
  # you do not use FancyIndexing, you may comment this out.
-@@ -54,6 +55,7 @@
+@@ -54,6 +55,7 @@ AddIcon /icons/uuencoded.gif .uu
  AddIcon /icons/script.gif .conf .sh .shar .csh .ksh .tcl
  AddIcon /icons/tex.gif .tex
  AddIcon /icons/bomb.gif core
@@ -17,9 +16,8 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-autoindex.conf.in httpd-2.4.1.oden/
  
  AddIcon /icons/back.gif ..
  AddIcon /icons/hand.right.gif README
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-dav.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-dav.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-dav.conf.in	2011-06-13 23:13:08.000000000 +0200
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-dav.conf.in	2012-03-07 13:06:39.835739053 +0100
+--- httpd-2.4.3/docs/conf/extra/httpd-dav.conf.in.mdvConfig~	2011-06-13 23:13:08.000000000 +0200
++++ httpd-2.4.3/docs/conf/extra/httpd-dav.conf.in	2012-12-26 14:42:21.414138531 +0100
 @@ -12,11 +12,11 @@
  # on the directory where the DavLockDB is placed and on any directory where
  # "Dav On" is specified.
@@ -35,10 +33,9 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-dav.conf.in httpd-2.4.1.oden/docs/c
      Dav On
  
      AuthType Digest
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-default.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-default.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-default.conf.in	2011-11-08 21:41:47.000000000 +0100
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-default.conf.in	2012-03-07 13:11:30.726755318 +0100
-@@ -62,7 +62,7 @@
+--- httpd-2.4.3/docs/conf/extra/httpd-default.conf.in.mdvConfig~	2012-07-23 14:14:34.000000000 +0200
++++ httpd-2.4.3/docs/conf/extra/httpd-default.conf.in	2012-12-26 14:42:21.414138531 +0100
+@@ -62,7 +62,7 @@ ServerTokens Full
  # Set to "EMail" to also include a mailto: link to the ServerAdmin.
  # Set to one of:  On | Off | EMail
  #
@@ -47,9 +44,8 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-default.conf.in httpd-2.4.1.oden/do
  
  #
  # HostnameLookups: Log the names of clients or just their IP addresses
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-info.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-info.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-info.conf.in	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-info.conf.in	2012-03-07 13:06:39.875739054 +0100
+--- httpd-2.4.3/docs/conf/extra/httpd-info.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
++++ httpd-2.4.3/docs/conf/extra/httpd-info.conf.in	2012-12-26 14:42:21.414138531 +0100
 @@ -13,7 +13,6 @@
  
  <Location /server-status>
@@ -74,9 +70,8 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-info.conf.in httpd-2.4.1.oden/docs/
 -    Require host .example.com
      Require ip 127
  </Location>
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-mpm.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-mpm.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-mpm.conf.in	2011-11-12 08:15:45.000000000 +0100
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-mpm.conf.in	2012-03-07 13:06:39.904739056 +0100
+--- httpd-2.4.3/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
++++ httpd-2.4.3/docs/conf/extra/httpd-mpm.conf.in	2012-12-26 14:42:21.415138519 +0100
 @@ -8,9 +8,7 @@
  #
  # Note that this is the default PidFile for most MPMs.
@@ -143,15 +138,14 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-mpm.conf.in httpd-2.4.1.oden/docs/c
 -    MaxMemFree             100
 -</IfModule>
 +MaxMemFree            2048
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-ssl.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in	2011-11-18 18:18:31.000000000 +0100
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-ssl.conf.in	2012-03-07 13:06:39.904739056 +0100
+--- httpd-2.4.3/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
++++ httpd-2.4.3/docs/conf/extra/httpd-ssl.conf.in	2012-12-26 14:42:21.415138519 +0100
 @@ -1,3 +1,4 @@
 +<IfModule ssl_module>
  #
  # This is the Apache server configuration file providing SSL support.
  # It contains the configuration directives to instruct the server how to
-@@ -73,7 +74,7 @@
+@@ -73,7 +74,7 @@ SSLPassPhraseDialog  builtin
  #   Configure the SSL Session Cache: First the mechanism 
  #   to use and second the expiring timeout (in seconds).
  #SSLSessionCache         "dbm:@exp_runtimedir@/ssl_scache"
@@ -160,7 +154,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
  SSLSessionCacheTimeout  300
  
  ##
-@@ -84,10 +85,10 @@
+@@ -84,10 +85,10 @@ SSLSessionCacheTimeout  300
  
  #   General setup for the virtual host
  DocumentRoot "@exp_htdocsdir@"
@@ -175,7 +169,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
  
  #   SSL Engine Switch:
  #   Enable/Disable SSL for this virtual host.
-@@ -103,9 +104,9 @@
+@@ -103,9 +104,9 @@ SSLEngine on
  #   Some ECC cipher suites (http://www.ietf.org/rfc/rfc4492.txt)
  #   require an ECC certificate which can also be configured in
  #   parallel.
@@ -188,7 +182,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
  
  #   Server Private Key:
  #   If the key is not combined with the certificate, use this
-@@ -113,9 +114,9 @@
+@@ -113,9 +114,9 @@ SSLCertificateFile "@exp_sysconfdir@/ser
  #   you've both a RSA and a DSA private key you can configure
  #   both in parallel (to also allow the use of DSA ciphers, etc.)
  #   ECC keys, when in use, can also be configured in parallel
@@ -201,7 +195,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
  
  #   Server Certificate Chain:
  #   Point SSLCertificateChainFile at a file containing the
-@@ -124,7 +125,7 @@
+@@ -124,7 +125,7 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
  #   the referenced file can be the same as SSLCertificateFile
  #   when the CA certificates are directly appended to the server
  #   certificate for convenience.
@@ -210,7 +204,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
  
  #   Certificate Authority (CA):
  #   Set the CA certificate verification path where to find CA
-@@ -133,8 +134,8 @@
+@@ -133,8 +134,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
  #   Note: Inside SSLCACertificatePath you need hash symlinks
  #         to point to the certificate files. Use the provided
  #         Makefile to update the hash symlinks after changes.
@@ -221,7 +215,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
  
  #   Certificate Revocation Lists (CRL):
  #   Set the CA revocation path where to find CA CRLs for client
-@@ -145,8 +146,8 @@
+@@ -145,8 +146,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
  #   Note: Inside SSLCARevocationPath you need hash symlinks
  #         to point to the certificate files. Use the provided
  #         Makefile to update the hash symlinks after changes.
@@ -232,7 +226,7 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
  #SSLCARevocationCheck chain
  
  #   Client Authentication (Type):
-@@ -241,4 +242,8 @@
+@@ -241,4 +242,8 @@ BrowserMatch "MSIE [2-5]" \
  CustomLog "@exp_logfiledir@/ssl_request_log" \
            "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
  
@@ -242,23 +236,21 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-ssl.conf.in httpd-2.4.1.oden/docs/c
 +
 +</VirtualHost>
 +</IfModule>
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-userdir.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-userdir.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-userdir.conf.in	2011-06-06 23:40:41.000000000 +0200
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-userdir.conf.in	2012-03-07 13:06:39.905739056 +0100
+--- httpd-2.4.3/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~	2011-06-06 23:40:41.000000000 +0200
++++ httpd-2.4.3/docs/conf/extra/httpd-userdir.conf.in	2012-12-26 14:42:21.415138519 +0100
 @@ -1,3 +1,5 @@
 +<IfModule userdir_module>
 +
  # Settings for user home directories
  #
  # Required module: mod_authz_core, mod_authz_host, mod_userdir
-@@ -19,3 +21,4 @@
+@@ -19,3 +21,4 @@ UserDir public_html
      Require method GET POST OPTIONS
  </Directory>
  
 +</IfModule>
-diff -Naur httpd-2.4.1/docs/conf/extra/httpd-vhosts.conf.in httpd-2.4.1.oden/docs/conf/extra/httpd-vhosts.conf.in
---- httpd-2.4.1/docs/conf/extra/httpd-vhosts.conf.in	2011-01-14 17:09:18.000000000 +0100
-+++ httpd-2.4.1.oden/docs/conf/extra/httpd-vhosts.conf.in	2012-03-07 13:06:39.905739056 +0100
+--- httpd-2.4.3/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~	2012-02-20 16:22:16.000000000 +0100
++++ httpd-2.4.3/docs/conf/extra/httpd-vhosts.conf.in	2012-12-26 14:42:21.415138519 +0100
 @@ -20,22 +20,21 @@
  # The first VirtualHost section is used for all requests that do not
  # match a ServerName or ServerAlias in any <VirtualHost> block.
@@ -298,10 +290,9 @@ diff -Naur httpd-2.4.1/docs/conf/extra/httpd-vhosts.conf.in httpd-2.4.1.oden/doc
 +#</VirtualHost>
  
  
-diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.conf.in
---- httpd-2.4.1/docs/conf/httpd.conf.in	2012-02-06 17:55:22.000000000 +0100
-+++ httpd-2.4.1.oden/docs/conf/httpd.conf.in	2012-03-07 13:09:19.210747964 +0100
-@@ -63,7 +63,8 @@
+--- httpd-2.4.3/docs/conf/httpd.conf.in.mdvConfig~	2012-08-14 22:53:31.000000000 +0200
++++ httpd-2.4.3/docs/conf/httpd.conf.in	2012-12-26 14:42:59.861668942 +0100
+@@ -63,7 +63,8 @@ Listen @@Port@@
  # Example:
  # LoadModule foo_module modules/mod_foo.so
  #
@@ -311,7 +302,7 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
  
  <IfModule unixd_module>
  #
-@@ -74,8 +75,8 @@
+@@ -74,8 +75,8 @@ Listen @@Port@@
  # It is usually good practice to create a dedicated user and group for
  # running httpd, as with most system services.
  #
@@ -322,7 +313,7 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
  
  </IfModule>
  
-@@ -96,7 +97,7 @@
+@@ -96,7 +97,7 @@ Group daemon
  # e-mailed.  This address appears on some server-generated pages, such
  # as error documents.  e.g. admin@your-domain.com
  #
@@ -331,7 +322,7 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
  
  #
  # ServerName gives the name and port that the server uses to identify itself.
-@@ -145,6 +146,10 @@
+@@ -145,6 +146,10 @@ DocumentRoot "@exp_htdocsdir@"
      #
      Options Indexes FollowSymLinks
  
@@ -342,7 +333,7 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
      #
      # AllowOverride controls what directives may be placed in .htaccess files.
      # It can be "All", "None", or any combination of the keywords:
-@@ -166,6 +171,10 @@
+@@ -166,6 +171,10 @@ DocumentRoot "@exp_htdocsdir@"
      DirectoryIndex index.html
  </IfModule>
  
@@ -353,7 +344,7 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
  #
  # The following lines prevent .htaccess and .htpasswd files from being 
  # viewed by Web clients. 
-@@ -312,8 +321,11 @@
+@@ -312,8 +321,11 @@ LogLevel warn
      # To parse .shtml files for server-side includes (SSI):
      # (You will also need to add "Includes" to the "Options" directive.)
      #
@@ -367,7 +358,7 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
  </IfModule>
  
  #
-@@ -361,34 +373,34 @@
+@@ -361,34 +373,34 @@ LogLevel warn
  # necessary.
  
  # Server-pool management (MPM specific)
@@ -411,7 +402,7 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
  
  # Configure mod_proxy_html to understand HTML4/XHTML1
  <IfModule proxy_html_module>
-@@ -396,7 +408,7 @@
+@@ -396,7 +408,7 @@ Include @rel_sysconfdir@/extra/proxy-htm
  </IfModule>
  
  # Secure (SSL/TLS) connections
@@ -420,11 +411,10 @@ diff -Naur httpd-2.4.1/docs/conf/httpd.conf.in httpd-2.4.1.oden/docs/conf/httpd.
  #
  # Note: The following must must be present to support
  #       starting without SSL on platforms with no /dev/random equivalent
-@@ -406,3 +418,17 @@
- SSLRandomSeed startup builtin
- SSLRandomSeed connect builtin
+@@ -416,3 +428,16 @@ BrowserMatch "MSIE 10.0;" bad_DNT
+ RequestHeader unset DNT env=bad_DNT
  </IfModule>
-+
+ 
 +# include legacy Mandriva directives
 +
 +Include conf/fileprotector.conf
