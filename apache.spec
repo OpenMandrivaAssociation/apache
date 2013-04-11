@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.3
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -42,7 +42,7 @@ BuildRequires:	apr-util-devel >= 1.4.1
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
-BuildRequires:	libsasl-devel
+BuildRequires:	sasl-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	lua-devel >= 5.1
 BuildRequires:	lynx
@@ -1042,7 +1042,7 @@ href="http://appserver.example.com/foo/bar.html">foobar</a> to <a
 href="http://www.example.com/appserver/foo/bar.html">foobar</a> making it
 accessible from outside.
 
-mod_proxy_html was originally developed at WebÞing, whose extensive
+mod_proxy_html was originally developed at WebÃžing, whose extensive
 documentation may be useful to users.
 
 %package	mod_mime
@@ -2192,7 +2192,7 @@ Requires:	autoconf automake libtool
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
-Requires:	libsasl-devel
+Requires:	sasl-devel
 Requires:	openssl-devel
 Requires:	pcre-devel
 Requires:	perl >= 0:5.600
