@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.3
-Release:	2
+Version:	2.4.6
+Release:	1
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -26,8 +26,6 @@ Source15:	httpd.service
 Source100:	buildconf
 Patch0:		httpd-2.0.45-deplibs.patch
 Patch8:		httpd-2.1.10-apxs.patch
-# http://issues.apache.org/bugzilla/show_bug.cgi?id=32524
-Patch15:	httpd-ab_source_address.diff
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
@@ -37,21 +35,21 @@ Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
 BuildRequires:	autoconf automake libtool
-BuildRequires:	apr-devel >= 1:1.4.6
-BuildRequires:	apr-util-devel >= 1.4.1
+BuildRequires:	pkgconfig(apr-1) >= 1.4.6
+BuildRequires:	pkgconfig(apr-util-1) >= 1.4.1
 BuildRequires:	db-devel
-BuildRequires:	expat-devel
+BuildRequires:	pkgconfig(expat)
 BuildRequires:	gdbm-devel
 BuildRequires:	sasl-devel
-BuildRequires:	libxml2-devel
-BuildRequires:	lua-devel >= 5.1
+BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(lua) >= 5.1
 BuildRequires:	lynx
 BuildRequires:	openldap-devel
-BuildRequires:	openssl-devel
-BuildRequires:	pcre-devel
+BuildRequires:	pkgconfig(openssl)
+BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	perl
 BuildRequires:	pkgconfig
-BuildRequires:	zlib-devel
+BuildRequires:	pkgconfig(zlib)
 # So people who "urpmi httpd" get what they expect
 Provides:	httpd = %EVRD
 
@@ -651,6 +649,21 @@ or to maintain the size of the disk cache within size and/or inode limits. The
 tool can be run on demand, or can be daemonized to offer continuous monitoring
 of directory sizes.
 
+%package	mod_cache_socache
+Summary:	Shared Object cache module for HTTPD
+Group:		System/Servers
+
+%description	mod_cache_socache
+mod_cache_socache implements a shared object cache (socache) based storage
+manager for mod_cache.
+
+The headers and bodies of cached responses are combined, and stored underneath
+a single key in the shared object cache. A number of implementations of shared
+object caches are available to choose from.
+
+Multiple content negotiated responses can be stored concurrently, however the
+caching of partial content is not yet supported by this module.
+
 %package	mod_socache_shmcb
 Summary:	shmcb based shared object cache provider
 Group:		System/Servers
@@ -1010,6 +1023,16 @@ The mod_deflate module provides the DEFLATE output filter that allows
 output from your server to be compressed before being sent to the client
 over the network.
 
+%package	mod_macro
+Summary:	Macro support inside Apache httpd runtime configuration files
+Group:		System/Servers
+
+%description	mod_macro
+This modules provides macros within apache httpd runtime configuration files.
+These macros may have parameters. They are expanded when used (parameters
+are substituted by their values given as an argument), and the result is
+processed normally.
+
 %package	mod_xml2enc
 Summary:	Enhanced charset/internationalisation support for libxml2-based filter modules
 Group:		System/Servers
@@ -1044,6 +1067,16 @@ accessible from outside.
 
 mod_proxy_html was originally developed at WebÞing, whose extensive
 documentation may be useful to users.
+
+%package	mod_proxy_wstunnel
+Summary:	WebSockets support for mod_proxy
+Group:		System/Servers
+
+%description	mod_proxy_wstunnel
+This module requires the service of mod_proxy. It provides support
+for the tunnelling of web socket connections to a backend websockets
+server. The connection is automagically upgraded to a websocket
+connection.
 
 %package	mod_mime
 Summary:	Associates the requested filename's extensions with the
@@ -2230,10 +2263,9 @@ web browser and point to this URL: http://localhost/manual
 %setup -q -n httpd-%{version} -a11
 %patch0 -p0 -b .deplibs.droplet
 %patch8 -p1 -b .apxs.droplet
-%patch15 -p1 -b .ab_source_address.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
-%patch19 -p0 -b .linux3.droplet
+%patch19 -p1 -b .linux3.droplet
 %patch105 -p1 -b .filter.droplet
 %patch106 -p1 -b .mdvConfig~
 %patch107 -p1 -b .linkage~
@@ -2614,8 +2646,8 @@ lynx -dump -nolist new_features_2_4.html > new_features_2_4.txt
 find %{buildroot}%{_datadir}/doc/apache-doc -type d -exec chmod 755 {} \;
 find %{buildroot}%{_datadir}/doc/apache-doc -type f -exec chmod 644 {} \;
 
-# cleanup
-rm -rf %{buildroot}/srv/www/cgi-bin/printenv
+# let's not ship those, they might reveal some information to unwanted eyes
+rm -rf %{buildroot}/srv/www/cgi-bin/printenv*
 rm -rf %{buildroot}/srv/www/cgi-bin/test-cgi
 
 #########################################################################################
@@ -3767,6 +3799,9 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/022_mod_cache_disk.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_cache_disk.so
 
+%files mod_cache_socache
+%attr(0755,root,root) %{_libdir}/apache/mod_cache_socache.so
+
 %files mod_socache_shmcb
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/023_mod_socache_shmcb.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_socache_shmcb.so
@@ -3859,6 +3894,9 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/045_mod_deflate.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_deflate.so
 
+%files mod_macro
+%attr(0755,root,root) %{_libdir}/apache/mod_macro.so
+
 %files mod_xml2enc
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/046_mod_xml2enc.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_xml2enc.so
@@ -3866,6 +3904,9 @@ fi
 %files mod_proxy_html
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/047_mod_proxy_html.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_html.so
+
+%files mod_proxy_wstunnel
+%attr(0755,root,root) %{_libdir}/apache/mod_proxy_wstunnel.so
 
 %files mod_mime
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/048_mod_mime.conf
@@ -4189,6 +4230,7 @@ fi
 %dir /srv/www/error
 %dir /srv/www/error/include
 %dir /srv/www/icons
+/srv/www/icons/*.svg
 %dir /srv/www/icons/small
 %dir /var/log/httpd
 %dir /srv/www/cgi-bin

@@ -1,5 +1,5 @@
---- httpd-2.4.3/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.3/docs/conf/extra/httpd-autoindex.conf.in	2012-12-26 14:42:21.414138531 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
++++ httpd-2.4.6/docs/conf/extra/httpd-autoindex.conf.in	2013-07-19 23:19:13.271150789 +0200
 @@ -14,6 +14,7 @@
  # listings.
  #
@@ -16,8 +16,8 @@
  
  AddIcon /icons/back.gif ..
  AddIcon /icons/hand.right.gif README
---- httpd-2.4.3/docs/conf/extra/httpd-dav.conf.in.mdvConfig~	2011-06-13 23:13:08.000000000 +0200
-+++ httpd-2.4.3/docs/conf/extra/httpd-dav.conf.in	2012-12-26 14:42:21.414138531 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-dav.conf.in.mdvConfig~	2011-06-13 23:13:08.000000000 +0200
++++ httpd-2.4.6/docs/conf/extra/httpd-dav.conf.in	2013-07-19 23:19:13.271150789 +0200
 @@ -12,11 +12,11 @@
  # on the directory where the DavLockDB is placed and on any directory where
  # "Dav On" is specified.
@@ -33,8 +33,8 @@
      Dav On
  
      AuthType Digest
---- httpd-2.4.3/docs/conf/extra/httpd-default.conf.in.mdvConfig~	2012-07-23 14:14:34.000000000 +0200
-+++ httpd-2.4.3/docs/conf/extra/httpd-default.conf.in	2012-12-26 14:42:21.414138531 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-default.conf.in.mdvConfig~	2012-07-23 14:14:34.000000000 +0200
++++ httpd-2.4.6/docs/conf/extra/httpd-default.conf.in	2013-07-19 23:19:13.271150789 +0200
 @@ -62,7 +62,7 @@ ServerTokens Full
  # Set to "EMail" to also include a mailto: link to the ServerAdmin.
  # Set to one of:  On | Off | EMail
@@ -44,8 +44,8 @@
  
  #
  # HostnameLookups: Log the names of clients or just their IP addresses
---- httpd-2.4.3/docs/conf/extra/httpd-info.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.3/docs/conf/extra/httpd-info.conf.in	2012-12-26 14:42:21.414138531 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-info.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
++++ httpd-2.4.6/docs/conf/extra/httpd-info.conf.in	2013-07-19 23:19:13.271150789 +0200
 @@ -13,7 +13,6 @@
  
  <Location /server-status>
@@ -70,8 +70,8 @@
 -    Require host .example.com
      Require ip 127
  </Location>
---- httpd-2.4.3/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
-+++ httpd-2.4.3/docs/conf/extra/httpd-mpm.conf.in	2012-12-26 14:42:21.415138519 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
++++ httpd-2.4.6/docs/conf/extra/httpd-mpm.conf.in	2013-07-19 23:19:13.272150794 +0200
 @@ -8,9 +8,7 @@
  #
  # Note that this is the default PidFile for most MPMs.
@@ -138,8 +138,8 @@
 -    MaxMemFree             100
 -</IfModule>
 +MaxMemFree            2048
---- httpd-2.4.3/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
-+++ httpd-2.4.3/docs/conf/extra/httpd-ssl.conf.in	2012-12-26 14:42:21.415138519 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~	2012-12-11 10:55:03.000000000 +0100
++++ httpd-2.4.6/docs/conf/extra/httpd-ssl.conf.in	2013-07-19 23:19:13.272150794 +0200
 @@ -1,3 +1,4 @@
 +<IfModule ssl_module>
  #
@@ -226,7 +226,7 @@
  #SSLCARevocationCheck chain
  
  #   Client Authentication (Type):
-@@ -241,4 +242,8 @@ BrowserMatch "MSIE [2-5]" \
+@@ -249,4 +250,8 @@ BrowserMatch "MSIE [2-5]" \
  CustomLog "@exp_logfiledir@/ssl_request_log" \
            "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
  
@@ -236,8 +236,8 @@
 +
 +</VirtualHost>
 +</IfModule>
---- httpd-2.4.3/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~	2011-06-06 23:40:41.000000000 +0200
-+++ httpd-2.4.3/docs/conf/extra/httpd-userdir.conf.in	2012-12-26 14:42:21.415138519 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~	2011-06-06 23:40:41.000000000 +0200
++++ httpd-2.4.6/docs/conf/extra/httpd-userdir.conf.in	2013-07-19 23:19:13.272150794 +0200
 @@ -1,3 +1,5 @@
 +<IfModule userdir_module>
 +
@@ -249,8 +249,8 @@
  </Directory>
  
 +</IfModule>
---- httpd-2.4.3/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~	2012-02-20 16:22:16.000000000 +0100
-+++ httpd-2.4.3/docs/conf/extra/httpd-vhosts.conf.in	2012-12-26 14:42:21.415138519 +0100
+--- httpd-2.4.6/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~	2012-02-20 16:22:16.000000000 +0100
++++ httpd-2.4.6/docs/conf/extra/httpd-vhosts.conf.in	2013-07-19 23:19:13.272150794 +0200
 @@ -20,22 +20,21 @@
  # The first VirtualHost section is used for all requests that do not
  # match a ServerName or ServerAlias in any <VirtualHost> block.
@@ -290,8 +290,8 @@
 +#</VirtualHost>
  
  
---- httpd-2.4.3/docs/conf/httpd.conf.in.mdvConfig~	2012-08-14 22:53:31.000000000 +0200
-+++ httpd-2.4.3/docs/conf/httpd.conf.in	2012-12-26 14:42:59.861668942 +0100
+--- httpd-2.4.6/docs/conf/httpd.conf.in.mdvConfig~	2012-11-08 04:05:38.000000000 +0100
++++ httpd-2.4.6/docs/conf/httpd.conf.in	2013-07-19 23:19:54.234356003 +0200
 @@ -63,7 +63,8 @@ Listen @@Port@@
  # Example:
  # LoadModule foo_module modules/mod_foo.so
@@ -411,9 +411,9 @@
  #
  # Note: The following must must be present to support
  #       starting without SSL on platforms with no /dev/random equivalent
-@@ -416,3 +428,16 @@ BrowserMatch "MSIE 10.0;" bad_DNT
- RequestHeader unset DNT env=bad_DNT
- </IfModule>
+@@ -418,3 +430,16 @@ SSLRandomSeed connect builtin
+ #RequestHeader unset DNT env=bad_DNT
+ #</IfModule>
  
 +# include legacy Mandriva directives
 +
