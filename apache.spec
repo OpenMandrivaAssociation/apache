@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.6
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -1706,6 +1706,8 @@ provider would be mod_slotmem_shm.
 %package	mod_ssl
 Summary:	Strong cryptography using the SSL and TLS protocols
 Group:		System/Servers
+Requires:	apache-mod_socache_shmcb
+Requires(post):	openssl
 
 %description	mod_ssl
 This module provides SSL v2/v3 and TLS v1 support for the Apache HTTP
