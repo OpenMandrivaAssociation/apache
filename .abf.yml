@@ -1,8 +1,10 @@
 removed_sources:
   httpd-2.4.2.tar.gz: fc168decb5eb6f68d89601e9aa899fa46f355c1d
   httpd-2.4.3.tar.gz: 845ca56816b0352c7759b6b8f47bd012c0864efd
+  httpd-2.4.6.tar.gz: ea85288d655239bf11d6b5d569b72b830071391c
 sources:
   Mandriva.tar.gz: 750e49ba5ac5ffa211626c51a410929321936bbd
   apache2_transparent_png_icons.tar.bz2: 20bdf283abbdbd34580b4a6f08934cb8910a0d6a
   httpd-2.4.3.tar.gz.asc: 524fc73a15f68750029703fe139ae4e2ebecf952
-  httpd-2.4.6.tar.gz: ea85288d655239bf11d6b5d569b72b830071391c
+  httpd-2.4.7.tar.gz: 9a73783b0f75226fb2afdcadd30ccba77ba05149
+  httpd-2.4.7.tar.gz.asc: fade8bc71d34c35cf77affe13964292c45e66231
