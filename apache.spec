@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.9
-Release:	3
+Release:	4
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -196,6 +196,7 @@ access control, the apache logs and more.
 Summary:	Meta package
 Group:		System/Servers
 Requires:	apache-mpm = %{version}-%{release}
+Requires:	apache-mod_access_compat = %{version}-%{release}
 Requires:	apache-mod_actions = %{version}-%{release}
 Requires:	apache-mod_alias = %{version}-%{release}
 Requires:	apache-mod_auth_basic = %{version}-%{release}
