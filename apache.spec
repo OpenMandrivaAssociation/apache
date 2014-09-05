@@ -2513,7 +2513,7 @@ install -d %{buildroot}/srv/www/perl
 #EXCLUDE_FROM_STRIP="%{buildroot}%{_sbindir}/httpd %{buildroot}%{_sbindir}/httpd-worker %{buildroot}%{_sbindir}/httpd-peruser"
 
 # install source
-tar c -C %{_builddir}/tmp-httpd-%{version} usr/src | tar x -C %{buildroot}
+tar c -C %{_builddir}/tmp-httpd-%{version} usr/src | tar x -C %{buildroot} -f -
 
 pushd build-prefork
 make install \
