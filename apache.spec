@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.10
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -37,9 +37,7 @@ Patch108:	httpd-2.4.1-buildfix.diff
 BuildRequires:	autoconf automake libtool
 BuildRequires:	pkgconfig(apr-1) >= 1.5.0
 BuildRequires:	pkgconfig(apr-util-1) >= 1.5.3
-BuildRequires:	db-devel
 BuildRequires:	pkgconfig(expat)
-BuildRequires:	gdbm-devel
 BuildRequires:	sasl-devel
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(lua) >= 5.1
@@ -2224,9 +2222,7 @@ Group:		Development/C
 Requires:	apr-devel >= 1:1.4.6
 Requires:	apr-util-devel >= 1.4.1
 Requires:	autoconf automake libtool
-Requires:	db-devel
 Requires:	expat-devel
-Requires:	gdbm-devel
 Requires:	sasl-devel
 Requires:	openssl-devel
 Requires:	pcre-devel
