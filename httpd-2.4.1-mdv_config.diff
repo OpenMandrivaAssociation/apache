@@ -153,7 +153,7 @@
 +SSLSessionCache        "shmcb:/var/cache/httpd/mod_ssl/ssl_scache(512000)"
  SSLSessionCacheTimeout  300
  
- ##
+ #   OCSP Stapling (requires OpenSSL 0.9.8h or later)
 @@ -84,10 +85,10 @@ SSLSessionCacheTimeout  300
  
  #   General setup for the virtual host
