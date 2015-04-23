@@ -4,7 +4,7 @@
 %define defaultmaxmodules 256
 %define defaultserverlimit 2048
 
-%define TAG Mandriva Linux
+%define TAG OpenMandriva Lx
 %define BASEPRODUCT Apache
 %define all_services httpd.service httpd-worker.service httpd-event.service
 
@@ -21,7 +21,7 @@ Source2:	webapp.script
 Source3:	apache2_transparent_png_icons.tar.bz2
 Source9: 	htcacheclean.service
 Source10: 	htcacheclean.sysconfig
-Source11:	Mandriva.tar.gz
+Source11:	OpenMandriva.tar.xz
 Source15:	httpd.service
 Source100:	buildconf
 Patch0:		httpd-2.0.45-deplibs.patch
@@ -238,7 +238,7 @@ Obsoletes:	apache-mod_authn_default
 
 %description	modules
 This is a meta package that pulls in the apache modules used as default in the
-apache-2.2 series in Mandriva.
+apache-2.2 series in OpenMandriva.
 
 %package	mod_authn_file
 Summary:	User authentication using text files
@@ -2238,11 +2238,11 @@ If you are installing the apache Web server and you want to be able to compile
 or develop additional modules for apache, you'll need to install this package.
 
 %package	source
-Summary:	The apache source code, including Mandriva patches
+Summary:	The apache source code, including OpenMandriva patches
 Group:		System/Servers
 
 %description	source
-The apache source code, including Mandriva patches. Use this package to build
+The apache source code, including OpenMandriva patches. Use this package to build
 your own customized apache if needed.
 
 %package	doc
@@ -2349,7 +2349,7 @@ cp %{SOURCE10} htcacheclean.sysconfig
 cp server/core.c server/core.c.untagged
 
 # some adjustments here
-perl -pi -e "s|_MODULE_DIR_|%{_libdir}/apache|g" Mandriva/*_mod_*.conf
+perl -pi -e "s|_MODULE_DIR_|%{_libdir}/apache|g" OpenMandriva/*_mod_*.conf
 
 # Build the systemd file
 cp %{SOURCE15} httpd.service
@@ -2579,7 +2579,7 @@ rm -f %{buildroot}%{_libdir}/apache/build/config.nice
 
 ##################################################################
 # install module conf files for the "modules.d" dir loading structure
-install -m0644 Mandriva/*mod_*.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
+install -m0644 OpenMandriva/*mod_*.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
 
 install -d %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d
 
@@ -2617,12 +2617,12 @@ touch %{buildroot}/var/cache/httpd/mod_ssl/scache.sem
 # fix a msec safe cache for the mod_ldap LDAPSharedCacheFile
 touch %{buildroot}/var/cache/httpd/mod_ldap_cache
 
-install -m0644 Mandriva/fileprotector.conf %{buildroot}%{_sysconfdir}/httpd/conf/fileprotector.conf
-install -m0644 Mandriva/httpd.sysconf %{buildroot}%{_sysconfdir}/sysconfig/httpd
-install -m0644 Mandriva/favicon.ico %{buildroot}/srv/www/html/
-install -m0644 Mandriva/robots.txt %{buildroot}/srv/www/html/
-install -m0644 Mandriva/rpm.png  %{buildroot}/srv/www/icons/
-install -m0644 Mandriva/httpd.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/httpd
+install -m0644 OpenMandriva/fileprotector.conf %{buildroot}%{_sysconfdir}/httpd/conf/fileprotector.conf
+install -m0644 OpenMandriva/httpd.sysconf %{buildroot}%{_sysconfdir}/sysconfig/httpd
+install -m0644 OpenMandriva/favicon.ico %{buildroot}/srv/www/html/
+install -m0644 OpenMandriva/robots.txt %{buildroot}/srv/www/html/
+install -m0644 OpenMandriva/rpm.png  %{buildroot}/srv/www/icons/
+install -m0644 OpenMandriva/httpd.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/httpd
 
 %multiarch_includes %{buildroot}%{_includedir}/apache/ap_config_layout.h
 
