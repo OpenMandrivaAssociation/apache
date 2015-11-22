@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.17
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -38,6 +38,7 @@ BuildRequires:	autoconf automake libtool
 BuildRequires:	pkgconfig(apr-1) >= 1.5.0
 BuildRequires:	pkgconfig(apr-util-1) >= 1.5.3
 BuildRequires:	pkgconfig(expat)
+BuildRequires:	pkgconfig(libnghttp2)
 BuildRequires:	sasl-devel
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(lua) >= 5.1
@@ -212,6 +213,7 @@ Requires:	apache-mod_env = %{version}-%{release}
 Requires:	apache-mod_expires = %{version}-%{release}
 Requires:	apache-mod_filter = %{version}-%{release}
 Requires:	apache-mod_headers = %{version}-%{release}
+Requires:	apache-mod_http2 = %{version}-%{release}
 Requires:	apache-mod_imagemap = %{version}-%{release}
 Requires:	apache-mod_include = %{version}-%{release}
 Requires:	apache-mod_info = %{version}-%{release}
@@ -2202,6 +2204,14 @@ sub-processing, external request redirection, or internal proxy throughput.
 Further details, discussion, and examples, are provided in the detailed
 mod_rewrite documentation.
 
+%package        mod_http2
+Summary:        Provides HTTP2 Support
+Group:          System/Servers
+Conflicts:      apache-modules < 2.4.0
+
+%description    mod_http2
+This module provides HTTP/2 (RFC 7540) support for the Apache HTTP Server.
+
 %package	htcacheclean
 Summary:	Clean up the disk cache (for apache-mod_cache_disk)
 Group:		System/Servers
@@ -3687,6 +3697,14 @@ if [ "$1" = "0" ]; then
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
+%post mod_http2
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+
+%postun mod_http2
+if [ "$1" = "0" ]; then
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+
 %post htcacheclean
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
@@ -4178,6 +4196,10 @@ fi
 %files mod_rewrite
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/113_mod_rewrite.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_rewrite.so
+
+%files mod_http2
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/114_mod_http2.conf
+%attr(0755,root,root) %{_libdir}/apache/mod_http2.so
 
 %files base
 %defattr(-,root,root)
