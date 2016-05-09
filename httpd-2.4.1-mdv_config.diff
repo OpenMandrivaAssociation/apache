@@ -412,8 +412,8 @@
  # Note: The following must must be present to support
  #       starting without SSL on platforms with no /dev/random equivalent
 @@ -418,3 +430,16 @@ SSLRandomSeed connect builtin
- #RequestHeader unset DNT env=bad_DNT
- #</IfModule>
+ SSLRandomSeed connect builtin
+ </IfModule>
  
 +# include legacy Mandriva directives
 +
