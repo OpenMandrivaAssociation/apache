@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.20
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://www.apache.org
@@ -2658,6 +2658,12 @@ find %{buildroot}%{_datadir}/doc/apache-doc -type f -exec chmod 644 {} \;
 rm -rf %{buildroot}/srv/www/cgi-bin/printenv*
 rm -rf %{buildroot}/srv/www/cgi-bin/test-cgi
 
+# Create the /run directory at boot
+mkdir -p %{buildroot}%{_prefix}/lib/tmpfiles.d
+cat >%{buildroot}%{_prefix}/lib/tmpfiles.d/apache.conf <<EOF
+d /run/httpd 0755 apache apache -
+EOF
+
 #########################################################################################
 # install phase done
 #
@@ -4288,6 +4294,7 @@ fi
 %exclude %{_mandir}/man8/htcacheclean.8*
 %exclude %{_mandir}/man8/suexec.8*
 %{_mandir}/*/*
+%{_prefix}/lib/tmpfiles.d/apache.conf
 
 %files htcacheclean
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/htcacheclean
