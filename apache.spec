@@ -35,6 +35,7 @@ Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
 BuildRequires:	autoconf automake libtool
+BuildRequires:	flex-devel
 BuildRequires:	pkgconfig(apr-1) >= 1.5.0
 BuildRequires:	pkgconfig(apr-util-1) >= 1.5.3
 BuildRequires:	pkgconfig(expat)
@@ -1582,6 +1583,15 @@ Limitations
  ProxyPass / backend.server:port ProxyPassReverse / backend.server:port
  That is, the entire URL is appended to the mapped backend URL. This is in
  keeping with the intent of being a simple but fast reverse proxy switch.
+
+%package        mod_proxy_hcheck
+Summary:        Dynamic health checking of balancer members
+Group:          System/Servers
+
+%description    mod_proxy_hcheck
+This module provides for dynamic health checking of balancer members
+(workers). This can be enabled on a worker-by-worker basis. The health
+check is done independently of the actual reverse proxy requests.
 
 %package	mod_session
 Summary:	Session support
@@ -3341,6 +3351,14 @@ if [ "$1" = "0" ]; then
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
+%post mod_proxy_hcheck
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+
+%postun mod_proxy_hcheck
+if [ "$1" = "0" ]; then
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+
 %post mod_session
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
@@ -4042,6 +4060,10 @@ fi
 %files mod_proxy_express
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/075_mod_proxy_express.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_express.so
+
+%files mod_proxy_hcheck
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/115_mod_proxy_hcheck.conf
+%attr(0755,root,root) %{_libdir}/apache/mod_proxy_hcheck.so
 
 %files mod_session
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/076_mod_session.conf
