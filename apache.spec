@@ -2443,7 +2443,7 @@ for mpm in worker event prefork; do
     	    --enable-ssl --with-ssl=%{_prefix} --disable-distcache \
     	    --enable-deflate=shared \
     	    --enable-cgid=shared \
-    	    --enable-proxy=shared --enable-proxy-connect=shared --enable-proxy-ftp=shared \
+    	    --enable-proxy=shared --enable-proxy-fdpass --enable-proxy-connect=shared --enable-proxy-ftp=shared \
     	    --enable-proxy-http=shared --enable-proxy-ajp=shared --enable-proxy-balancer=shared \
     	    --enable-dav=shared --enable-dav-fs=shared --enable-dav-lock=shared \
     	    --enable-version=shared \
