@@ -1,4 +1,5 @@
 sources:
   OpenMandriva.tar.xz: 885d0d778c1037d986ff420689d2c77147fb46c8
   apache2_transparent_png_icons.tar.bz2: 20bdf283abbdbd34580b4a6f08934cb8910a0d6a
-  httpd-2.4.23.tar.gz: 91898e6a7c010a5cd35855a67d1ec59914cbeee8
+  httpd-2.4.25.tar.gz: 377c62dc6b25c9378221111dec87c28f8fe6ac69
+  httpd-2.4.25.tar.gz.asc: 43ac11727958b91c2bb315bb89c618df3034765f
