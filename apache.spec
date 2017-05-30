@@ -11,10 +11,10 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.25
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
-URL:		http://www.apache.org
+URL:		http://httpd.apache.org
 Source0:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz
 Source1:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz.asc
 Source2:	webapp.script
@@ -2646,8 +2646,6 @@ install -m0644 OpenMandriva/robots.txt %{buildroot}/srv/www/html/
 install -m0644 OpenMandriva/rpm.png  %{buildroot}/srv/www/icons/
 install -m0644 OpenMandriva/httpd.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/httpd
 
-%multiarch_includes %{buildroot}%{_includedir}/apache/ap_config_layout.h
-
 # rpm filetriggers
 install -d %{buildroot}%{_localstatedir}/lib/rpm/filetriggers
 cat > %{buildroot}%{_localstatedir}/lib/rpm/filetriggers/webapp.filter << EOF
@@ -4327,7 +4325,6 @@ fi
 /lib/systemd/system/htcacheclean.service
 
 %files devel
-%{multiarch_includedir}/apache/ap_config_layout.h
 %{_includedir}/apache
 %attr(0755,root,root) %dir %{_libdir}/apache/build
 %attr(0644,root,root) %{_libdir}/apache/build/*.mk
