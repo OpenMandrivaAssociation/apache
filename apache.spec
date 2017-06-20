@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.25
-Release:	2
+Version:	2.4.26
+Release:	1
 Group:		System/Servers
 License:	Apache License
 URL:		http://httpd.apache.org
@@ -34,7 +34,6 @@ Patch105:	httpd-2.2.17-filter.patch
 Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
-Patch109:	httpd-2.4.23-openssl11.patch
 BuildRequires:	autoconf automake libtool
 BuildRequires:	flex-devel
 BuildRequires:	pkgconfig(apr-1) >= 1.5.0
@@ -2289,7 +2288,6 @@ web browser and point to this URL: http://localhost/manual
 %patch106 -p1 -b .mdvConfig~
 %patch107 -p1 -b .linkage~
 %patch108 -p0 -b .buildfix~
-%patch109 -p1
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
