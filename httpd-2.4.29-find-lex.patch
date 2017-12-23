@@ -1,0 +1,10 @@
+--- httpd-2.4.29/configure.in.omv~	2017-12-23 01:12:02.893488428 +0100
++++ httpd-2.4.29/configure.in	2017-12-23 01:12:18.745509558 +0100
+@@ -9,6 +9,7 @@ AC_INIT(ABOUT_APACHE)
+ 
+ AC_CONFIG_HEADER(include/ap_config_auto.h)
+ AC_CONFIG_AUX_DIR(build)
++AC_PROG_LEX
+ 
+ dnl Absolute source/build directory
+ abs_srcdir=`(cd $srcdir && pwd)`

@@ -6,11 +6,11 @@
 
 %define TAG OpenMandriva Lx
 %define BASEPRODUCT Apache
-%define all_services httpd.service httpd-worker.service httpd-event.service
+%define all_services httpd.service httpd-worker.service httpd-prefork.service
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.26
+Version:	2.4.29
 Release:	1
 Group:		System/Servers
 License:	Apache License
@@ -25,6 +25,7 @@ Source11:	OpenMandriva.tar.xz
 Source15:	httpd.service
 Source100:	buildconf
 Patch0:		httpd-2.0.45-deplibs.patch
+Patch1:		httpd-2.4.29-find-lex.patch
 Patch8:		httpd-2.1.10-apxs.patch
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
@@ -1975,32 +1976,11 @@ to run as a specified user and Group.
 Normally, when a CGI or SSI program executes, it runs as the same user who is
 running the web server.
 
-%package	mod_cgi
-Summary:	Execution of CGI scripts
-Group:		System/Servers
-Conflicts:	apache-modules < 2.4.0
-
-%description	mod_cgi
-Any file that has the handler cgi-script will be treated as a CGI script,
-and run by the server, with its output being returned to the client. Files
-acquire this handler either by having a name containing an extension defined
-by the AddHandler directive, or by being in a ScriptAlias directory.
-
-For an introduction to using CGI scripts with Apache, see our tutorial on
-Dynamic Content With CGI.
-
-When using a multi-threaded MPM under unix, the module mod_cgid should
-be used in place of this module. At the user level, the two modules are
-essentially identical.
-
-For backward-compatibility, the cgi-script handler will also be activated
-for any file with the mime-type application/x-httpd-cgi. The use of the
-magic mime-type is deprecated.
-
 %package	mod_cgid
 Summary:	Execution of CGI scripts using an external CGI daemon
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Obsoletes:	%{name}-mod_cgi < %{EVRD}
 
 %description	mod_cgid
 Except for the optimizations and the additional ScriptSock directive noted
@@ -2280,6 +2260,7 @@ web browser and point to this URL: http://localhost/manual
 
 %setup -q -n httpd-%{version} -a11
 %patch0 -p0 -b .deplibs.droplet
+%patch1 -p1 -b .lex~
 %patch8 -p1 -b .apxs.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
@@ -2373,10 +2354,10 @@ perl -pi -e "s|_MODULE_DIR_|%{_libdir}/apache|g" OpenMandriva/*_mod_*.conf
 
 # Build the systemd file
 cp %{SOURCE15} httpd.service
-for mpm in worker event; do
-    sed "s,@NAME@,${mpm},g;s,@EXEC@,%{_sbindir}/httpd-${mpm},g" httpd.service > httpd-${mpm}.service
+for mpm in prefork worker; do
+	sed "s,@NAME@,${mpm},g;s,@EXEC@,%{_sbindir}/httpd-${mpm},g" httpd.service > httpd-${mpm}.service
+	touch -r httpd.service httpd-${mpm}.service
 done
-touch -r httpd.service httpd-${mpm}.service
 
 %build
 %serverbuild
@@ -2429,13 +2410,29 @@ APVARS="--enable-layout=NUX \
     --enable-forward \
     --with-program-name=httpd"
 
-for mpm in worker event prefork; do
+for mpm in worker prefork event; do
     mkdir build-${mpm}; pushd build-${mpm}
     ln -s ../configure .
 
     if [ ${mpm} = prefork ]; then
-        %configure2_5x $APVARS \
+        %configure $APVARS \
     	    --with-mpm=prefork \
+            --enable-modules=none
+    # don't build support tools
+    perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
+    fi
+
+    if [ ${mpm} = worker ]; then
+	%configure $APVARS \
+    	    --with-mpm=worker \
+	    --enable-modules=none
+    # don't build support tools
+    perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
+    fi
+
+    if [ ${mpm} = event ]; then
+	%configure $APVARS \
+    	    --with-mpm=event \
     	    --enable-modules=all \
 	    --enable-mods-shared=all \
     	    --with-ldap --enable-ldap=shared --enable-authnz-ldap=shared \
@@ -2455,34 +2452,11 @@ for mpm in worker event prefork; do
 	    --enable-ident=shared \
 	    --enable-imagemap=shared \
 	    --enable-suexec=shared
+    fi
 
     # nuke excessive use of ldflags
     perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
     perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{ldflags}|g" build/config_vars.mk
-
-    fi
-
-    if [ ${mpm} = worker ]; then
-	%configure2_5x $APVARS \
-    	    --with-mpm=worker \
-	    --enable-modules=none
-    # don't build support tools
-    perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
-    # nuke excessive use of ldflags
-    perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
-    perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{ldflags}|g" build/config_vars.mk
-    fi
-
-    if [ ${mpm} = event ]; then
-	%configure2_5x $APVARS \
-    	    --with-mpm=event \
-	    --enable-modules=none
-    # don't build support tools
-    perl -pi -e "s|^SUBDIRS = .*|SUBDIRS = os server modules|g" Makefile
-    # nuke excessive use of ldflags
-    perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
-    perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{ldflags}|g" build/config_vars.mk
-    fi
 
     #Copy configure flags to a file in the apache-source rpm.
     cp config.nice %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/config.nice.${mpm}
@@ -2503,8 +2477,8 @@ for mpm in worker event prefork; do
     popd
 done
 
-# Create default/prefork service file for systemd
-sed "s,@NAME@,prefork,g;s,@EXEC@,%{_sbindir}/httpd,g" httpd.service > httpd.service.def
+# Create default/event service file for systemd
+sed "s,@NAME@,event,g;s,@EXEC@,%{_sbindir}/httpd,g" httpd.service > httpd.service.def
 touch -r httpd.service httpd.service.def
 
 %install
@@ -2531,7 +2505,7 @@ install -d %{buildroot}/srv/www/perl
 # install source
 tar -cf - -C %{_builddir}/tmp-httpd-%{version} usr/src | tar x -C %{buildroot} -f -
 
-pushd build-prefork
+pushd build-event
 make install \
 	prefix=%{_sysconfdir}/httpd \
 	bindir=%{buildroot}%{_bindir} \
@@ -2605,15 +2579,15 @@ install -d %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d
 
 # install the mpm stuff
 install -m0755 build-worker/httpd %{buildroot}%{_sbindir}/httpd-worker
-install -m0755 build-event/httpd %{buildroot}%{_sbindir}/httpd-event
+install -m0755 build-prefork/httpd %{buildroot}%{_sbindir}/httpd-prefork
 
 # install alternative MPMs; executables, man pages, and systemd service files
 install -d %{buildroot}/lib/systemd/system
-for mpm in worker event; do
+for mpm in prefork worker; do
     install -p -m 644 httpd-${mpm}.service %{buildroot}/lib/systemd/system/httpd-${mpm}.service
 done
 
-# Default httpd (prefork) service file
+# Default httpd (event) service file
 install -p -m 644 httpd.service.def %{buildroot}/lib/systemd/system/httpd.service
 
 # install htcacheclean files
@@ -2621,11 +2595,11 @@ install -m0644 htcacheclean.service %{buildroot}/lib/systemd/system/htcacheclean
 install -m0644 htcacheclean.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/htcacheclean
 
 # install missing files
-install -m755 build-prefork/support/split-logfile %{buildroot}%{_sbindir}/split-logfile
+install -m755 build-event/support/split-logfile %{buildroot}%{_sbindir}/split-logfile
 install -m755 support/list_hooks.pl %{buildroot}%{_sbindir}/list_hooks.pl
-install -m755 build-prefork/support/logresolve.pl %{buildroot}%{_sbindir}/logresolve.pl
-install -m755 build-prefork/support/log_server_status %{buildroot}%{_sbindir}/log_server_status
-install -m755 build-prefork/support/checkgid %{buildroot}%{_sbindir}/checkgid
+install -m755 build-event/support/logresolve.pl %{buildroot}%{_sbindir}/logresolve.pl
+install -m755 build-event/support/log_server_status %{buildroot}%{_sbindir}/log_server_status
+install -m755 build-event/support/checkgid %{buildroot}%{_sbindir}/checkgid
 install -m755 support/check_forensic %{buildroot}%{_sbindir}/check_forensic
 
 # fix a msec safe cache for the ssl stuff
@@ -2666,6 +2640,9 @@ find %{buildroot}%{_datadir}/doc/apache-doc -type f -exec chmod 644 {} \;
 rm -rf %{buildroot}/srv/www/cgi-bin/printenv*
 rm -rf %{buildroot}/srv/www/cgi-bin/test-cgi
 
+# No longer available because of threaded MPMs
+rm -f %{buildroot}%{_sysconfdir}/httpd/modules.d/101_mod_cgi.conf
+
 # Create the /run directory at boot
 mkdir -p %{buildroot}%{_prefix}/lib/tmpfiles.d
 cat >%{buildroot}%{_prefix}/lib/tmpfiles.d/apache.conf <<EOF
@@ -2675,14 +2652,6 @@ EOF
 #########################################################################################
 # install phase done
 #
-
-%clean
-rm -rf %{buildroot}
-
-# Clean up "install source" and other generated dirs
-[ "%{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}" != "/" ] && rm -rf %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}
-[ "%{_builddir}/usr/src" != "/" ] && rm -rf %{_builddir}/usr/src
-[ "%{_builddir}/tmp-httpd-%{version}" != "/" ] && rm -rf %{_builddir}/tmp-httpd-%{version}
 
 %pre base
 %_pre_useradd apache /srv/www /bin/sh
@@ -3615,14 +3584,6 @@ if [ "$1" = "0" ]; then
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
-%post mod_cgi
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-
-%postun mod_cgi
-if [ "$1" = "0" ]; then
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
-
 %post mod_cgid
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
@@ -3736,16 +3697,16 @@ if [ "$1" = "0" ]; then
 fi
 
 %files mpm-prefork
-%attr(0755,root,root) %{_sbindir}/httpd
-/lib/systemd/system/httpd.service
+%attr(0755,root,root) %{_sbindir}/httpd-prefork
+/lib/systemd/system/httpd-prefork.service
 
 %files mpm-worker
 %attr(0755,root,root) %{_sbindir}/httpd-worker
 /lib/systemd/system/httpd-worker.service
 
 %files mpm-event
-%attr(0755,root,root) %{_sbindir}/httpd-event
-/lib/systemd/system/httpd-event.service
+%attr(0755,root,root) %{_sbindir}/httpd
+/lib/systemd/system/httpd.service
 
 %files modules
 
@@ -4170,10 +4131,6 @@ fi
 %attr(0755,root,root) %{_libdir}/apache/mod_suexec.so
 %attr(0755,root,root) %{_sbindir}/suexec
 %attr(0644,root,root) %{_mandir}/man8/suexec.8*
-
-%files mod_cgi
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/101_mod_cgi.conf
-%attr(0755,root,root) %{_libdir}/apache/mod_cgi.so
 
 %files mod_cgid
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/102_mod_cgid.conf
