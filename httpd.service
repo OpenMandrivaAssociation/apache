@@ -4,12 +4,12 @@ After=syslog.target network.target
 
 [Service]
 Type=forking
-PIDFile=/var/run/httpd/httpd.pid
+PIDFile=/run/httpd/httpd.pid
 EnvironmentFile=/etc/sysconfig/httpd
-ExecStart=@EXEC@ $OPTIONS -k start
-ExecReload=@EXEC@ $OPTIONS -t
-ExecReload=/bin/kill -HUP $MAINPID
-ExecStop=@EXEC@ $OPTIONS -k stop
+ExecStart=/usr/sbin/apachectl start
+ExecReload=/usr/sbin/apachectl graceful
+ExecStop=/usr/sbin/apachectl stop
+KillSignal=SIGCONT
 #PrivateTmp=true
 
 [Install]

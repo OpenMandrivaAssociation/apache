@@ -10,7 +10,7 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.29
+Version:	2.4.33
 Release:	1
 Group:		System/Servers
 License:	Apache License
@@ -235,6 +235,8 @@ Requires:	apache-mod_vhost_alias = %{version}-%{release}
 Requires:	apache-mod_authz_core = %{version}-%{release}
 Requires:	apache-mod_authz_host = %{version}-%{release}
 Requires:	apache-mod_unixd = %{version}-%{release}
+# new 2.4+ modules
+Requires:	apache-mod_md = %{version}-%{release}
 # obsolete 2.2 modules
 Obsoletes:	apache-mod_authz_default
 Obsoletes:	apache-mod_authn_alias
@@ -242,7 +244,7 @@ Obsoletes:	apache-mod_authn_default
 
 %description	modules
 This is a meta package that pulls in the apache modules used as default in the
-apache-2.2 series in OpenMandriva.
+apache-2.4 series in OpenMandriva.
 
 %package	mod_authn_file
 Summary:	User authentication using text files
@@ -1035,6 +1037,21 @@ These macros may have parameters. They are expanded when used (parameters
 are substituted by their values given as an argument), and the result is
 processed normally.
 
+%package	mod_md
+Summary:	Apache httpd module for managing common properties of domains
+Group:		System/Servers
+
+%description	mod_md
+This module manages common properties of domains for one or more virtual
+hosts. Specifically it can use the ACME protocol (RFC Draft) to automate
+certificate provisioning.
+
+These will be configured for managed domains and their virtual hosts
+automatically. This includes renewal of certificates before they expire.
+
+The most famous Certificate Authority currently implementing the ACME
+protocol is Let's Encrypt.
+
 %package	mod_xml2enc
 Summary:	Enhanced charset/internationalisation support for libxml2-based filter modules
 Group:		System/Servers
@@ -1497,6 +1514,21 @@ SCGI protocol, version 1.
 
 Thus, in order to get the ability of handling the SCGI protocol, mod_proxy
 and mod_proxy_scgi have to be present in the server.
+
+Do not enable proxying until you have secured your server. Open proxy
+servers are dangerous both to your network and to the Internet at large.
+
+%package	mod_proxy_uwsgi
+Summary:	UWSGI gateway module for mod_proxy
+Group:		System/Servers
+Conflicts:	apache-proxy < 2.4.0
+
+%description	mod_proxy_uwsgi
+This module requires the service of mod_proxy. It provides support for the
+UWSGI protocol.
+
+Thus, in order to get the ability of handling the UWSGI protocol, mod_proxy
+and mod_proxy_uwsgi have to be present in the server.
 
 Do not enable proxying until you have secured your server. Open proxy
 servers are dangerous both to your network and to the Internet at large.
@@ -2352,10 +2384,10 @@ cp server/core.c server/core.c.untagged
 # some adjustments here
 perl -pi -e "s|_MODULE_DIR_|%{_libdir}/apache|g" OpenMandriva/*_mod_*.conf
 
-# Build the systemd file
+# Build the systemd files
 cp %{SOURCE15} httpd.service
 for mpm in prefork worker; do
-	sed "s,@NAME@,${mpm},g;s,@EXEC@,%{_sbindir}/httpd-${mpm},g" httpd.service > httpd-${mpm}.service
+	sed "s,@NAME@,${mpm},g;s,%{_sbindir}/apachectl,%{_sbindir}/apachectl-${mpm},g" httpd.service > httpd-${mpm}.service
 	touch -r httpd.service httpd-${mpm}.service
 done
 
@@ -2584,7 +2616,9 @@ install -m0755 build-prefork/httpd %{buildroot}%{_sbindir}/httpd-prefork
 # install alternative MPMs; executables, man pages, and systemd service files
 install -d %{buildroot}/lib/systemd/system
 for mpm in prefork worker; do
-    install -p -m 644 httpd-${mpm}.service %{buildroot}/lib/systemd/system/httpd-${mpm}.service
+	install -p -m 644 httpd-${mpm}.service %{buildroot}/lib/systemd/system/httpd-${mpm}.service
+	sed -e "s,/httpd',/httpd-${mpm}'," %{buildroot}%{_sbindir}/apachectl >%{buildroot}%{_sbindir}/apachectl-${mpm}
+	chmod +x %{buildroot}%{_sbindir}/apachectl-${mpm}
 done
 
 # Default httpd (event) service file
@@ -3286,6 +3320,14 @@ if [ "$1" = "0" ]; then
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
+%post mod_proxy_uwsgi
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+
+%postun mod_proxy_uwsgi
+if [ "$1" = "0" ]; then
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+
 %post mod_proxy_fdpass
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
@@ -3697,14 +3739,17 @@ if [ "$1" = "0" ]; then
 fi
 
 %files mpm-prefork
+%{_sbindir}/apachectl-prefork
 %attr(0755,root,root) %{_sbindir}/httpd-prefork
 /lib/systemd/system/httpd-prefork.service
 
 %files mpm-worker
+%{_sbindir}/apachectl-worker
 %attr(0755,root,root) %{_sbindir}/httpd-worker
 /lib/systemd/system/httpd-worker.service
 
 %files mpm-event
+%{_sbindir}/apachectl
 %attr(0755,root,root) %{_sbindir}/httpd
 /lib/systemd/system/httpd.service
 
@@ -3896,6 +3941,9 @@ fi
 %files mod_macro
 %attr(0755,root,root) %{_libdir}/apache/mod_macro.so
 
+%files mod_md
+%attr(0755,root,root) %{_libdir}/apache/mod_md.so
+
 %files mod_xml2enc
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/046_mod_xml2enc.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_xml2enc.so
@@ -4003,6 +4051,9 @@ fi
 %files mod_proxy_scgi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/071_mod_proxy_scgi.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_proxy_scgi.so
+
+%files mod_proxy_uwsgi
+%attr(0755,root,root) %{_libdir}/apache/mod_proxy_uwsgi.so
 
 %files mod_proxy_fdpass
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/072_mod_proxy_fdpass.conf
@@ -4256,7 +4307,6 @@ fi
 %attr(0755,root,root) %{_bindir}/htpasswd
 %attr(0755,root,root) %{_bindir}/httxt2dbm
 %attr(0755,root,root) %{_bindir}/logresolve
-%attr(0755,root,root) %{_sbindir}/apachectl
 %attr(0755,root,root) %{_sbindir}/check_forensic
 %attr(0755,root,root) %{_sbindir}/checkgid
 %attr(0755,root,root) %{_sbindir}/fcgistarter
