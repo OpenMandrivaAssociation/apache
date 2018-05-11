@@ -250,6 +250,7 @@ apache-2.4 series in OpenMandriva.
 Summary:	User authentication using text files
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authn_core = %{EVRD}
 
 %description	mod_authn_file
 This module provides authentication front-ends such as mod_auth_digest
@@ -263,6 +264,7 @@ the AuthBasicProvider or AuthDigestProvider with the file value.
 Summary:	User authentication using DBM files
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authn_core = %{EVRD}
 
 %description	mod_authn_dbm
 This module provides authentication front-ends such as mod_auth_digest and
@@ -276,6 +278,7 @@ the AuthBasicProvider or AuthDigestProvider with the dbm value.
 Summary:	Allows "anonymous" user access to authenticated areas
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authn_core = %{EVRD}
 
 %description	mod_authn_anon
 This module provides authentication front-ends such as mod_auth_basic to
@@ -297,6 +300,7 @@ directive with the anon value.
 Summary:	User authentication using an SQL database
 Group:		System/Servers
 Requires:	apache-mod_dbd
+Requires:	%{name}-mod_authn_core = %{EVRD}
 
 %description	mod_authn_dbd
 This module provides authentication front-ends such as mod_auth_digest
@@ -312,6 +316,7 @@ the AuthBasicProvider or AuthDigestProvider with the dbd value.
 %package	mod_authn_socache
 Summary:	Manages a cache of authentication credentials to relieve the load on backends
 Group:		System/Servers
+Requires:	%{name}-mod_authn_core = %{EVRD}
 
 %description	mod_authn_socache
 Maintains a cache of authentication credentials, so that a new backend
@@ -331,6 +336,7 @@ are common to all authentication providers.
 Summary:	Group authorizations based on host (name or IP address)
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authz_core = %{EVRD}
 
 %description	mod_authz_host
 The authorization providers implemented by mod_authz_host are registered using
@@ -348,6 +354,7 @@ by enclosing the directives in a <Limit> section.
 Summary:	Group authorization using plaintext files
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authz_core = %{EVRD}
 
 %description	mod_authz_groupfile
 This module provides authorization capabilities so that authenticated
@@ -358,6 +365,7 @@ membership. Similar functionality is provided by mod_authz_dbm.
 Summary:	User Authorization
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authz_core = %{EVRD}
 
 %description	mod_authz_user
 This module provides authorization capabilities so that authenticated
@@ -370,6 +378,7 @@ grant access to all successfully authenticated users.
 Summary:	Group authorization using DBM files
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authz_core = %{EVRD}
 
 %description	mod_authz_dbm
 This module provides authorization capabilities so that authenticated
@@ -380,6 +389,7 @@ membership. Similar functionality is provided by mod_authz_groupfile.
 Summary:	Authorization based on file ownership
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authz_core = %{EVRD}
 
 %description	mod_authz_owner
 This module authorizes access to files by comparing the userid used for
@@ -407,6 +417,7 @@ file-group
 Summary:	Group Authorization and Login using SQL
 Group:		System/Servers
 Conflicts:	apache-modules < 2.4.0
+Requires:	%{name}-mod_authz_core = %{EVRD}
 
 %description	mod_authz_dbd
 This module provides authorization capabilities so that authenticated
@@ -440,6 +451,8 @@ applied to the authorization processing.
 Summary:	LDAP HTTP Basic authentication
 Group:		System/Servers
 Conflicts:	apache-mod_proxy < 2.4.0
+Requires:	%{name}-mod_authn_core = %{EVRD}
+Requires:	%{name}-mod_authz_core = %{EVRD}
 
 %description	mod_authnz_ldap
 This module provides authentication front-ends such as mod_auth_basic to
