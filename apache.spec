@@ -47,7 +47,9 @@ BuildRequires:	pkgconfig(lua) >= 5.1
 BuildRequires:	lynx
 BuildRequires:	openldap-devel
 BuildRequires:	pkgconfig(openssl)
+BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libpcre)
+BuildRequires:	pkgconfig(jansson)
 BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	pkgconfig(zlib)
