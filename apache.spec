@@ -51,6 +51,7 @@ BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	pkgconfig(zlib)
+BuildRequires:	pkgconfig(uuid)
 # So people who "urpmi httpd" get what they expect
 Provides:	httpd = %EVRD
 
