@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.33
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://httpd.apache.org
@@ -36,6 +36,8 @@ Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
 BuildRequires:	autoconf automake libtool
+# For _pre_useradd macro and friends
+BuildRequires:	rpm-helper
 BuildRequires:	flex-devel
 BuildRequires:	pkgconfig(apr-1) >= 1.5.0
 BuildRequires:	pkgconfig(apr-util-1) >= 1.5.3
