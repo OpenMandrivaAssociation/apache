@@ -10,7 +10,7 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.38
+Version:	2.4.39
 Release:	1
 Group:		System/Servers
 License:	Apache License
@@ -2166,6 +2166,14 @@ whenever a file of a certain MIME content type is requested.  The Script
 directive lets you run CGI scripts whenever a particular method is used in
 a request. This makes it much easier to execute scripts that process files.
 
+%package	mod_socache_redis
+Summary:	Redis cache support for Apache
+Group:		System/Servers
+Conflicts:	apache-modules < 2.4.0
+
+%description	mod_socache_redis
+Redis cache support for Apache
+
 %package	mod_speling
 Summary:	Attempts to correct various minor misspellings
 Group:		System/Servers
@@ -4232,6 +4240,9 @@ fi
 %files mod_actions
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/109_mod_actions.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_actions.so
+
+%files mod_socache_redis
+%attr(0755,root,root) %{_libdir}/apache/mod_socache_redis.so
 
 %files mod_speling
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/110_mod_speling.conf
