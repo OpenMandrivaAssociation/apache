@@ -10,7 +10,7 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.41
+Version:	2.4.43
 Release:	1
 Group:		System/Servers
 License:	Apache License
@@ -35,15 +35,16 @@ Patch105:	httpd-2.2.17-filter.patch
 Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
+Patch109:	httpd-2.4.43-no-Lusrlib.patch
 BuildRequires:	autoconf automake libtool
 # For _pre_useradd macro and friends
 BuildRequires:	rpm-helper
-BuildRequires:	flex-devel
+BuildRequires:	pkgconfig(libfl)
 BuildRequires:	pkgconfig(apr-1) >= 1.5.0
 BuildRequires:	pkgconfig(apr-util-1) >= 1.5.3
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(libnghttp2)
-BuildRequires:	sasl-devel
+BuildRequires:	pkgconfig(libsasl2)
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(lua) >= 5.1
 BuildRequires:	lynx
@@ -56,6 +57,8 @@ BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(uuid)
+BuildRequires:	pkgconfig(libbrotlienc)
+BuildRequires:	pkgconfig(libbrotlidec)
 # So people who "urpmi httpd" get what they expect
 Provides:	httpd = %EVRD
 
@@ -2277,16 +2280,16 @@ directories at regular intervals for cached content to be removed.
 %package	devel
 Summary:	Module development tools for the apache web server
 Group:		Development/C
-Requires:	apr-devel >= 1:1.4.6
-Requires:	apr-util-devel >= 1.4.1
+Requires:	pkgconfig(apr-1) >= 1.4.6
+Requires:	pkgconfig(apr-util-1) >= 1.4.1
 Requires:	autoconf automake libtool
-Requires:	expat-devel
-Requires:	sasl-devel
-Requires:	openssl-devel
-Requires:	pcre-devel
+Requires:	pkgconfig(expat)
+Requires:	pkgconfig(libsasl2)
+Requires:	pkgconfig(openssl)
+Requires:	pkgconfig(libpcre)
 Requires:	perl >= 0:5.600
 Requires:	pkgconfig
-Requires:	zlib-devel
+Requires:	pkgconfig(zlib)
 
 %description	devel
 The apache-devel package contains the source code for the apache Web server and
@@ -2314,8 +2317,14 @@ This package contains the apache server documentation in HTML format.
 Please view the documentaion by starting the apache server and your favourite
 web browser and point to this URL: http://localhost/manual
 
-%prep
+%package	mod_brotli
+Summary:	Apache httpd module for Brotli compression
+Group:		System/Servers
 
+%description	mod_brotli
+This module manages Brotli compression
+
+%prep
 %setup -q -n httpd-%{version} -a11
 %patch0 -p0 -b .deplibs.droplet
 %patch1 -p1 -b .lex~
@@ -2327,6 +2336,7 @@ web browser and point to this URL: http://localhost/manual
 %patch106 -p1 -b .mdvConfig~
 %patch107 -p1 -b .linkage~
 %patch108 -p0 -b .buildfix~
+%patch109 -p1 -b .Lusrlib~
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -3969,6 +3979,9 @@ fi
 
 %files mod_md
 %attr(0755,root,root) %{_libdir}/apache/mod_md.so
+
+%files mod_brotli
+%attr(0755,root,root) %{_libdir}/apache/mod_brotli.so
 
 %files mod_xml2enc
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/046_mod_xml2enc.conf
