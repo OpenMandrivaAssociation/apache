@@ -10,7 +10,7 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.47
+Version:	2.4.52
 Release:	1
 Group:		System/Servers
 License:	Apache License
@@ -35,7 +35,6 @@ Patch105:	httpd-2.2.17-filter.patch
 Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
-Patch109:	httpd-2.4.43-no-Lusrlib.patch
 BuildRequires:	autoconf automake libtool
 # For _pre_useradd macro and friends
 BuildRequires:	rpm-helper
@@ -2336,7 +2335,6 @@ This module manages Brotli compression
 %patch106 -p1 -b .mdvConfig~
 %patch107 -p1 -b .linkage~
 %patch108 -p0 -b .buildfix~
-%patch109 -p1 -b .Lusrlib~
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
@@ -2505,7 +2503,7 @@ for mpm in worker prefork event; do
 	    --enable-mods-shared=all \
     	    --with-ldap --enable-ldap=shared --enable-authnz-ldap=shared \
 	    --enable-cache=shared --enable-disk-cache=shared --enable-file-cache=shared --enable-mem-cache=shared \
-    	    --enable-ssl --with-ssl=%{_prefix} --disable-distcache \
+    	    --enable-ssl --disable-distcache \
     	    --enable-deflate=shared \
     	    --enable-cgid=shared \
     	    --enable-proxy=shared --enable-proxy-fdpass --enable-proxy-connect=shared --enable-proxy-ftp=shared \
