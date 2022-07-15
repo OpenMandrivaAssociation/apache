@@ -23,6 +23,7 @@ Source9: 	htcacheclean.service
 Source10: 	htcacheclean.sysconfig
 Source11:	OpenMandriva.tar.xz
 Source15:	httpd.service
+Source20:	apache.sysusers
 Source100:	buildconf
 Patch0:		httpd-2.0.45-deplibs.patch
 Patch1:		httpd-2.4.29-find-lex.patch
@@ -2717,10 +2718,7 @@ EOF
 
 # And the apache user
 mkdir -p %{buildroot}%{_sysusersdir}
-cat >%{buildroot}%{_sysusersdir}/apache.conf <<EOF
-g apache 993 -
-u apache 191:993 "Apache HTTPD" /srv/www
-EOF
+cp %{S:20} %{buildroot}%{_sysusersdir}/apache.conf
 
 #########################################################################################
 # install phase done
@@ -2747,8 +2745,10 @@ if [ "$1" -eq "0" ] ; then
 fi
 
 %postun mpm-prefork
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+systemctl daemon-reload >/dev/null 2>&1 || :
 
+%pre base
+%sysusers_create_package apache %{S:20}
 
 %post mpm-worker
 # Register the httpd service
