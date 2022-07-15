@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.52
-Release:	2
+Version:	2.4.54
+Release:	1
 Group:		System/Servers
 License:	Apache License
 URL:		http://httpd.apache.org
@@ -31,7 +31,6 @@ Patch8:		httpd-2.1.10-apxs.patch
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
 Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-2.2.21-linux3.diff
-Patch105:	httpd-2.2.17-filter.patch
 Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
@@ -2331,7 +2330,6 @@ This module manages Brotli compression
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
 %patch19 -p1 -b .linux3.droplet
-%patch105 -p1 -b .filter.droplet
 %patch106 -p1 -b .mdvConfig~
 %patch107 -p1 -b .linkage~
 %patch108 -p0 -b .buildfix~
@@ -2421,7 +2419,7 @@ perl -pi -e "s|_MODULE_DIR_|%{_libdir}/apache|g" OpenMandriva/*_mod_*.conf
 # Build the systemd files
 cp %{SOURCE15} httpd.service
 for mpm in prefork worker; do
-	sed "s,@NAME@,${mpm},g;s,%{_sbindir}/apachectl,%{_sbindir}/apachectl-${mpm},g" httpd.service > httpd-${mpm}.service
+	sed "s,@NAME@,${mpm},g;s,/usr/sbin/apachectl,%{_sbindir}/apachectl-${mpm},g" httpd.service > httpd-${mpm}.service
 	touch -r httpd.service httpd-${mpm}.service
 done
 
@@ -2648,18 +2646,18 @@ install -m0755 build-worker/httpd %{buildroot}%{_sbindir}/httpd-worker
 install -m0755 build-prefork/httpd %{buildroot}%{_sbindir}/httpd-prefork
 
 # install alternative MPMs; executables, man pages, and systemd service files
-install -d %{buildroot}/lib/systemd/system
+install -d %{buildroot}%{_unitdir}
 for mpm in prefork worker; do
-	install -p -m 644 httpd-${mpm}.service %{buildroot}/lib/systemd/system/httpd-${mpm}.service
+	install -p -m 644 httpd-${mpm}.service %{buildroot}%{_unitdir}/httpd-${mpm}.service
 	sed -e "s,/httpd',/httpd-${mpm}'," %{buildroot}%{_sbindir}/apachectl >%{buildroot}%{_sbindir}/apachectl-${mpm}
 	chmod +x %{buildroot}%{_sbindir}/apachectl-${mpm}
 done
 
 # Default httpd (event) service file
-install -p -m 644 httpd.service.def %{buildroot}/lib/systemd/system/httpd.service
+install -p -m 644 httpd.service.def %{buildroot}%{_unitdir}/httpd.service
 
 # install htcacheclean files
-install -m0644 htcacheclean.service %{buildroot}/lib/systemd/system/htcacheclean.service
+install -m0644 htcacheclean.service %{buildroot}%{_unitdir}/htcacheclean.service
 install -m0644 htcacheclean.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/htcacheclean
 
 # install missing files
@@ -2717,15 +2715,16 @@ cat >%{buildroot}%{_prefix}/lib/tmpfiles.d/apache.conf <<EOF
 d /run/httpd 0755 apache apache -
 EOF
 
+# And the apache user
+mkdir -p %{buildroot}%{_sysusersdir}
+cat >%{buildroot}%{_sysusersdir}/apache.conf <<EOF
+g apache 993 -
+u apache 191:993 "Apache HTTPD" /srv/www
+EOF
+
 #########################################################################################
 # install phase done
 #
-
-%pre base
-%_pre_useradd apache /srv/www /bin/sh
-
-%postun base
-%_postun_userdel apache
 
 %triggerun -- %name < 2.4.3-1
 # Deal with the /var/www -> /srv/www move
@@ -3775,17 +3774,17 @@ fi
 %files mpm-prefork
 %{_sbindir}/apachectl-prefork
 %attr(0755,root,root) %{_sbindir}/httpd-prefork
-/lib/systemd/system/httpd-prefork.service
+%{_unitdir}/httpd-prefork.service
 
 %files mpm-worker
 %{_sbindir}/apachectl-worker
 %attr(0755,root,root) %{_sbindir}/httpd-worker
-/lib/systemd/system/httpd-worker.service
+%{_unitdir}/httpd-worker.service
 
 %files mpm-event
 %{_sbindir}/apachectl
 %attr(0755,root,root) %{_sbindir}/httpd
-/lib/systemd/system/httpd.service
+%{_unitdir}/httpd.service
 
 %files modules
 
@@ -4289,6 +4288,7 @@ fi
 %dir %{_sysconfdir}/httpd/conf/extra
 %dir %{_sysconfdir}/httpd/conf/original
 %dir %{_sysconfdir}/httpd/conf/original/extra
+%{_sysusersdir}/apache.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-autoindex.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-dav.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-default.conf
@@ -4367,7 +4367,7 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/htcacheclean
 %attr(0755,root,root) %{_sbindir}/htcacheclean
 %{_mandir}/man8/htcacheclean.8*
-/lib/systemd/system/htcacheclean.service
+%{_unitdir}/htcacheclean.service
 
 %files devel
 %{_includedir}/apache
