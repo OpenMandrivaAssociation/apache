@@ -10,7 +10,7 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.54
+Version:	2.4.55
 Release:	1
 Group:		System/Servers
 License:	Apache License
@@ -23,7 +23,6 @@ Source9: 	htcacheclean.service
 Source10: 	htcacheclean.sysconfig
 Source11:	OpenMandriva.tar.xz
 Source15:	httpd.service
-Source20:	apache.sysusers
 Source100:	buildconf
 Patch0:		httpd-2.0.45-deplibs.patch
 Patch1:		httpd-2.4.29-find-lex.patch
@@ -189,8 +188,9 @@ The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules
 %package	base
 Summary:	Common files and utilities for apache
 Group:		System/Servers
-Requires(pre): rpm-helper
-Requires(postun): rpm-helper
+Requires:	www-user
+Requires(pre):	www-user
+Prereq:		www-user
 Requires:	apache = %{version}-%{release}
 Provides:	apache-conf = %{version}-%{release}
 Obsoletes:	apache-conf
@@ -460,6 +460,8 @@ Group:		System/Servers
 Conflicts:	apache-mod_proxy < 2.4.0
 Requires:	%{name}-mod_authn_core = %{EVRD}
 Requires:	%{name}-mod_authz_core = %{EVRD}
+Requires:	www-user
+Requires(pre):	www-user
 
 %description	mod_authnz_ldap
 This module provides authentication front-ends such as mod_auth_basic to
@@ -1771,6 +1773,8 @@ Summary:	Strong cryptography using the SSL and TLS protocols
 Group:		System/Servers
 Requires:	apache-mod_socache_shmcb
 Requires(post):	openssl
+Requires:	www-user
+Requires(pre):	www-user
 
 %description	mod_ssl
 This module provides SSL v2/v3 and TLS v1 support for the Apache HTTP
@@ -1912,6 +1916,8 @@ modules or, if a dynamic module, it must be loaded before mod_heartmonitor.
 %package	mod_dav
 Summary:	Distributed Authoring and Versioning (WebDAV) functionality
 Group:		System/Servers
+Requires:	www-user
+Requires(pre):	www-user
 
 %description	mod_dav
 This module provides class 1 and class 2 WebDAV ('Web-based Distributed
@@ -2716,10 +2722,6 @@ cat >%{buildroot}%{_prefix}/lib/tmpfiles.d/apache.conf <<EOF
 d /run/httpd 0755 apache apache -
 EOF
 
-# And the apache user
-mkdir -p %{buildroot}%{_sysusersdir}
-cp %{S:20} %{buildroot}%{_sysusersdir}/apache.conf
-
 #########################################################################################
 # install phase done
 #
@@ -2746,9 +2748,6 @@ fi
 
 %postun mpm-prefork
 systemctl daemon-reload >/dev/null 2>&1 || :
-
-%pre base
-%sysusers_create_package apache %{S:20}
 
 %post mpm-worker
 # Register the httpd service
@@ -3998,7 +3997,7 @@ fi
 %files mod_ldap
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/049_mod_ldap.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ldap.so
-%attr(0600,apache,root) %ghost /var/cache/httpd/mod_ldap_cache
+%attr(0600,www,root) %ghost /var/cache/httpd/mod_ldap_cache
 
 %files mod_log_config
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/050_mod_log_config.conf
@@ -4138,10 +4137,10 @@ fi
 %files mod_ssl
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/082_mod_ssl.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_ssl.so
-%attr(0700,apache,root) %dir /var/cache/httpd/mod_ssl
-%attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.dir
-%attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.pag
-%attr(0600,apache,root) %ghost /var/cache/httpd/mod_ssl/scache.sem
+%attr(0700,www,root) %dir /var/cache/httpd/mod_ssl
+%attr(0600,www,root) %ghost /var/cache/httpd/mod_ssl/scache.dir
+%attr(0600,www,root) %ghost /var/cache/httpd/mod_ssl/scache.pag
+%attr(0600,www,root) %ghost /var/cache/httpd/mod_ssl/scache.sem
 
 %files mod_optional_hook_export
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/083_mod_optional_hook_export.conf
@@ -4194,8 +4193,8 @@ fi
 %files mod_dav
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/095_mod_dav.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_dav.so
-%attr(-,apache,apache) %dir /var/lib/dav
-%attr(-,apache,apache) %dir /var/lib/dav/uploads
+%attr(-,www,www) %dir /var/lib/dav
+%attr(-,www,www) %dir /var/lib/dav/uploads
 
 %files mod_status
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/096_mod_status.conf
@@ -4288,7 +4287,6 @@ fi
 %dir %{_sysconfdir}/httpd/conf/extra
 %dir %{_sysconfdir}/httpd/conf/original
 %dir %{_sysconfdir}/httpd/conf/original/extra
-%{_sysusersdir}/apache.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-autoindex.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-dav.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/extra/httpd-default.conf
@@ -4318,8 +4316,7 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/original/extra/proxy-html.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/original/httpd.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/conf/fileprotector.conf
-%attr(0755,apache,apache) %dir /srv/www
-%attr(0755,apache,apache) %dir /var/run/httpd
+%attr(0755,www,www) %dir /var/run/httpd
 %attr(0755,root,root) %dir /srv/www/html
 %dir /srv/www/error
 %dir /srv/www/error/include
@@ -4356,7 +4353,7 @@ fi
 %attr(0755,root,root) %{_sbindir}/rotatelogs
 %attr(0755,root,root) %{_sbindir}/split-logfile
 %attr(0755,root,root) %dir %{_libdir}/apache
-%attr(0700,apache,root) %dir /var/cache/httpd
+%attr(0700,www,root) %dir /var/cache/httpd
 %{_localstatedir}/lib/rpm/filetriggers/webapp.*
 %exclude %{_mandir}/man8/htcacheclean.8*
 %exclude %{_mandir}/man8/suexec.8*
