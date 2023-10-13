@@ -46,7 +46,7 @@ BuildRequires:	pkgconfig(libsasl2)
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(lua) >= 5.1
 BuildRequires:	lynx
-BuildRequires:	openldap-devel
+BuildRequires:	pkgconfig(ldap)
 BuildRequires:	pkgconfig(openssl)
 BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libpcre)
