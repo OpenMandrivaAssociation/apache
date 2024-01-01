@@ -26,6 +26,7 @@ Source15:	httpd.service
 Source100:	buildconf
 Patch0:		httpd-2.0.45-deplibs.patch
 Patch1:		httpd-2.4.29-find-lex.patch
+Patch2:		httpd-2.4.58-libxml-2.12.patch
 Patch8:		httpd-2.1.10-apxs.patch
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
@@ -2324,6 +2325,7 @@ This module manages Brotli compression
 %setup -q -n httpd-%{version} -a11
 %patch0 -p0 -b .deplibs.droplet
 %patch1 -p1 -b .lex~
+%patch2 -p1 -b .libxml~
 %patch8 -p1 -b .apxs.droplet
 %patch16 -p0 -b .fix_extra_htaccess_check.droplet
 %patch18 -p0 -b .PR45994.droplet
@@ -2472,6 +2474,7 @@ APVARS="--enable-layout=NUX \
     --enable-forward \
     --with-program-name=httpd"
 
+export LTFLAGS="--tag=CC"
 for mpm in worker prefork event; do
     mkdir build-${mpm}; pushd build-${mpm}
     ln -s ../configure .
@@ -2517,8 +2520,8 @@ for mpm in worker prefork event; do
     fi
 
     # nuke excessive use of ldflags
-    perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{ldflags}|g" build/config_vars.mk
-    perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{ldflags}|g" build/config_vars.mk
+    perl -pi -e "s|^LDFLAGS.*|LDFLAGS = %{build_ldflags}|g" build/config_vars.mk
+    perl -pi -e "s|^SH_LDFLAGS.*|SH_LDFLAGS = %{build_ldflags}|g" build/config_vars.mk
 
     #Copy configure flags to a file in the apache-source rpm.
     cp config.nice %{_builddir}/tmp-httpd-%{version}%{_usrsrc}/apache-%{version}/config.nice.${mpm}
@@ -2530,7 +2533,7 @@ for mpm in worker prefork event; do
 
     # if libexpat0-devel is installed on x86_64 somehow the EXTRA_LDLAGS is set 
     # to -L/usr/lib, fix that with a conditional hack...
-    %ifarch x86_64
+    %if "%{_lib}" != "lib"
 	find -type f | xargs perl -pi -e "s|/usr/lib\b|%{_libdir}|g"
     %endif
 
@@ -2610,10 +2613,6 @@ CVMK="%{buildroot}%{_libdir}/apache/build/config_vars.mk"
 perl -pi -e "s|%{_builddir}/httpd-%{version}|%{_usrsrc}/apache-%{version}|g" $CVMK
 perl -pi -e "s|%{buildroot}||g" $CVMK
 perl -pi -e "s|^EXTRA_INCLUDES.*|EXTRA_INCLUDES = `apr-1-config --includes` -I%{_includedir}/apache -I%{_includedir}/openssl|g" $CVMK
-
-# fix libtool invocation
-perl -pi -e "s|^LIBTOOL.*|LIBTOOL = libtool|g" $CVMK
-perl -pi -e "s|^SH_LIBTOOL.*|SH_LIBTOOL = libtool|g" $CVMK
 
 # if the following 3 lines needs to be enabled again, use the ".*" wildcard as in
 # "s|bla bla =.*|bla bla = replaced whatever text after the equal char...|g"

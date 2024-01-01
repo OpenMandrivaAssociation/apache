@@ -1,0 +1,11 @@
+diff -up httpd-2.4.58/modules/filters/mod_xml2enc.c.omv~ httpd-2.4.58/modules/filters/mod_xml2enc.c
+--- httpd-2.4.58/modules/filters/mod_xml2enc.c.omv~	2024-01-01 23:36:56.289035836 +0100
++++ httpd-2.4.58/modules/filters/mod_xml2enc.c	2024-01-01 23:37:16.281236510 +0100
+@@ -36,6 +36,7 @@
+ 
+ /* libxml2 */
+ #include <libxml/encoding.h>
++#include <libxml/xmlstring.h>
+ 
+ #if defined(__clang__)
+ #pragma clang diagnostic pop
