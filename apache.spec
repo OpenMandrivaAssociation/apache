@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.58
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://httpd.apache.org
@@ -81,9 +81,6 @@ The package was built with a ServerLimit of %{?!serverlimit:%{defaultserverlimit
 %package	mpm-prefork
 Summary:	Implements a non-threaded, pre-forking web server (stable)
 Group:		System/Servers
-Requires(preun): systemd-units
-Requires(postun): systemd-units
-Requires(post): systemd-units
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
@@ -115,9 +112,6 @@ The package was built with a ServerLimit of %{?!serverlimit:%{defaultserverlimit
 %package	mpm-worker
 Summary:	Implements a hybrid multi-threaded multi-process web server (experimental)
 Group:		System/Servers
-Requires(preun): systemd-units
-Requires(postun): systemd-units
-Requires(post): systemd-units
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
@@ -154,9 +148,6 @@ The package was built to support a maximum of %{?!maxmodules:%{defaultmaxmodules
 %package	mpm-event
 Summary:	Implements a hybrid multi-threaded multi-process web server
 Group:		System/Servers
-Requires(preun): systemd-units
-Requires(postun): systemd-units
-Requires(post): systemd-units
 Requires:	apache-base = %{version}-%{release}
 Requires:	apache-modules = %{version}-%{release}
 Provides:	webserver
