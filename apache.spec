@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.58
-Release:	2
+Release:	3
 Group:		System/Servers
 License:	Apache License
 URL:		http://httpd.apache.org
@@ -50,7 +50,7 @@ BuildRequires:	lynx
 BuildRequires:	pkgconfig(ldap)
 BuildRequires:	pkgconfig(openssl)
 BuildRequires:	pkgconfig(libcurl)
-BuildRequires:	pkgconfig(libpcre)
+BuildRequires:	pkgconfig(libpcre2-posix)
 BuildRequires:	pkgconfig(jansson)
 BuildRequires:	perl
 BuildRequires:	pkgconfig
@@ -2283,7 +2283,7 @@ Requires:	autoconf automake libtool
 Requires:	pkgconfig(expat)
 Requires:	pkgconfig(libsasl2)
 Requires:	pkgconfig(openssl)
-Requires:	pkgconfig(libpcre)
+Requires:	pkgconfig(libpcre2-posix)
 Requires:	perl >= 0:5.600
 Requires:	pkgconfig
 Requires:	pkgconfig(zlib)
@@ -2466,7 +2466,7 @@ APVARS="--enable-layout=NUX \
     --with-perl=%{_bindir}/perl \
     --with-apr=%{_bindir}/apr-1-config \
     --with-apr-util=%{_bindir}/apu-1-config \
-    --with-pcre=%{_prefix} \
+    --with-pcre2=%{_bindir}/pcre2-config \
     --with-z=%{_prefix} \
     --enable-layout=NUX \
     --with-devrandom \
