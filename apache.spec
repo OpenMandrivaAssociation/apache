@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.59
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		http://httpd.apache.org
@@ -2709,7 +2709,7 @@ rm -f %{buildroot}%{_sysconfdir}/httpd/modules.d/101_mod_cgi.conf
 # Create the /run directory at boot
 mkdir -p %{buildroot}%{_prefix}/lib/tmpfiles.d
 cat >%{buildroot}%{_prefix}/lib/tmpfiles.d/apache.conf <<EOF
-d /run/httpd 0755 apache apache -
+d /run/httpd 0755 www www -
 EOF
 
 #########################################################################################
