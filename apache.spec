@@ -2323,16 +2323,16 @@ This module manages Brotli compression
 
 %prep
 %setup -q -n httpd-%{version} -a11
-%patch0 -p0 -b .deplibs.droplet
-%patch1 -p1 -b .lex~
-%patch2 -p1 -b .libxml~
-%patch8 -p1 -b .apxs.droplet
-%patch16 -p0 -b .fix_extra_htaccess_check.droplet
-%patch18 -p0 -b .PR45994.droplet
-%patch19 -p1 -b .linux3.droplet
-%patch106 -p1 -b .mdvConfig~
-%patch107 -p1 -b .linkage~
-%patch108 -p0 -b .buildfix~
+%patch 0 -p0 -b .deplibs.droplet
+%patch 1 -p1 -b .lex~
+%patch 2 -p1 -b .libxml~
+%patch 8 -p1 -b .apxs.droplet
+%patch 16 -p0 -b .fix_extra_htaccess_check.droplet
+%patch 18 -p0 -b .PR45994.droplet
+%patch 19 -p1 -b .linux3.droplet
+%patch 106 -p1 -b .mdvConfig~
+%patch 107 -p1 -b .linkage~
+%patch 108 -p0 -b .buildfix~
 
 # forcibly prevent use of bundled apr, apr-util, pcre
 rm -rf srclib/{apr,apr-util,pcre}
