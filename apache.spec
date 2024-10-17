@@ -14,7 +14,7 @@ Version:	2.4.62
 Release:	3
 Group:		System/Servers
 License:	Apache License
-URL:		http://httpd.apache.org
+URL:		https://httpd.apache.org
 Source0:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz
 Source1:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz.asc
 Source2:	webapp.script
