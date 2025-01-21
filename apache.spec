@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.62
-Release:	3
+Release:	4
 Group:		System/Servers
 License:	Apache License
 URL:		https://httpd.apache.org
@@ -184,6 +184,7 @@ Requires:	www-user
 Requires(pre):	www-user
 Prereq:		www-user
 Requires:	apache = %{version}-%{release}
+Requires:	%{name}-tools = %{EVRD}
 Provides:	apache-conf = %{version}-%{release}
 Obsoletes:	apache-conf
 
@@ -191,6 +192,14 @@ Obsoletes:	apache-conf
 This package contains the apache utilities such as Apache Bench (ab) for stress
 testing your apache installation and several tools for managing user databases,
 access control, the apache logs and more.
+
+%package	tools
+Summary:	Tools that come with the Apache web server (e.g. htpasswd)
+Group:		Servers
+
+%description	tools
+Tools that come with the Apache web server, but that may be
+useful even when not using Apache (e.g. htpasswd)
 
 %package	modules
 Summary:	Meta package
@@ -4330,8 +4339,6 @@ fi
 %attr(0755,root,root) %{_bindir}/ab
 %attr(0755,root,root) %{_bindir}/dbmmanage
 %attr(0755,root,root) %{_bindir}/htdbm
-%attr(0755,root,root) %{_bindir}/htdigest
-%attr(0755,root,root) %{_bindir}/htpasswd
 %attr(0755,root,root) %{_bindir}/httxt2dbm
 %attr(0755,root,root) %{_bindir}/logresolve
 %attr(0755,root,root) %{_sbindir}/check_forensic
@@ -4347,8 +4354,16 @@ fi
 %{_localstatedir}/lib/rpm/filetriggers/webapp.*
 %exclude %{_mandir}/man8/htcacheclean.8*
 %exclude %{_mandir}/man8/suexec.8*
+%exclude %{_mandir}/man1/htdigest.1*
+%exclude %{_mandir}/man1/htpasswd.1*
 %{_mandir}/*/*
 %{_prefix}/lib/tmpfiles.d/apache.conf
+
+%files tools
+%attr(0755,root,root) %{_bindir}/htdigest
+%attr(0755,root,root) %{_bindir}/htpasswd
+%{_mandir}/man1/htdigest.1*
+%{_mandir}/man1/htpasswd.1*
 
 %files htcacheclean
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/htcacheclean
