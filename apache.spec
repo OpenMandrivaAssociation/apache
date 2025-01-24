@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.62
-Release:	4
+Version:	2.4.63
+Release:	1
 Group:		System/Servers
 License:	Apache License
 URL:		https://httpd.apache.org
@@ -30,7 +30,6 @@ Patch2:		httpd-2.4.58-libxml-2.12.patch
 Patch8:		httpd-2.1.10-apxs.patch
 # speedups by Allen Pulsifer
 Patch16:	httpd-2.2.4-fix_extra_htaccess_check.diff
-Patch18:	httpd-2.2.10-ldap_auth_now_modular_in-apr-util-dbd-ldap_fix.diff
 Patch19:	httpd-2.2.21-linux3.diff
 Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
