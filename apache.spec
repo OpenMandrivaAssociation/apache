@@ -11,7 +11,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.63
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		https://httpd.apache.org

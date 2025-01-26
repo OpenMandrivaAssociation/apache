@@ -308,8 +308,8 @@
  #
 -User daemon
 -Group daemon
-+User apache
-+Group apache
++User www
++Group www
  
  </IfModule>
  
