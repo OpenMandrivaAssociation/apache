@@ -34,7 +34,7 @@ Patch19:	httpd-2.2.21-linux3.diff
 Patch106:	httpd-2.4.1-mdv_config.diff
 Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
-BuildRequires:	autoconf automake libtool
+BuildRequires:	autoconf automake slibtool
 # For _pre_useradd macro and friends
 BuildRequires:	rpm-helper
 BuildRequires:	pkgconfig(libfl)
@@ -2287,7 +2287,7 @@ Summary:	Module development tools for the apache web server
 Group:		Development/C
 Requires:	pkgconfig(apr-1) >= 1.4.6
 Requires:	pkgconfig(apr-util-1) >= 1.4.1
-Requires:	autoconf automake libtool
+Requires:	autoconf automake slibtool
 Requires:	pkgconfig(expat)
 Requires:	pkgconfig(libsasl2)
 Requires:	pkgconfig(openssl)
