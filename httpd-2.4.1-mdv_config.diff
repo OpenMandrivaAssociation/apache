@@ -1,5 +1,6 @@
---- httpd-2.4.6/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.6/docs/conf/extra/httpd-autoindex.conf.in	2013-07-19 23:19:13.271150789 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
++++ httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in	2026-05-04 18:16:31.417485571 +0200
 @@ -14,6 +14,7 @@
  # listings.
  #
@@ -16,8 +17,9 @@
  
  AddIcon /icons/back.gif ..
  AddIcon /icons/hand.right.gif README
---- httpd-2.4.6/docs/conf/extra/httpd-dav.conf.in.mdvConfig~	2011-06-13 23:13:08.000000000 +0200
-+++ httpd-2.4.6/docs/conf/extra/httpd-dav.conf.in	2013-07-19 23:19:13.271150789 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in.mdvConfig~	2025-01-20 13:53:06.000000000 +0100
++++ httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in	2026-05-04 18:16:31.417583242 +0200
 @@ -12,11 +12,11 @@
  # on the directory where the DavLockDB is placed and on any directory where
  # "Dav On" is specified.
@@ -33,8 +35,9 @@
      Dav On
  
      AuthType Digest
---- httpd-2.4.6/docs/conf/extra/httpd-default.conf.in.mdvConfig~	2012-07-23 14:14:34.000000000 +0200
-+++ httpd-2.4.6/docs/conf/extra/httpd-default.conf.in	2013-07-19 23:19:13.271150789 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-default.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-default.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-default.conf.in.mdvConfig~	2012-07-23 14:14:34.000000000 +0200
++++ httpd-2.4.67/docs/conf/extra/httpd-default.conf.in	2026-05-04 18:16:31.417675303 +0200
 @@ -62,7 +62,7 @@ ServerTokens Full
  # Set to "EMail" to also include a mailto: link to the ServerAdmin.
  # Set to one of:  On | Off | EMail
@@ -44,8 +47,9 @@
  
  #
  # HostnameLookups: Log the names of clients or just their IP addresses
---- httpd-2.4.6/docs/conf/extra/httpd-info.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.6/docs/conf/extra/httpd-info.conf.in	2013-07-19 23:19:13.271150789 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-info.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-info.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-info.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
++++ httpd-2.4.67/docs/conf/extra/httpd-info.conf.in	2026-05-04 18:16:31.417758764 +0200
 @@ -13,7 +13,6 @@
  
  <Location /server-status>
@@ -70,8 +74,9 @@
 -    Require host .example.com
      Require ip 127
  </Location>
---- httpd-2.4.6/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
-+++ httpd-2.4.6/docs/conf/extra/httpd-mpm.conf.in	2013-07-19 23:19:13.272150794 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
++++ httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in	2026-05-04 18:16:31.417852985 +0200
 @@ -8,9 +8,7 @@
  #
  # Note that this is the default PidFile for most MPMs.
@@ -138,14 +143,15 @@
 -    MaxMemFree             100
 -</IfModule>
 +MaxMemFree            2048
---- httpd-2.4.6/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~	2012-12-11 10:55:03.000000000 +0100
-+++ httpd-2.4.6/docs/conf/extra/httpd-ssl.conf.in	2013-07-19 23:19:13.272150794 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~	2017-05-16 21:33:45.000000000 +0200
++++ httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in	2026-05-04 18:16:31.417950276 +0200
 @@ -1,3 +1,4 @@
 +<IfModule ssl_module>
  #
  # This is the Apache server configuration file providing SSL support.
  # It contains the configuration directives to instruct the server how to
-@@ -73,7 +74,7 @@ SSLPassPhraseDialog  builtin
+@@ -89,7 +90,7 @@ SSLPassPhraseDialog  builtin
  #   Configure the SSL Session Cache: First the mechanism 
  #   to use and second the expiring timeout (in seconds).
  #SSLSessionCache         "dbm:@exp_runtimedir@/ssl_scache"
@@ -154,7 +160,7 @@
  SSLSessionCacheTimeout  300
  
  #   OCSP Stapling (requires OpenSSL 0.9.8h or later)
-@@ -84,10 +85,10 @@ SSLSessionCacheTimeout  300
+@@ -122,10 +123,10 @@ SSLSessionCacheTimeout  300
  
  #   General setup for the virtual host
  DocumentRoot "@exp_htdocsdir@"
@@ -169,7 +175,7 @@
  
  #   SSL Engine Switch:
  #   Enable/Disable SSL for this virtual host.
-@@ -103,9 +104,9 @@ SSLEngine on
+@@ -141,9 +142,9 @@ SSLEngine on
  #   Some ECC cipher suites (http://www.ietf.org/rfc/rfc4492.txt)
  #   require an ECC certificate which can also be configured in
  #   parallel.
@@ -182,7 +188,7 @@
  
  #   Server Private Key:
  #   If the key is not combined with the certificate, use this
-@@ -113,9 +114,9 @@ SSLCertificateFile "@exp_sysconfdir@/ser
+@@ -151,9 +152,9 @@ SSLCertificateFile "@exp_sysconfdir@/ser
  #   you've both a RSA and a DSA private key you can configure
  #   both in parallel (to also allow the use of DSA ciphers, etc.)
  #   ECC keys, when in use, can also be configured in parallel
@@ -195,7 +201,7 @@
  
  #   Server Certificate Chain:
  #   Point SSLCertificateChainFile at a file containing the
-@@ -124,7 +125,7 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
+@@ -162,7 +163,7 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
  #   the referenced file can be the same as SSLCertificateFile
  #   when the CA certificates are directly appended to the server
  #   certificate for convenience.
@@ -204,7 +210,7 @@
  
  #   Certificate Authority (CA):
  #   Set the CA certificate verification path where to find CA
-@@ -133,8 +134,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
+@@ -171,8 +172,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
  #   Note: Inside SSLCACertificatePath you need hash symlinks
  #         to point to the certificate files. Use the provided
  #         Makefile to update the hash symlinks after changes.
@@ -215,7 +221,7 @@
  
  #   Certificate Revocation Lists (CRL):
  #   Set the CA revocation path where to find CA CRLs for client
-@@ -145,8 +146,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
+@@ -183,8 +184,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
  #   Note: Inside SSLCARevocationPath you need hash symlinks
  #         to point to the certificate files. Use the provided
  #         Makefile to update the hash symlinks after changes.
@@ -226,7 +232,7 @@
  #SSLCARevocationCheck chain
  
  #   Client Authentication (Type):
-@@ -249,4 +250,8 @@ BrowserMatch "MSIE [2-5]" \
+@@ -287,4 +288,8 @@ BrowserMatch "MSIE [2-5]" \
  CustomLog "@exp_logfiledir@/ssl_request_log" \
            "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
  
@@ -236,8 +242,9 @@
 +
 +</VirtualHost>
 +</IfModule>
---- httpd-2.4.6/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~	2011-06-06 23:40:41.000000000 +0200
-+++ httpd-2.4.6/docs/conf/extra/httpd-userdir.conf.in	2013-07-19 23:19:13.272150794 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~	2011-06-06 23:40:41.000000000 +0200
++++ httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in	2026-05-04 18:16:31.418083858 +0200
 @@ -1,3 +1,5 @@
 +<IfModule userdir_module>
 +
@@ -249,8 +256,9 @@
  </Directory>
  
 +</IfModule>
---- httpd-2.4.6/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~	2012-02-20 16:22:16.000000000 +0100
-+++ httpd-2.4.6/docs/conf/extra/httpd-vhosts.conf.in	2013-07-19 23:19:13.272150794 +0200
+diff -up httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in
+--- httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~	2012-02-20 16:22:16.000000000 +0100
++++ httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in	2026-05-04 18:16:31.418169049 +0200
 @@ -20,22 +20,21 @@
  # The first VirtualHost section is used for all requests that do not
  # match a ServerName or ServerAlias in any <VirtualHost> block.
@@ -290,8 +298,9 @@
 +#</VirtualHost>
  
  
---- httpd-2.4.6/docs/conf/httpd.conf.in.mdvConfig~	2012-11-08 04:05:38.000000000 +0100
-+++ httpd-2.4.6/docs/conf/httpd.conf.in	2013-07-19 23:19:54.234356003 +0200
+diff -up httpd-2.4.67/docs/conf/httpd.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/httpd.conf.in
+--- httpd-2.4.67/docs/conf/httpd.conf.in.mdvConfig~	2026-03-16 07:19:31.000000000 +0100
++++ httpd-2.4.67/docs/conf/httpd.conf.in	2026-05-04 18:18:53.342292924 +0200
 @@ -63,7 +63,8 @@ Listen @@Port@@
  # Example:
  # LoadModule foo_module modules/mod_foo.so
@@ -344,7 +353,7 @@
  #
  # The following lines prevent .htaccess and .htpasswd files from being 
  # viewed by Web clients. 
-@@ -312,8 +321,11 @@ LogLevel warn
+@@ -321,8 +330,11 @@ LogLevel warn
      # To parse .shtml files for server-side includes (SSI):
      # (You will also need to add "Includes" to the "Options" directive.)
      #
@@ -358,7 +367,7 @@
  </IfModule>
  
  #
-@@ -361,34 +373,34 @@ LogLevel warn
+@@ -370,34 +382,34 @@ LogLevel warn
  # necessary.
  
  # Server-pool management (MPM specific)
@@ -402,16 +411,16 @@
  
  # Configure mod_proxy_html to understand HTML4/XHTML1
  <IfModule proxy_html_module>
-@@ -396,7 +408,7 @@ Include @rel_sysconfdir@/extra/proxy-htm
+@@ -405,7 +417,7 @@ Include @rel_sysconfdir@/extra/proxy-htm
  </IfModule>
  
  # Secure (SSL/TLS) connections
 -#Include @rel_sysconfdir@/extra/httpd-ssl.conf
 +Include @rel_sysconfdir@/extra/httpd-ssl.conf
  #
- # Note: The following must must be present to support
+ # Note: The following must be present to support
  #       starting without SSL on platforms with no /dev/random equivalent
-@@ -418,3 +430,16 @@ SSLRandomSeed connect builtin
+@@ -416,3 +428,16 @@ SSLRandomSeed startup builtin
  SSLRandomSeed connect builtin
  </IfModule>
  
