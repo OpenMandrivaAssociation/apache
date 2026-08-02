@@ -1,6 +1,8 @@
---- httpd-2.4.3/support/apxs.in.apxs.droplet	2012-07-25 13:42:40.000000000 +0200
-+++ httpd-2.4.3/support/apxs.in	2012-12-26 14:39:54.213869054 +0100
-@@ -453,11 +453,11 @@ if ($opt_c) {
+diff --git a/support/apxs.in b/support/apxs.in
+index b2705fa..13322ca 100644
+--- a/support/apxs.in
++++ b/support/apxs.in
+@@ -463,11 +463,11 @@ if ($opt_c) {
      my $ldflags = "$CFG_LDFLAGS";
      if ($opt_p == 1) {
          

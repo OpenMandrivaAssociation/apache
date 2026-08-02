@@ -10,8 +10,8 @@
 
 Summary:	The most widely used Web server on the Internet
 Name:		apache
-Version:	2.4.67
-Release:	2
+Version:	2.4.68
+Release:	1
 Group:		System/Servers
 License:	Apache License
 URL:		https://httpd.apache.org
@@ -2332,12 +2332,11 @@ This module manages Brotli compression
 
 %prep
 %setup -q -n httpd-%{version} -a11
-%patch 0 -p0 -b .deplibs.droplet
+%patch 0 -p1 -b .deplibs.droplet
 %patch 1 -p1 -b .lex~
 %patch 2 -p1 -b .libxml~
 %patch 8 -p1 -b .apxs.droplet
-%patch 16 -p0 -b .fix_extra_htaccess_check.droplet
-%patch 18 -p0 -b .PR45994.droplet
+%patch 16 -p1 -b .fix_extra_htaccess_check.droplet
 %patch 19 -p1 -b .linux3.droplet
 %patch 106 -p1 -b .mdvConfig~
 %patch 107 -p1 -b .linkage~

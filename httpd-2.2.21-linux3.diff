@@ -1,6 +1,8 @@
---- httpd-2.4.6/configure.in.linux3.droplet	2013-07-19 23:16:56.966488049 +0200
-+++ httpd-2.4.6/configure.in	2013-07-19 23:18:25.611915340 +0200
-@@ -314,14 +314,7 @@ case $host in
+diff --git a/configure.in b/configure.in
+index 4344b07..2b185dd 100644
+--- a/configure.in
++++ b/configure.in
+@@ -338,14 +338,7 @@ case $host in
        APR_SETVAR(SINGLE_LISTEN_UNSERIALIZED_ACCEPT, [1])
        ;;
    *-linux-*)

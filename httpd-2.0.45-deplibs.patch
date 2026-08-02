@@ -1,6 +1,8 @@
---- configure.in	2012-02-08 14:48:19.000000000 +0100
-+++ configure.in.oden	2012-03-03 12:40:47.763224931 +0100
-@@ -707,9 +707,9 @@
+diff --git a/configure.in b/configure.in
+index a4a9dba..5df9a37 100644
+--- a/configure.in
++++ b/configure.in
+@@ -844,9 +844,9 @@ APACHE_SUBST(INSTALL_SUEXEC)
  
  dnl APR should go after the other libs, so the right symbols can be picked up
  if test x${apu_found} != xobsolete; then

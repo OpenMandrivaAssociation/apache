@@ -1,6 +1,7 @@
-diff -up httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in	2026-05-04 18:16:31.417485571 +0200
+diff --git a/docs/conf/extra/httpd-autoindex.conf.in b/docs/conf/extra/httpd-autoindex.conf.in
+index acca95b..a90ff4b 100644
+--- a/docs/conf/extra/httpd-autoindex.conf.in
++++ b/docs/conf/extra/httpd-autoindex.conf.in
 @@ -14,6 +14,7 @@
  # listings.
  #
@@ -9,7 +10,7 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~ httpd-2
  
  # We include the /icons/ alias for FancyIndexed directory listings.  If
  # you do not use FancyIndexing, you may comment this out.
-@@ -54,6 +55,7 @@ AddIcon /icons/uuencoded.gif .uu
+@@ -55,6 +56,7 @@ AddIcon /icons/uuencoded.gif .uu
  AddIcon /icons/script.gif .conf .sh .shar .csh .ksh .tcl
  AddIcon /icons/tex.gif .tex
  AddIcon /icons/bomb.gif core
@@ -17,9 +18,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-autoindex.conf.in.mdvConfig~ httpd-2
  
  AddIcon /icons/back.gif ..
  AddIcon /icons/hand.right.gif README
-diff -up httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in.mdvConfig~	2025-01-20 13:53:06.000000000 +0100
-+++ httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in	2026-05-04 18:16:31.417583242 +0200
+diff --git a/docs/conf/extra/httpd-dav.conf.in b/docs/conf/extra/httpd-dav.conf.in
+index 2bf5545..ef2244f 100644
+--- a/docs/conf/extra/httpd-dav.conf.in
++++ b/docs/conf/extra/httpd-dav.conf.in
 @@ -12,11 +12,11 @@
  # on the directory where the DavLockDB is placed and on any directory where
  # "Dav On" is specified.
@@ -35,9 +37,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-dav.conf.in.mdvConfig~ httpd-2.4.67/
      Dav On
  
      AuthType Digest
-diff -up httpd-2.4.67/docs/conf/extra/httpd-default.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-default.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-default.conf.in.mdvConfig~	2012-07-23 14:14:34.000000000 +0200
-+++ httpd-2.4.67/docs/conf/extra/httpd-default.conf.in	2026-05-04 18:16:31.417675303 +0200
+diff --git a/docs/conf/extra/httpd-default.conf.in b/docs/conf/extra/httpd-default.conf.in
+index 7196922..2eeaefe 100644
+--- a/docs/conf/extra/httpd-default.conf.in
++++ b/docs/conf/extra/httpd-default.conf.in
 @@ -62,7 +62,7 @@ ServerTokens Full
  # Set to "EMail" to also include a mailto: link to the ServerAdmin.
  # Set to one of:  On | Off | EMail
@@ -47,9 +50,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-default.conf.in.mdvConfig~ httpd-2.4
  
  #
  # HostnameLookups: Log the names of clients or just their IP addresses
-diff -up httpd-2.4.67/docs/conf/extra/httpd-info.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-info.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-info.conf.in.mdvConfig~	2010-06-15 13:05:13.000000000 +0200
-+++ httpd-2.4.67/docs/conf/extra/httpd-info.conf.in	2026-05-04 18:16:31.417758764 +0200
+diff --git a/docs/conf/extra/httpd-info.conf.in b/docs/conf/extra/httpd-info.conf.in
+index 5cfdf69..cf2b7ed 100644
+--- a/docs/conf/extra/httpd-info.conf.in
++++ b/docs/conf/extra/httpd-info.conf.in
 @@ -13,7 +13,6 @@
  
  <Location /server-status>
@@ -74,9 +78,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-info.conf.in.mdvConfig~ httpd-2.4.67
 -    Require host .example.com
      Require ip 127
  </Location>
-diff -up httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~	2012-08-15 01:59:24.000000000 +0200
-+++ httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in	2026-05-04 18:16:31.417852985 +0200
+diff --git a/docs/conf/extra/httpd-mpm.conf.in b/docs/conf/extra/httpd-mpm.conf.in
+index bf29faf..30c7bb6 100644
+--- a/docs/conf/extra/httpd-mpm.conf.in
++++ b/docs/conf/extra/httpd-mpm.conf.in
 @@ -8,9 +8,7 @@
  #
  # Note that this is the default PidFile for most MPMs.
@@ -143,9 +148,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-mpm.conf.in.mdvConfig~ httpd-2.4.67/
 -    MaxMemFree             100
 -</IfModule>
 +MaxMemFree            2048
-diff -up httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~	2017-05-16 21:33:45.000000000 +0200
-+++ httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in	2026-05-04 18:16:31.417950276 +0200
+diff --git a/docs/conf/extra/httpd-ssl.conf.in b/docs/conf/extra/httpd-ssl.conf.in
+index 6a3c67a..eedcc75 100644
+--- a/docs/conf/extra/httpd-ssl.conf.in
++++ b/docs/conf/extra/httpd-ssl.conf.in
 @@ -1,3 +1,4 @@
 +<IfModule ssl_module>
  #
@@ -188,7 +194,7 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~ httpd-2.4.67/
  
  #   Server Private Key:
  #   If the key is not combined with the certificate, use this
-@@ -151,9 +152,9 @@ SSLCertificateFile "@exp_sysconfdir@/ser
+@@ -151,9 +152,9 @@ SSLCertificateFile "@exp_sysconfdir@/server.crt"
  #   you've both a RSA and a DSA private key you can configure
  #   both in parallel (to also allow the use of DSA ciphers, etc.)
  #   ECC keys, when in use, can also be configured in parallel
@@ -201,7 +207,7 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~ httpd-2.4.67/
  
  #   Server Certificate Chain:
  #   Point SSLCertificateChainFile at a file containing the
-@@ -162,7 +163,7 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
+@@ -162,7 +163,7 @@ SSLCertificateKeyFile "@exp_sysconfdir@/server.key"
  #   the referenced file can be the same as SSLCertificateFile
  #   when the CA certificates are directly appended to the server
  #   certificate for convenience.
@@ -210,7 +216,7 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~ httpd-2.4.67/
  
  #   Certificate Authority (CA):
  #   Set the CA certificate verification path where to find CA
-@@ -171,8 +172,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
+@@ -171,8 +172,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/server.key"
  #   Note: Inside SSLCACertificatePath you need hash symlinks
  #         to point to the certificate files. Use the provided
  #         Makefile to update the hash symlinks after changes.
@@ -221,7 +227,7 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~ httpd-2.4.67/
  
  #   Certificate Revocation Lists (CRL):
  #   Set the CA revocation path where to find CA CRLs for client
-@@ -183,8 +184,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/
+@@ -183,8 +184,8 @@ SSLCertificateKeyFile "@exp_sysconfdir@/server.key"
  #   Note: Inside SSLCARevocationPath you need hash symlinks
  #         to point to the certificate files. Use the provided
  #         Makefile to update the hash symlinks after changes.
@@ -242,9 +248,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-ssl.conf.in.mdvConfig~ httpd-2.4.67/
 +
 +</VirtualHost>
 +</IfModule>
-diff -up httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~	2011-06-06 23:40:41.000000000 +0200
-+++ httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in	2026-05-04 18:16:31.418083858 +0200
+diff --git a/docs/conf/extra/httpd-userdir.conf.in b/docs/conf/extra/httpd-userdir.conf.in
+index a744322..076bfe9 100644
+--- a/docs/conf/extra/httpd-userdir.conf.in
++++ b/docs/conf/extra/httpd-userdir.conf.in
 @@ -1,3 +1,5 @@
 +<IfModule userdir_module>
 +
@@ -256,9 +263,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-userdir.conf.in.mdvConfig~ httpd-2.4
  </Directory>
  
 +</IfModule>
-diff -up httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in
---- httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~	2012-02-20 16:22:16.000000000 +0100
-+++ httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in	2026-05-04 18:16:31.418169049 +0200
+diff --git a/docs/conf/extra/httpd-vhosts.conf.in b/docs/conf/extra/httpd-vhosts.conf.in
+index fbd2df4..8e2c950 100644
+--- a/docs/conf/extra/httpd-vhosts.conf.in
++++ b/docs/conf/extra/httpd-vhosts.conf.in
 @@ -20,22 +20,21 @@
  # The first VirtualHost section is used for all requests that do not
  # match a ServerName or ServerAlias in any <VirtualHost> block.
@@ -298,9 +306,10 @@ diff -up httpd-2.4.67/docs/conf/extra/httpd-vhosts.conf.in.mdvConfig~ httpd-2.4.
 +#</VirtualHost>
  
  
-diff -up httpd-2.4.67/docs/conf/httpd.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/httpd.conf.in
---- httpd-2.4.67/docs/conf/httpd.conf.in.mdvConfig~	2026-03-16 07:19:31.000000000 +0100
-+++ httpd-2.4.67/docs/conf/httpd.conf.in	2026-05-04 18:18:53.342292924 +0200
+diff --git a/docs/conf/httpd.conf.in b/docs/conf/httpd.conf.in
+index 998eee0..35ee155 100644
+--- a/docs/conf/httpd.conf.in
++++ b/docs/conf/httpd.conf.in
 @@ -63,7 +63,8 @@ Listen @@Port@@
  # Example:
  # LoadModule foo_module modules/mod_foo.so
@@ -411,7 +420,7 @@ diff -up httpd-2.4.67/docs/conf/httpd.conf.in.mdvConfig~ httpd-2.4.67/docs/conf/
  
  # Configure mod_proxy_html to understand HTML4/XHTML1
  <IfModule proxy_html_module>
-@@ -405,7 +417,7 @@ Include @rel_sysconfdir@/extra/proxy-htm
+@@ -405,7 +417,7 @@ Include @rel_sysconfdir@/extra/proxy-html.conf
  </IfModule>
  
  # Secure (SSL/TLS) connections

@@ -1,12 +1,11 @@
-
- something is fishy here, so just nuke this part
-
---- server/Makefile.in	2011-06-04 13:41:13.000000000 -0400
-+++ server/Makefile.in.oden	2012-03-09 03:54:46.470895535 -0500
-@@ -83,20 +83,3 @@
+--- server/Makefile.in
++++ server/Makefile.in
+@@ -84,22 +84,3 @@
+ 	@echo "* Please do not edit by hand." >> $@
+ 	$(CPP) $(ALL_CPPFLAGS) $(ALL_INCLUDES) exports.c | grep "ap_hack_" | grep -v apr_ | sed -e 's/^.*[)]\(.*\);$$/\1/' >> $@
  	$(CPP) $(ALL_CPPFLAGS) $(ALL_INCLUDES) export_vars.h | grep -v apr_ | sed -e 's/^\#[^!]*//' | sed -e '/^$$/d' >> $@
- 
- 
+-
+-
 -#   developer stuff
 -#   (we really don't expect end users to use these targets!)
 -#

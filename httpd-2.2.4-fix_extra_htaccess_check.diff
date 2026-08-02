@@ -1,6 +1,8 @@
---- server/request.c	2006-07-12 05:38:44.000000000 +0200
-+++ server/request.c.oden	2007-06-14 13:08:22.000000000 +0200
-@@ -931,12 +931,20 @@
+diff --git a/server/request.c b/server/request.c
+index 5599b2c..983e183 100644
+--- a/server/request.c
++++ b/server/request.c
+@@ -1188,12 +1188,20 @@ AP_DECLARE(int) ap_directory_walk(request_rec *r)
  #ifdef CASE_BLIND_FILESYSTEM
                  && (filename_len <= canonical_len)
  #endif
