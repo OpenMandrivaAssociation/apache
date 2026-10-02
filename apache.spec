@@ -187,6 +187,73 @@ Requires:	apache = %{version}-%{release}
 Requires:	%{name}-tools = %{EVRD}
 Provides:	apache-conf = %{version}-%{release}
 Obsoletes:	apache-conf
+# Retired third-party modules. apache-mod_macro is not listed: the core
+# subpackage uses Epoch 1 so it updates that Epoch 1 package in place.
+Obsoletes:	apache-mod_activex_filter
+Obsoletes:	apache-mod_annodex
+Obsoletes:	apache-mod_antispam
+Obsoletes:	apache-mod_auth_cert
+Obsoletes:	apache-mod_auth_certificate
+Obsoletes:	apache-mod_auth_imap
+Obsoletes:	apache-mod_auth_msfix
+Obsoletes:	apache-mod_auth_nds
+Obsoletes:	apache-mod_auth_ntlm_winbind
+Obsoletes:	apache-mod_auth_pam
+Obsoletes:	apache-mod_auth_token
+Obsoletes:	apache-mod_authn_imap
+Obsoletes:	apache-mod_backtrace
+Obsoletes:	apache-mod_but
+Obsoletes:	apache-mod_cfg_ldap
+Obsoletes:	apache-mod_chm
+Obsoletes:	apache-mod_chroot
+Obsoletes:	apache-mod_defensible
+Obsoletes:	apache-mod_delay
+Obsoletes:	apache-mod_diagnostics
+Obsoletes:	apache-mod_dns
+Obsoletes:	apache-mod_dnsbl_lookup
+Obsoletes:	apache-mod_domaintree
+Obsoletes:	apache-mod_encoding
+Obsoletes:	apache-mod_fakessl
+Obsoletes:	apache-mod_form
+Obsoletes:	apache-mod_geoip
+Obsoletes:	apache-mod_gfx
+Obsoletes:	apache-mod_gzip_disk
+Obsoletes:	apache-mod_icpquery
+Obsoletes:	apache-mod_injection
+Obsoletes:	apache-mod_jsmin
+Obsoletes:	apache-mod_layout
+Obsoletes:	apache-mod_ldap_userdir
+Obsoletes:	apache-mod_limitipconn
+Obsoletes:	apache-mod_line_edit
+Obsoletes:	apache-mod_load_average
+Obsoletes:	apache-mod_log_data
+Obsoletes:	apache-mod_log_rotate
+Obsoletes:	apache-mod_memcached
+Obsoletes:	apache-mod_musicindex
+Obsoletes:	apache-mod_mya
+Obsoletes:	apache-mod_proxy_xml
+Obsoletes:	apache-mod_put
+Obsoletes:	apache-mod_random
+Obsoletes:	apache-mod_replace
+Obsoletes:	apache-mod_roaming
+Obsoletes:	apache-mod_scrmable
+Obsoletes:	apache-mod_sesehe
+Obsoletes:	apache-mod_sleep
+Obsoletes:	apache-mod_smtpd
+Obsoletes:	apache-mod_spam_die
+Obsoletes:	apache-mod_tidy
+Obsoletes:	apache-mod_traf_thief
+Obsoletes:	apache-mod_transform
+Obsoletes:	apache-mod_upload
+Obsoletes:	apache-mod_variety
+Obsoletes:	apache-mod_vdbh
+Obsoletes:	apache-mod_vhost_mysql
+Obsoletes:	apache-mod_xhtml
+Obsoletes:	apache-mod_xhtml_neg
+Obsoletes:	apache-mod_xmlns
+Obsoletes:	apache-mod_xslt_filter
+Obsoletes:	apache-mod_ziplook
+Obsoletes:	apache-mod_zipread
 
 %description	base
 This package contains the apache utilities such as Apache Bench (ab) for stress
@@ -1053,6 +1120,10 @@ over the network.
 %package	mod_macro
 Summary:	Macro support inside Apache httpd runtime configuration files
 Group:		System/Servers
+# Same epoch as the retired external apache-mod_macro 1.2.1, so this
+# build sorts newer. Obsoleting that name from here would obsolete this
+# package itself.
+Epoch:		1
 
 %description	mod_macro
 This modules provides macros within apache httpd runtime configuration files.
@@ -2643,6 +2714,14 @@ rm -f %{buildroot}%{_libdir}/apache/build/config.nice
 ##################################################################
 # install module conf files for the "modules.d" dir loading structure
 install -m0644 OpenMandriva/*mod_*.conf %{buildroot}%{_sysconfdir}/httpd/modules.d/
+# Same filename as the retired external package. Load only with -D HAVE_MACRO.
+cat > %{buildroot}%{_sysconfdir}/httpd/modules.d/30_mod_macro.conf <<'EOF'
+<IfDefine HAVE_MACRO>
+	<IfModule !mod_macro.c>
+		LoadModule macro_module %{_libdir}/apache/mod_macro.so
+	</IfModule>
+</IfDefine>
+EOF
 
 install -d %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d
 
@@ -3969,6 +4048,7 @@ fi
 %attr(0755,root,root) %{_libdir}/apache/mod_deflate.so
 
 %files mod_macro
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/30_mod_macro.conf
 %attr(0755,root,root) %{_libdir}/apache/mod_macro.so
 
 %files mod_md
