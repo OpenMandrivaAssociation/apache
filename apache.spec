@@ -8,6 +8,9 @@
 %define BASEPRODUCT Apache
 %define all_services httpd.service httpd-worker.service httpd-prefork.service
 
+# Shipped in apache-source as a pytest helper. FCGI::ProcManager is not packaged.
+%global __requires_exclude ^perl\\(FCGI::ProcManager\\)$
+
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.69
