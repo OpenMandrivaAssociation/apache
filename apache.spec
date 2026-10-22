@@ -14,7 +14,7 @@
 Summary:	The most widely used Web server on the Internet
 Name:		apache
 Version:	2.4.69
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	Apache License
 URL:		https://httpd.apache.org
@@ -2728,9 +2728,10 @@ EOF
 
 install -d %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d
 
-# install the mpm stuff
-install -m0755 build-worker/httpd %{buildroot}%{_sbindir}/httpd-worker
-install -m0755 build-prefork/httpd %{buildroot}%{_sbindir}/httpd-prefork
+# build-*/httpd is an slibtool wrapper. Install through slibtool so the
+# real binary is copied, the same way make install handles the event MPM.
+slibtool-shared --tag=CC --mode=install install -m0755 build-worker/httpd %{buildroot}%{_sbindir}/httpd-worker
+slibtool-shared --tag=CC --mode=install install -m0755 build-prefork/httpd %{buildroot}%{_sbindir}/httpd-prefork
 
 # install alternative MPMs; executables, man pages, and systemd service files
 install -d %{buildroot}%{_unitdir}
@@ -2752,7 +2753,8 @@ install -m755 build-event/support/split-logfile %{buildroot}%{_sbindir}/split-lo
 install -m755 support/list_hooks.pl %{buildroot}%{_sbindir}/list_hooks.pl
 install -m755 build-event/support/logresolve.pl %{buildroot}%{_sbindir}/logresolve.pl
 install -m755 build-event/support/log_server_status %{buildroot}%{_sbindir}/log_server_status
-install -m755 build-event/support/checkgid %{buildroot}%{_sbindir}/checkgid
+# make install already runs slibtool --mode=install for checkgid.
+# support/checkgid is the wrapper and must not replace that binary.
 install -m755 support/check_forensic %{buildroot}%{_sbindir}/check_forensic
 
 # fix a msec safe cache for the ssl stuff
