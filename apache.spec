@@ -39,6 +39,8 @@ Patch107:	httpd-2.4.1-linkage_fix.diff
 Patch108:	httpd-2.4.1-buildfix.diff
 BuildRequires:	autoconf automake slibtool
 BuildRequires:	make
+# Out-of-tree MPM builds regenerate server/util_expr_parse.c with yacc.
+BuildRequires:	byacc
 # For _pre_useradd macro and friends
 BuildRequires:	rpm-helper
 BuildRequires:	pkgconfig(libfl)
