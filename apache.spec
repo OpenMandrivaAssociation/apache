@@ -19,7 +19,8 @@ Group:		System/Servers
 License:	Apache License
 URL:		https://httpd.apache.org
 Source0:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz
-Source1:	http://archive.apache.org/dist/httpd/httpd-%{version}.tar.gz.asc
+# The .asc is not checked and is not in the lookaside. rpmbuild -bs has
+# no URL helper, so a remote signature source fails the build.
 Source2:	webapp.script
 Source3:	apache2_transparent_png_icons.tar.bz2
 Source9: 	htcacheclean.service
